@@ -16,6 +16,10 @@ export interface Song {
   trailerStart?: number;
   isCondensed?: boolean;
   condensed?: boolean;
+  paymentsDisabled?: boolean;
 }
 
-export const songs = songsData as Song[];
+export const songs = (songsData as Song[]).filter(s => s.id !== 'global_settings');
+
+export const globalPaymentsDisabled = (songsData as any[]).find(s => s.id === 'global_settings')?.globalPaymentsDisabled ?? false;
+

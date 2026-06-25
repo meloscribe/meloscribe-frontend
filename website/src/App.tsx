@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Music, ShoppingBag, Coffee, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
-import { songs, Song } from './data/songs';
+import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalDownloads, formatDownloadsCount, kofiUrl } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
 import Impressum from './pages/Impressum';
@@ -26,6 +26,7 @@ const translations = {
     popularArrangements: 'Popular Arrangements',
     popularDesc: 'Discover our most downloaded piano sheets',
     downloadSheets: 'Unlock Sheets',
+    currentlyDisabled: 'Currently Disabled',
     viewAll: 'View All Arrangements',
     joinCommunity: 'Join the Community',
     communityDesc: 'Follow us for tutorials, new releases, and behind-the-scenes',
@@ -57,6 +58,7 @@ const translations = {
     popularArrangements: 'Beliebte Arrangements',
     popularDesc: 'Entdecke unsere meist heruntergeladenen Klaviernoten',
     downloadSheets: 'Noten freischalten',
+    currentlyDisabled: 'Derzeit deaktiviert',
     viewAll: 'Alle Arrangements ansehen',
     joinCommunity: 'Werde Teil der Community',
     communityDesc: 'Folge uns für Tutorials, Neuerscheinungen und Hinter den Kulissen',
@@ -88,8 +90,9 @@ const translations = {
     popularArrangements: 'Arrangements populaires',
     popularDesc: 'Découvrez nos partitions les plus téléchargées',
     downloadSheets: 'Débloquer les partitions',
+    currentlyDisabled: 'Actuellement désactivé',
     viewAll: 'Voir tous les arrangements',
-    joinCommunity: 'Rejoignez la communauté',
+    joinCommunity: 'Reignez la communauté',
     communityDesc: 'Suivez-nous pour des tutoriels, de nouvelles sorties et les coulisses',
     tiktok: 'TikTok',
     youtube: 'YouTube',
@@ -105,6 +108,70 @@ const translations = {
     privacy: 'Politique de confidentialité',
     terms: 'Conditions d\'utilisation',
     refunds: 'Politique de remboursement',
+  },
+  es: {
+    brand: 'meloscribe',
+    tagline: 'Toca las canciones',
+    taglineHighlight: 'que amas.',
+    subtitle: 'Partituras y arreglos de piano precisos para bandas sonoras de pop y cine. Sin adivinanzas, sin búsquedas interminables. ',
+    subtitleHighlight: 'Consigue tus partituras y empieza a jugar.',
+    badgeText: 'Nuevas partituras añadidas semanalmente',
+    browseSheets: 'Explorar partituras',
+    followUs: 'Síguenos',
+    scrollToExplore: 'Desplazarse',
+    popularArrangements: 'Arreglos populares',
+    popularDesc: 'Descubre nuestras partituras de piano más descargadas',
+    downloadSheets: 'Desbloquear partituras',
+    currentlyDisabled: 'Actualmente desactivado',
+    viewAll: 'Ver todos los arreglos',
+    joinCommunity: 'Únete a la comunidad',
+    communityDesc: 'Síguenos para tutoriales, nuevos lanzamientos y detrás de escena',
+    tiktok: 'TikTok',
+    youtube: 'YouTube',
+    instagram: 'Instagram',
+    pinterest: 'Pinterest',
+    facebook: 'Facebook',
+    threads: 'Threads',
+    statsFollowers: 'Seguidores totales',
+    statsSheets: 'Arreglos de partituras',
+    statsDownloads: 'Descargas',
+    copyright: 'Todos los derechos reservados.',
+    imprint: 'Aviso legal',
+    privacy: 'Política de privacidad',
+    terms: 'Condiciones de servicio',
+    refunds: 'Política de reembolso',
+  },
+  it: {
+    brand: 'meloscribe',
+    tagline: 'Suona le canzoni',
+    taglineHighlight: 'che ami.',
+    subtitle: 'Spartiti e arrangiamenti per pianoforte precisi per colonne sonore pop e cinematografiche. Nessuna congettura, nessuna ricerca infinita. ',
+    subtitleHighlight: 'Prendi i tuoi spartiti e inizia a suonare.',
+    badgeText: 'Nuovi spartiti aggiunti ogni settimana',
+    browseSheets: 'Sfoglia gli spartiti',
+    followUs: 'Seguici',
+    scrollToExplore: 'Scorri',
+    popularArrangements: 'Arrangamenti popolari',
+    popularDesc: 'Scopri i nostri spartiti per pianoforte più scaricati',
+    downloadSheets: 'Sblocca gli spartiti',
+    currentlyDisabled: 'Attualmente disabilitato',
+    viewAll: 'Visualizza tutti gli arrangiamenti',
+    joinCommunity: 'Unisciti alla comunità',
+    communityDesc: 'Seguici per tutorial, nuove uscite e dietro le quinte',
+    tiktok: 'TikTok',
+    youtube: 'YouTube',
+    instagram: 'Instagram',
+    pinterest: 'Pinterest',
+    facebook: 'Facebook',
+    threads: 'Threads',
+    statsFollowers: 'Follower totali',
+    statsSheets: 'Arrangamenti spartiti',
+    statsDownloads: 'Download',
+    copyright: 'Tutti i diritti riservati.',
+    imprint: 'Note legali',
+    privacy: 'Informativa sulla privacy',
+    terms: 'Termini di servizio',
+    refunds: 'Politica di rimborso',
   },
 };
 
@@ -213,14 +280,30 @@ const getPlatformIcon = (name: string) => {
 
 function LanguageDropdown({ language, setLanguage }: { language: Language; setLanguage: (lang: Language) => void }) {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const languages: { code: Language; name: string }[] = [
     { code: 'en', name: 'English' },
     { code: 'de', name: 'Deutsch' },
     { code: 'fr', name: 'Français' },
+    { code: 'es', name: 'Español' },
+    { code: 'it', name: 'Italiano' },
   ];
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-900 hover:border-gray-400 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 dark:hover:text-white dark:hover:border-dark-400 transition-all duration-300"
@@ -257,7 +340,7 @@ function App() {
   const [scrolled, setScrolled] = useState(false);
   const [language, setLanguageState] = useState<Language>(() => {
     const current = (i18n.resolvedLanguage || i18n.language) as Language;
-    return ['en', 'de', 'fr'].includes(current) ? current : 'en';
+    return ['en', 'de', 'fr', 'es', 'it'].includes(current) ? current : 'en';
   });
   const [liveDownloads, setLiveDownloads] = useState<string>(formattedTotalDownloads);
   const t = translations[language];
@@ -382,7 +465,7 @@ function App() {
   // Sync language state with i18n resolved language
   useEffect(() => {
     const current = (i18n.resolvedLanguage || i18n.language) as Language;
-    if (current && ['en', 'de', 'fr'].includes(current) && current !== language) {
+    if (current && ['en', 'de', 'fr', 'es', 'it'].includes(current) && current !== language) {
       setLanguageState(current);
     }
   }, [i18n.resolvedLanguage, i18n.language]);
@@ -668,75 +751,84 @@ function App() {
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {songs.filter(song => !song.hidden).slice(0, 3).map((song) => (
-                  <div
-                    key={song.id}
-                    className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
-                    onMouseEnter={() => handleCardMouseEnter(song)}
-                    onMouseLeave={handleCardMouseLeave}
-                  >
-                    {/* Header visual - image or gradient background */}
-                    <div 
-                      onClick={() => handleDownloadClick(song)}
-                      className="relative w-full aspect-[3/4] overflow-hidden select-none cursor-pointer"
+                {songs.filter(song => !song.hidden).slice(0, 3).map((song) => {
+                  const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                  return (
+                    <div
+                      key={song.id}
+                      className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
+                      onMouseEnter={() => handleCardMouseEnter(song)}
+                      onMouseLeave={handleCardMouseLeave}
                     >
-                      {song.coverImage ? (
-                        <img 
-                          src={song.coverImage} 
-                          alt={song.title} 
-                          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
-                        />
-                      ) : (
-                        <div 
-                          className="w-full h-full relative overflow-hidden bg-dark-950 dark:bg-dark-950" 
-                          style={{
-                            backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(0, 245, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 45, 146, 0.08) 0%, transparent 50%)'
-                          }}
-                        >
-                          {/* Ambient dark grid mesh */}
-                          <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
-                        </div>
-                      )}
-                      
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                      
-                      {/* Audio Visualizer Overlay */}
-                      <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                      </div>
-
-                      {/* Difficulty Badge */}
-                      <div className="absolute top-4 left-4">
-                        <span className={`px-3 py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-xs font-semibold border ${
-                          song.difficulty === 'Easy'
-                            ? 'text-neon-cyan border-neon-cyan/40'
-                            : 'text-neon-pink border-neon-pink/40'
-                        }`}>
-                          {song.difficulty}
-                        </span>
-                      </div>
-
-                      {/* Price Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span className="px-3 py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
-                          {song.price}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
-                      <button
-                        onClick={() => handleDownloadClick(song)}
-                        className="kofi-download-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan font-semibold hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 transition-all duration-300 cursor-pointer"
+                      {/* Header visual - image or gradient background */}
+                      <div 
+                        onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
+                        className={`relative w-full aspect-[3/4] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        <ShoppingBag className="w-4 h-4 text-neon-pink dark:text-neon-pink/80" />{t.downloadSheets}
-                      </button>
+                        {song.coverImage ? (
+                          <img 
+                            src={song.coverImage} 
+                            alt={song.title} 
+                            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
+                          />
+                        ) : (
+                          <div 
+                            className="w-full h-full relative overflow-hidden bg-dark-950 dark:bg-dark-950" 
+                            style={{
+                              backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(0, 245, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 45, 146, 0.08) 0%, transparent 50%)'
+                            }}
+                          >
+                            {/* Ambient dark grid mesh */}
+                            <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
+                          </div>
+                        )}
+                        
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                        
+                        {/* Audio Visualizer Overlay */}
+                        <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                        </div>
+  
+                        {/* Difficulty Badge */}
+                        <div className="absolute top-4 left-4">
+                          <span className={`px-3 py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-xs font-semibold border ${
+                            song.difficulty === 'Easy'
+                              ? 'text-neon-cyan border-neon-cyan/40'
+                              : 'text-neon-pink border-neon-pink/40'
+                          }`}>
+                            {song.difficulty}
+                          </span>
+                        </div>
+  
+                        {/* Price Badge */}
+                        <div className="absolute top-4 right-4">
+                          <span className="px-3 py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
+                            {song.price}
+                          </span>
+                        </div>
+                      </div>
+  
+                      <div className="p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
+                        <button
+                          onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
+                          disabled={isPaymentsDisabled}
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ${
+                            isPaymentsDisabled
+                              ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 cursor-pointer'
+                          }`}
+                        >
+                          <ShoppingBag className={`w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                          {isPaymentsDisabled ? t.currentlyDisabled : t.downloadSheets}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="text-center mt-12">
@@ -858,73 +950,82 @@ function App() {
             {/* Song Cards Grid */}
             {filteredSongs.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {filteredSongs.map((song) => (
-                  <div
-                    key={song.id}
-                    className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
-                    onMouseEnter={() => handleCardMouseEnter(song)}
-                    onMouseLeave={handleCardMouseLeave}
-                  >
-                    {/* Header visual - image or gradient background */}
-                    <div 
-                      onClick={() => handleDownloadClick(song)}
-                      className="relative w-full aspect-[3/4] overflow-hidden select-none cursor-pointer"
+                {filteredSongs.map((song) => {
+                  const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                  return (
+                    <div
+                      key={song.id}
+                      className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
+                      onMouseEnter={() => handleCardMouseEnter(song)}
+                      onMouseLeave={handleCardMouseLeave}
                     >
-                      {song.coverImage ? (
-                        <img 
-                          src={song.coverImage} 
-                          alt={song.title} 
-                          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
-                        />
-                      ) : (
-                        <div 
-                          className="w-full h-full relative overflow-hidden bg-dark-950 dark:bg-dark-950" 
-                          style={{
-                            backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(0, 245, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 45, 146, 0.08) 0%, transparent 50%)'
-                          }}
-                        >
-                          <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
-                        </div>
-                      )}
-                      
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-
-                      {/* Audio Visualizer Overlay */}
-                      <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                        <div className="visualizer-bar" />
-                      </div>
-
-                      <div className="absolute top-4 left-4">
-                        <span className={`px-3 py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-xs font-semibold border ${
-                          song.difficulty === 'Easy'
-                            ? 'text-neon-cyan border-neon-cyan/40'
-                            : 'text-neon-pink border-neon-pink/40'
-                        }`}>
-                          {song.difficulty}
-                        </span>
-                      </div>
-
-                      {/* Price Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span className="px-3 py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
-                          {song.price}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
-                      <button
-                        onClick={() => handleDownloadClick(song)}
-                        className="kofi-download-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan font-semibold hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 transition-all duration-300 cursor-pointer"
+                      {/* Header visual - image or gradient background */}
+                      <div 
+                        onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
+                        className={`relative w-full aspect-[3/4] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        <ShoppingBag className="w-4 h-4 text-neon-pink dark:text-neon-pink/80" />{t.downloadSheets}
-                      </button>
+                        {song.coverImage ? (
+                          <img 
+                            src={song.coverImage} 
+                            alt={song.title} 
+                            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
+                          />
+                        ) : (
+                          <div 
+                            className="w-full h-full relative overflow-hidden bg-dark-950 dark:bg-dark-950" 
+                            style={{
+                              backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(0, 245, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 45, 146, 0.08) 0%, transparent 50%)'
+                            }}
+                          >
+                            <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
+                          </div>
+                        )}
+                        
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+  
+                        {/* Audio Visualizer Overlay */}
+                        <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                          <div className="visualizer-bar" />
+                        </div>
+  
+                        <div className="absolute top-4 left-4">
+                          <span className={`px-3 py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-xs font-semibold border ${
+                            song.difficulty === 'Easy'
+                              ? 'text-neon-cyan border-neon-cyan/40'
+                              : 'text-neon-pink border-neon-pink/40'
+                          }`}>
+                            {song.difficulty}
+                          </span>
+                        </div>
+  
+                        {/* Price Badge */}
+                        <div className="absolute top-4 right-4">
+                          <span className="px-3 py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
+                            {song.price}
+                          </span>
+                        </div>
+                      </div>
+  
+                      <div className="p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
+                        <button
+                          onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
+                          disabled={isPaymentsDisabled}
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ${
+                            isPaymentsDisabled
+                              ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 cursor-pointer'
+                          }`}
+                        >
+                          <ShoppingBag className={`w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                          {isPaymentsDisabled ? t.currentlyDisabled : t.downloadSheets}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-20 bg-dark-800/20 rounded-2xl border border-dark-600/30 animate-in fade-in duration-300">
@@ -1031,6 +1132,7 @@ function App() {
           kofiId={selectedSong.kofiId}
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
+          language={language}
         />
       )}
 

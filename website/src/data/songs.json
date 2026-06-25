@@ -1,5 +1,16 @@
 [
   {
+    "id": "global_settings",
+    "title": "Global Settings",
+    "artist": "",
+    "difficulty": "Original",
+    "price": "",
+    "kofiId": "",
+    "coverImage": "",
+    "hidden": true,
+    "globalPaymentsDisabled": false
+  },
+  {
     "id": "1",
     "title": "Mary On A Cross",
     "artist": "Ghost",
