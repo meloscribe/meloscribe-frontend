@@ -6,6 +6,8 @@ import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedT
 import PaddleModal from './components/PaddleModal';
 import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
+import Terms from './pages/Terms';
+import Refunds from './pages/Refunds';
 import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 
@@ -39,6 +41,8 @@ const translations = {
     copyright: 'All rights reserved.',
     imprint: 'Imprint',
     privacy: 'Privacy Policy',
+    terms: 'Terms of Service',
+    refunds: 'Refund Policy',
   },
   de: {
     brand: 'meloscribe',
@@ -68,6 +72,8 @@ const translations = {
     copyright: 'Alle Rechte vorbehalten.',
     imprint: 'Impressum',
     privacy: 'Datenschutz',
+    terms: 'Nutzungsbedingungen',
+    refunds: 'Erstattungsrichtlinie',
   },
   fr: {
     brand: 'meloscribe',
@@ -97,6 +103,8 @@ const translations = {
     copyright: 'Tous droits réservés.',
     imprint: 'Mentions légales',
     privacy: 'Politique de confidentialité',
+    terms: 'Conditions d\'utilisation',
+    refunds: 'Politique de remboursement',
   },
 };
 
@@ -926,10 +934,14 @@ function App() {
             )}
           </div>
         </section>
-      ) : currentPath === '/impressum' ? (
+      ) : currentPath === '/imprint' ? (
         <Impressum onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/datenschutz' ? (
+      ) : currentPath === '/privacy' ? (
         <Datenschutz onBack={() => navigate('/')} language={language} />
+      ) : currentPath === '/terms' ? (
+        <Terms onBack={() => navigate('/')} language={language} />
+      ) : currentPath === '/refunds' ? (
+        <Refunds onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/suggestions' ? (
         <Suggestions onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath === '/success' ? (
@@ -978,18 +990,32 @@ function App() {
                   Suggestions
                 </a>
                 <a 
-                  href="/impressum" 
-                  onClick={(e) => { e.preventDefault(); navigate('/impressum'); }}
+                  href="/imprint" 
+                  onClick={(e) => { e.preventDefault(); navigate('/imprint'); }}
                   className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
                 >
                   {t.imprint}
                 </a>
                 <a 
-                  href="/datenschutz" 
-                  onClick={(e) => { e.preventDefault(); navigate('/datenschutz'); }}
+                  href="/privacy" 
+                  onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}
                   className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
                 >
                   {t.privacy}
+                </a>
+                <a 
+                  href="/terms" 
+                  onClick={(e) => { e.preventDefault(); navigate('/terms'); }}
+                  className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
+                >
+                  {t.terms}
+                </a>
+                <a 
+                  href="/refunds" 
+                  onClick={(e) => { e.preventDefault(); navigate('/refunds'); }}
+                  className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
+                >
+                  {t.refunds}
                 </a>
               </div>
             </div>

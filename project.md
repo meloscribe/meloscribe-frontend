@@ -44,6 +44,9 @@ A premium React + TypeScript + Tailwind CSS website for meloscribe, offering pre
 - [x] Replace Ko-fi integration with Paddle v2 checkout flow
 - [x] Implement secure /success and verify download flow via Cloudflare R2 presigned URLs
 - [x] Initialized Git repository for meloscribe-website and created initial commit (main branch)
+- [x] Add Terms of Service (/terms) and Refund Policy (/refunds) pages for Paddle compliance
+- [x] Rename `/impressum` and `/datenschutz` to `/imprint` and `/privacy` for standardized English URL naming
+
 
 ## Active Blockers
 - **DNS / Domain Propagation**: Waiting for domain nameservers on Spaceship to be updated to Cloudflare and DNS mapping (Vercel & Oracle backend A-record) to resolve.
