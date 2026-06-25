@@ -1,0 +1,14 @@
+# Learning Journal & Bug Ledger
+
+This document tracks technical insights, challenges, and resolved bugs throughout the lifecycle of the meloscribe website.
+
+## Learnings & Best Practices
+- **Ko-fi Widget Capabilities**: The official `overlay-widget.js` only provides tip/floating chat features and doesn't support specific shop products dynamically. Using a clean React iframe modal is the optimal way to display specific shop product checkouts on-page.
+- **Vite SPA Routing**: For single page applications without full routers, using basic react state bound to `window.location.pathname` and intercepting navigation provides lightweight, zero-dependency routing.
+- **Ko-fi Shop Scrape and Session Management**: Public shop links can be retrieved by executing a non-persistent Chromium browser instance with custom cookies loaded from a `kofi_cookie.txt` file, bypassing profile lock issues. Using Python's native `html.parser` serves as a robust fallback for parsing DOM trees if direct JavaScript evaluation errors out.
+- **Tailwind Header Border Transition Flashing**: Transitioning from `border-transparent` or `bg-transparent` to specific dark color/opacity states can cause a brief white line or color flash as the browser interpolates the color from `currentColor` (which defaults to white on dark themes). Specifying exact color bases with `0` opacity (e.g. `border-dark-600/0` and `bg-dark-900/0`) ensures the transition purely interpolates the alpha channel, creating a completely clean and seamless scroll-color shift.
+- **TypeScript AST Fragility**: Overwriting structured TypeScript files via regular expressions is brittle and easily broken by code formatters like Prettier. Storing the song array in a pure JSON file (`songs.json`) and casting it inside TypeScript (`as Song[]`) is indestructible and allows both Python and React components to read/write safely.
+- **PowerShell Desktop Shortcuts**: Running `.vbs` files via WScript can be blocked by Windows Script Host execution policies. Using a native PowerShell script that instantiates the Shell COM object bypasses these blocks, allowing creation of shortcuts with minimized window settings.
+- **Bypassing Audio CORS Restrictions**: Utilizing Web Audio API `MediaElementAudioSourceNode` triggers strict CORS checks if audio previews are served from external CDNs. Programmatic volume control via `window.setInterval` directly on an HTML5 `Audio` instance achieves smooth fades (300ms in, 200ms out) without throwing cross-origin security errors.
+- **Card Hitbox Expansions**: When wrapping card components or lists, absolute elements can intercept user interactions. Setting `pointer-events-none` on overlay effects (such as neon hover cards) ensures child buttons and interactive links (like checkout toggles) remain fully clickable.
+

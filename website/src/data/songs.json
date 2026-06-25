@@ -1,0 +1,333 @@
+[
+  {
+    "id": "1",
+    "title": "Mary On A Cross",
+    "artist": "Ghost",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "10cc0bc7d7",
+    "coverImage": "/covers/Mary On A Cross.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "hidden": true
+  },
+  {
+    "id": "2",
+    "title": "Sonne",
+    "artist": "Rammstein",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "5b8dbdf5a9",
+    "coverImage": "/covers/Sonne.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "3",
+    "title": "Je te laisserai des mots",
+    "artist": "Patrick Watson",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "54f987dccf",
+    "coverImage": "/covers/Je te laisserai des mots.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "4",
+    "title": "Closed Doors",
+    "artist": "Ismail",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "2e9e22aae1",
+    "coverImage": "/covers/Closed Doors.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "5",
+    "title": "Sweetest Rain",
+    "artist": "Abilene",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "d72030bb22",
+    "coverImage": "/covers/Sweetest Rain.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "6",
+    "title": "We wish you a merry Christmas",
+    "artist": "Traditional",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "ef8a9c6c80",
+    "coverImage": "/covers/We wish you a merry Christmas.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "7",
+    "title": "Nuvole Bianche (All Parts)",
+    "artist": "Ludovico Einaudi",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "73b15ca92f",
+    "coverImage": "/covers/Nuvole Bianche.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "8",
+    "title": "Experience (All Parts)",
+    "artist": "Ludovico Einaudi",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "c22482a763",
+    "coverImage": "/covers/Experience.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "9",
+    "title": "In This Shirt",
+    "artist": "The Irrepressibles",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "e2b0ca68de",
+    "coverImage": "/covers/In This Shirt.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "10",
+    "title": "Wet Hands",
+    "artist": "C418",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "cf9ffe91f4",
+    "coverImage": "/covers/Wet Hands.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "11",
+    "title": "The Scientist",
+    "artist": "Coldplay",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "097c7d1ced",
+    "coverImage": "/covers/The Scientist.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "12",
+    "title": "Icarus (All Parts)",
+    "artist": "Tony Ann",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "25e4417488",
+    "coverImage": "/covers/Icarus.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "13",
+    "title": "Mockingbird",
+    "artist": "Eminem",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "93ffb822e1",
+    "coverImage": "/covers/Mockingbird.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "14",
+    "title": "Succession theme",
+    "artist": "Nicholas Britell",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "485cdc4a89",
+    "coverImage": "/covers/Succession theme.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "15",
+    "title": "Past Lives",
+    "artist": "BØRNS",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "af4b42d91c",
+    "coverImage": "/covers/Past Lives.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "16",
+    "title": "No Surprises",
+    "artist": "Radiohead",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "42a3c2f1ed",
+    "coverImage": "/covers/No Surprises.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "17",
+    "title": "Greensleeves",
+    "artist": "Traditional",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "d0f1f917d3",
+    "coverImage": "/covers/Greensleeves.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "18",
+    "title": "God Rest Ye Merry, Gentlemen",
+    "artist": "Traditional",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "8cea5caad2",
+    "coverImage": "/covers/God Rest Ye Merry, Gentlemen.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "19",
+    "title": "Carol of the Bells",
+    "artist": "Mykola Leontovych",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "282240b14f",
+    "coverImage": "/covers/Carol of the Bells.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "20",
+    "title": "Believer (All Parts)",
+    "artist": "Imagine Dragons",
+    "difficulty": "Original",
+    "price": "5 €",
+    "kofiId": "0eacd716f6",
+    "coverImage": "/covers/Believer.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "21",
+    "title": "Silent Night",
+    "artist": "F. X. Gruber",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "8af05a9cf6",
+    "coverImage": "/covers/Silent Night.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "22",
+    "title": "Hallelujah",
+    "artist": "Leonard Cohen",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "8fcb4230be",
+    "coverImage": "/covers/Hallelujah.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "23",
+    "title": "Cornfield Chase",
+    "artist": "Hans Zimmer",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "1f7c94f492",
+    "coverImage": "/covers/Cornfield Chase.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "24",
+    "title": "Je te laisserai des mots (Part 2)",
+    "artist": "Patrick Watson",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "0d994c1f96",
+    "coverImage": "/covers/Je te laisserai des mots Part 2.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "25",
+    "title": "Je te laisserai des mots (Part 1)",
+    "artist": "Patrick Watson",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "92ea0ab21f",
+    "coverImage": "/covers/Je te laisserai des mots Part 1.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "26",
+    "title": "Aria Math (Part 2)",
+    "artist": "C418",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "54f1d059e7",
+    "coverImage": "/covers/Aria Math Part 2.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "27",
+    "title": "Aria Math (Part 1)",
+    "artist": "C418",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "e0c9e9f9f7",
+    "coverImage": "/covers/Aria Math Part 1.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "28",
+    "title": "Divenire (Part 2)",
+    "artist": "Ludovico Einaudi",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "9ddfe978f7",
+    "coverImage": "/covers/Divenire Part 2.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "29",
+    "title": "My singing Monsters Plant Island",
+    "artist": "Unknown",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "f160a4321e",
+    "coverImage": "/covers/My singing Monsters Plant Island.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  },
+  {
+    "id": "30",
+    "title": "Your love is my drug",
+    "artist": "Kesha",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "5001230bba",
+    "coverImage": "/covers/Your love is my drug.jpg",
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+  },
+  {
+    "id": "31",
+    "title": "Golden Brown x Love Story",
+    "artist": "Unknown",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "507ada6ad7",
+    "coverImage": "/covers/Golden Brown x Love Story.jpg",
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+  },
+  {
+    "id": "32",
+    "title": "River Flows in You",
+    "artist": "Yiruma",
+    "difficulty": "Original",
+    "price": "3 €",
+    "kofiId": "6d30b731a2",
+    "coverImage": "/covers/River Flows in You.jpg",
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+  },
+  {
+    "id": "33",
+    "title": "Viva la Vida (Part 2)",
+    "artist": "Coldplay",
+    "difficulty": "Original",
+    "price": "2 €",
+    "kofiId": "9c12e8b3b9",
+    "coverImage": "/covers/Viva la Vida Part 2.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+  }
+]
