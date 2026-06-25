@@ -46,6 +46,8 @@ A premium React + TypeScript + Tailwind CSS website for meloscribe, offering pre
 - [x] Initialized Git repository for meloscribe-website and created initial commit (main branch)
 - [x] Add Terms of Service (/terms) and Refund Policy (/refunds) pages for Paddle compliance
 - [x] Rename `/impressum` and `/datenschutz` to `/imprint` and `/privacy` for standardized English URL naming
+- [x] Add vercel.json configuration to handle SPA fallback routing to index.html
+
 
 
 ## Active Blockers
