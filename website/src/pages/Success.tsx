@@ -19,50 +19,53 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
   const queryParams = new URLSearchParams(window.location.search);
   const checkoutId = queryParams.get('checkout_id') || queryParams.get('checkout') || 'demo_checkout_123';
 
+  const API_BASE = import.meta.env.VITE_API_URL || 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'https://wooing-encrust-ladle.ngrok-free.dev'
+      : 'https://api.meloscribe.dev');
+
   useEffect(() => {
-    const verifyPurchase = async () => {
-      setLoading(true);
-      setError(null);
-      
+    let intervalId: number;
+    let attempts = 0;
+    const maxAttempts = 30; // 30 attempts * 1.5s = 45s max polling
+
+    const checkHash = async () => {
       try {
-        // Try calling the active backend (local development falls back to ngrok or api.meloscribe.dev)
-        const res = await fetch(`https://wooing-encrust-ladle.ngrok-free.dev/api/download/verify?checkout_id=${checkoutId}`);
+        const res = await fetch(`${API_BASE}/api/order/hash-by-checkout?checkout_id=${checkoutId}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.download_url) {
-            setDownloadUrl(data.download_url);
-            showToast(isDe ? 'Download-Link erfolgreich generiert!' : 'Download link successfully generated!');
-            
-            // Auto start download
-            const link = document.createElement('a');
-            link.href = data.download_url;
-            link.setAttribute('download', '');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          } else {
-            throw new Error('No download URL returned');
+          if (data && data.download_hash) {
+            clearInterval(intervalId);
+            window.history.pushState(null, '', `/order/${data.download_hash}`);
+            window.dispatchEvent(new PopStateEvent('popstate'));
+            return;
           }
-        } else {
-          throw new Error('Verification request failed');
         }
       } catch (err) {
-        console.warn('Backend verification failed, enabling premium sandbox demo mode.', err);
-        // Fallback for offline testing / sandbox
-        setTimeout(() => {
-          setDownloadUrl('https://example.com/demo-meloscribe-sheets.zip');
-          showToast(isDe ? 'Demo-Modus aktiv: Test-Download bereit!' : 'Demo mode active: Test download ready!');
-        }, 1500);
-      } finally {
-        // Allow fallback loader duration
-        setTimeout(() => {
-          setLoading(false);
-        }, 1800);
+        console.warn('Polling hash failed:', err);
+      }
+
+      attempts += 1;
+      if (attempts >= maxAttempts) {
+        clearInterval(intervalId);
+        setError(isDe ? 'Verifizierung dauerte zu lange. Bitte prüfe deine E-Mails.' : 'Verification timed out. Please check your email for the link.');
+        setLoading(false);
       }
     };
 
-    verifyPurchase();
-  }, [checkoutId, isDe, showToast]);
+    if (checkoutId === 'demo_checkout_123' || checkoutId.startsWith('demo_')) {
+      setTimeout(() => {
+        window.history.pushState(null, '', `/order/demo_hash_${checkoutId}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, 1500);
+      return;
+    }
+
+    intervalId = window.setInterval(checkHash, 1500);
+    checkHash();
+
+    return () => clearInterval(intervalId);
+  }, [checkoutId, isDe]);
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] flex items-center justify-center">

@@ -10,6 +10,7 @@ import Terms from './pages/Terms';
 import Refunds from './pages/Refunds';
 import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
+import OrderDetails from './pages/OrderDetails';
 
 // Translations
 const translations = {
@@ -306,11 +307,11 @@ function LanguageDropdown({ language, setLanguage }: { language: Language; setLa
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-900 hover:border-gray-400 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 dark:hover:text-white dark:hover:border-dark-400 transition-all duration-300"
+        className="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-900 hover:border-gray-400 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 dark:hover:text-white dark:hover:border-dark-400 transition-all duration-300"
       >
         <Globe className="w-4 h-4" />
-        <span className="text-sm font-medium">{language.toUpperCase()}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="text-sm font-medium hidden sm:inline">{language.toUpperCase()}</span>
+        <ChevronDown className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} hidden sm:inline`} />
       </button>
 
       {isOpen && (
@@ -334,6 +335,11 @@ function LanguageDropdown({ language, setLanguage }: { language: Language; setLa
     </div>
   );
 }
+
+const API_BASE = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'https://wooing-encrust-ladle.ngrok-free.dev'
+    : 'https://api.meloscribe.dev');
 
 function App() {
   const { i18n } = useTranslation();
@@ -470,11 +476,11 @@ function App() {
     }
   }, [i18n.resolvedLanguage, i18n.language]);
 
-  // Fetch live downloads from the local backend via ngrok tunnel on mount
+  // Fetch live downloads from the backend on mount
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('https://wooing-encrust-ladle.ngrok-free.dev/api/public/stats');
+        const res = await fetch(`${API_BASE}/api/public/stats`);
         if (res.ok) {
           const data = await res.json();
           if (data && typeof data.downloads === 'number') {
@@ -598,23 +604,23 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo and Nav links */}
-            <div className="flex items-center gap-6 sm:gap-8">
+            <div className="flex items-center gap-2 sm:gap-8">
               <a 
                 href="/" 
                 onClick={(e) => { e.preventDefault(); navigate('/'); }}
-                className="flex items-center gap-2 group"
+                className="flex items-center gap-1.5 sm:gap-2 group"
               >
-                <Music className="w-6 h-6 text-neon-cyan logo-music-note" />
-                <span className="font-display text-xl sm:text-2xl font-bold tracking-tight">
+                <Music className="w-5 h-5 sm:w-6 sm:h-6 text-neon-cyan logo-music-note" />
+                <span className="font-display text-lg sm:text-2xl font-bold tracking-tight">
                   <span className="text-gradient">{t.brand}</span>
                 </span>
               </a>
 
-              <nav className="flex items-center gap-4 sm:gap-6">
+              <nav className="flex items-center gap-2.5 sm:gap-6">
                 <a 
                   href="/sheets" 
                   onClick={(e) => { e.preventDefault(); navigate('/sheets'); }}
-                  className={`text-sm font-semibold transition-colors duration-300 ${
+                  className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
                     currentPath === '/sheets'
                       ? 'text-neon-cyan'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -625,7 +631,7 @@ function App() {
                 <a 
                   href="/suggestions" 
                   onClick={(e) => { e.preventDefault(); navigate('/suggestions'); }}
-                  className={`text-sm font-semibold transition-colors duration-300 ${
+                  className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
                     currentPath === '/suggestions'
                       ? 'text-neon-cyan'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -637,11 +643,11 @@ function App() {
             </div>
 
             {/* Right side - Theme + Language + Ko-fi support link */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               {/* Audio Preview Mute Toggle */}
               <button
                 onClick={() => setIsMuted(!isMuted)}
-                className={`flex items-center justify-center p-2 rounded-lg border transition-all duration-300 ${
+                className={`flex items-center justify-center p-1.5 sm:p-2 rounded-lg border transition-all duration-300 ${
                   !isMuted 
                     ? 'bg-neon-cyan/10 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle' 
                     : 'bg-gray-100 border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan hover:border-neon-cyan'
@@ -654,7 +660,7 @@ function App() {
               {/* Theme Toggle Button */}
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="flex items-center justify-center p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan dark:hover:text-neon-cyan hover:border-neon-cyan dark:hover:border-neon-cyan transition-all duration-300"
+                className="flex items-center justify-center p-1.5 sm:p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan dark:hover:text-neon-cyan hover:border-neon-cyan dark:hover:border-neon-cyan transition-all duration-300"
                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -668,11 +674,10 @@ function App() {
                 href={kofiUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neon-pink/10 border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/20 hover:border-neon-pink/60 hover:shadow-neon-pink-subtle font-medium text-sm transition-all duration-300 cursor-pointer"
+                className="flex items-center gap-2 p-1.5 sm:px-4 sm:py-2 rounded-lg bg-neon-pink/10 border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/20 hover:border-neon-pink/60 hover:shadow-neon-pink-subtle font-medium text-xs sm:text-sm transition-all duration-300 cursor-pointer"
               >
                 <Coffee className="w-4 h-4" />
                 <span className="hidden sm:inline">Buy me a Coffee</span>
-                <span className="inline sm:hidden">Support</span>
               </a>
             </div>
           </div>
@@ -1047,6 +1052,8 @@ function App() {
         <Suggestions onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath === '/success' ? (
         <Success onBack={() => navigate('/')} language={language} showToast={showToast} />
+      ) : currentPath.startsWith('/order/') ? (
+        <OrderDetails onBack={() => navigate('/')} language={language} showToast={showToast} hash={currentPath.substring('/order/'.length)} />
       ) : null}
 
 
@@ -1082,7 +1089,7 @@ function App() {
               <p className="text-gray-500 dark:text-gray-500 text-sm text-center sm:text-left">
                 &copy; {new Date().getFullYear()} {t.brand}. {t.copyright}
               </p>
-              <div className="flex items-center gap-6">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-x-6">
                 <a 
                   href="/suggestions" 
                   onClick={(e) => { e.preventDefault(); navigate('/suggestions'); }}

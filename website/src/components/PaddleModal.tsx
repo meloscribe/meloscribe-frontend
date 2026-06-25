@@ -106,11 +106,18 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
 
+  const generateSecureHash = () => {
+    const array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  };
+
   const handleRedirect = () => {
     setIsRedirecting(true);
     
     const paddle = (window as any).Paddle;
     if (typeof paddle !== 'undefined') {
+      const downloadHash = generateSecureHash();
       paddle.Checkout.open({
         items: [
           {
@@ -120,12 +127,13 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
         ],
         customData: {
           song_title: songTitle,
-          song_artist: songArtist
+          song_artist: songArtist,
+          download_hash: downloadHash
         },
         settings: {
           theme: 'dark',
           locale: activeLang,
-          successUrl: `${window.location.origin}/success`
+          successUrl: `${window.location.origin}/success?checkout_id={checkout_id}`
         }
       });
       

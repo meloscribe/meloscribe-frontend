@@ -47,8 +47,11 @@ A premium React + TypeScript + Tailwind CSS website for meloscribe, offering pre
 - [x] Add Terms of Service (/terms) and Refund Policy (/refunds) pages for Paddle compliance
 - [x] Rename `/impressum` and `/datenschutz` to `/imprint` and `/privacy` for standardized English URL naming
 - [x] Add vercel.json configuration to handle SPA fallback routing to index.html
-
-
+- [x] Fix mobile layout cut-off issues inside header elements (logo, mute, language, coffee button) and footer legal links
+- [x] Implement secure 3-step Paddle payment flow with permanent unique success pages `/order/:hash`
+- [x] Protect downloads with 15-minute Cloudflare R2 presigned URLs and a limit counter (max 20 downloads)
+- [x] Migrate `purchases` SQLite table with `download_hash` and `download_count` columns
+- [x] Configure SQLite connection timeout limits and enable WAL mode to prevent database locks
 
 ## Active Blockers
 - **DNS / Domain Propagation**: Waiting for domain nameservers on Spaceship to be updated to Cloudflare and DNS mapping (Vercel & Oracle backend A-record) to resolve.
