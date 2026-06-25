@@ -40,10 +40,14 @@ A premium React + TypeScript + Tailwind CSS website for meloscribe, offering pre
 - [x] Enhance logo hover animation with bouncy elastic motion and alternating neon drop shadows
 - [x] Complete global audio preview hover system on sheets catalog page grid
 - [x] Add click listeners to cover images in all grids to trigger the Ko-fi checkout modal (hitbox expansion)
-- [x] Extend TypeScript Song interface and playAudio logic to dynamically support highlight timestamps based on condensed/non-condensed structures
+- [x] Implement dynamic highlight timestamps support based on condensed structures
+- [x] Replace Ko-fi integration with Paddle v2 checkout flow
+- [x] Implement secure /success and verify download flow via Cloudflare R2 presigned URLs
+- [x] Initialized Git repository for meloscribe-website and created initial commit (main branch)
 
 ## Active Blockers
-- None.
+- **DNS / Domain Propagation**: Waiting for domain nameservers on Spaceship to be updated to Cloudflare and DNS mapping (Vercel & Oracle backend A-record) to resolve.
+- **SSL Certificate**: Let's Encrypt Certbot setup on Oracle server pending until DNS propagation is complete.
 
 ## Architecture Notes
 - React SPA built with Vite.
@@ -53,3 +57,26 @@ A premium React + TypeScript + Tailwind CSS website for meloscribe, offering pre
 - Header scroll transitions use exact color bases with alpha interpolation to prevent browser color flashing.
 - Catalog data stored in `songs.json` to prevent AST parsing issues during edits.
 - Global HTML5 Audio state management with Programmatic Fade-In (300ms) and Fade-Out (200ms) to bypass cross-origin browser autoplay blockades.
+
+## Infrastructure & Hosting Architecture (meloscribe.dev)
+
+This section documents the infrastructure, network security, and deployment layout established on **2026-06-25** to host the Meloscribe platform securely and for free.
+
+### 1. Domain & DNS Control (Cloudflare)
+The domain `meloscribe.dev` is registered on **Spaceship**. The domain nameservers are pointed to **Cloudflare** for unified DNS dashboard management, SSL edge security, and DDoS protection.
+
+**DNS Settings (Cloudflare):**
+- `meloscribe.dev` (Apex) -> `A` Record -> `76.76.21.21` (Vercel Anycast IP) | DNS Only (Graue Wolke)
+- `www.meloscribe.dev` -> `CNAME` Record -> `cname.vercel-dns.com` | DNS Only (Graue Wolke)
+- `api.meloscribe.dev` -> `A` Record -> `152.70.23.171` (Oracle VM Public IP) | DNS Only (Graue Wolke)
+
+### 2. Frontend Hosting (Vercel)
+- **Source Code**: React/Vite/TS SPA codebase is located in the GitHub repository `meloscribe-website`.
+- **Deployment Flow**: Linked directly to Vercel. Every push to the `main` branch triggers an automated build and deploy.
+- **Analytics**: Vercel Analytics integration tracks views and demographics without requiring a cookie consent banner.
+
+### 3. Backend Hosting (Oracle Cloud VM)
+- **Infrastructure**: Oracle Cloud Infrastructure (OCI) Free-Tier Ubuntu 24.04 LTS Instance (`152.70.23.171`).
+- **Web Server & Reverse Proxy**: Nginx proxypasses public HTTPS requests for `api.meloscribe.dev` to localhost port `8787` (Uvicorn running FastAPI).
+- **SSL Certificate**: Let's Encrypt TLS certificate generated via Certbot. Automatic renewal is handled by `certbot.timer` systemd service.
+
