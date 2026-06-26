@@ -66,7 +66,7 @@ export default function Impressum({ onBack, language }: ImpressumProps) {
               <div className="space-y-2">
                 <p className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-neon-cyan" />
-                  <span>Email: <strong>ventoba.sm@gmail.com</strong></span>
+                  <span>Email: <strong>info@meloscribe.dev</strong></span>
                 </p>
               </div>
             </div>

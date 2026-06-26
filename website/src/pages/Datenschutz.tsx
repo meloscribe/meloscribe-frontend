@@ -63,7 +63,7 @@ export default function Datenschutz({ onBack, language }: DatenschutzProps) {
                 <p>Wolfgelts 10</p>
                 <p>88353 Kißlegg</p>
                 <p>{language === 'de' ? 'Deutschland' : 'Germany'}</p>
-                <p>E-Mail: <strong>ventoba.sm@gmail.com</strong></p>
+                <p>E-Mail: <strong>info@meloscribe.dev</strong></p>
               </div>
             </div>
 
@@ -94,40 +94,38 @@ export default function Datenschutz({ onBack, language }: DatenschutzProps) {
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
-                {language === 'de' ? '4. Bezahlvorgang & Digitale Auslieferung (Ko-fi)' : '4. Checkout & Digital Delivery (Ko-fi)'}
+                {language === 'de' ? '4. Bezahlvorgang & Digitale Auslieferung (Paddle)' : '4. Checkout & Digital Delivery (Paddle)'}
               </h2>
               <p>
                 {language === 'de' ? (
                   <>
-                    Der Erwerb und Download von Klaviernoten-PDFs läuft über die Bezahl- und Shop-Plattform <strong>Ko-fi</strong> (Ko-fi Labs). 
-                    Wenn Sie ein Sheet erwerben, läuft im Hintergrund folgendes System ab:
+                    Der Erwerb und Download von Klaviernoten, MIDI- und MP4-Dateien läuft über die Bezahl- und Shop-Plattform <strong>Paddle.com</strong> (Paddle.com Market Ltd).
+                    Wenn Sie ein Sheet-Music-Paket erwerben, läuft im Hintergrund folgendes System ab:
                     <br /><br />
-                    1. <strong>Der Klick:</strong> Durch Klick auf den Download-Button öffnet sich die sichere Checkout-Schnittstelle von Ko-fi für das gewählte Produkt.
+                    1. <strong>Der Klick:</strong> Durch Klick auf den „Buy"-Button öffnet sich das sichere Checkout-Overlay von Paddle für das gewählte Produkt.
                     <br />
-                    2. <strong>Die Zahlung:</strong> Zur Bestellabwicklung geben Sie Ihre E-Mail-Adresse ein und zahlen per PayPal oder Kreditkarte.
+                    2. <strong>Die Zahlung:</strong> Zur Bestellabwicklung geben Sie Ihre E-Mail-Adresse ein und zahlen per Kreditkarte oder anderen von Paddle unterstützten Methoden.
                     <br />
-                    3. <strong>Der Sofort-Download:</strong> Direkt nach erfolgreicher Zahlung springt das Zahlungsfenster um und bietet einen „Download Files“-Button an. Das PDF-Dokument kann direkt gespeichert werden, ohne unsere Seite zu verlassen.
+                    3. <strong>Der Download:</strong> Direkt nach erfolgreicher Zahlung werden Sie auf eine sichere Download-Seite weitergeleitet. Jede Datei (PDF, MIDI, MP4) wird als separater, temporärer 15-Minuten-Link ausgeliefert, der direkt aus dem Cloudflare R2-Speicher bezogen wird.
                     <br />
-                    4. <strong>Die Sicherheits-E-Mail:</strong> Ko-fi sendet automatisch eine Bestätigungs-E-Mail mit einem personalisierten, temporären Download-Link an Ihre angegebene Adresse, falls das Fenster versehentlich geschlossen wird.
+                    4. <strong>Die Sicherheits-E-Mail:</strong> Paddle sendet automatisch eine Kaufbestätigung mit der Zugangs-URL an Ihre angegebene Adresse, falls Sie die Download-Seite versehentlich schließen. Download-Links können bis zu 20× genutzt werden.
                     <br /><br />
-                    Die Rechtsgrundlage für die Verarbeitung dieser Bestell- und Kontaktdaten ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung zur Bereitstellung der digitalen Ware). 
-                    Die Bindung personalisierter, temporärer Download-Links dient dem Schutz digitaler Urheberrechte vor unbefugter Weiterverbreitung, was unser berechtigtes Interesse nach <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> darstellt.
+                    Die Rechtsgrundlage ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung). Die Bindung an temporäre Download-Links dient dem Schutz digitaler Urheberrechte (<strong>Art. 6 Abs. 1 lit. f DSGVO</strong>).
                   </>
                 ) : (
                   <>
-                    The purchase and download of sheet music PDFs is processed via the checkout and shop platform <strong>Ko-fi</strong> (Ko-fi Labs). 
-                    When you purchase a sheet, the following step-by-step workflow is initiated:
+                    The purchase and download of sheet music PDFs, MIDI, and MP4 files is processed via the checkout and billing platform <strong>Paddle.com</strong> (Paddle.com Market Ltd).
+                    When you purchase a practice package, the following step-by-step workflow is initiated:
                     <br /><br />
-                    1. <strong>The Click:</strong> Clicking the download button opens Ko-fi's secure checkout interface for that specific product.
+                    1. <strong>The Click:</strong> Clicking the "Buy" button opens Paddle's secure checkout overlay for the selected product.
                     <br />
-                    2. <strong>The Payment:</strong> You enter your email address to complete the purchase and pay via PayPal or credit card.
+                    2. <strong>The Payment:</strong> You enter your email address and pay by credit card or another method supported by Paddle.
                     <br />
-                    3. <strong>Immediate Download:</strong> Instantly after a successful transaction, the checkout window shows a "Download Files" button so you can save your PDF right away without leaving our site.
+                    3. <strong>The Download:</strong> Immediately after a successful transaction, you are redirected to a secure download page. Each file (PDF, MIDI, MP4) is delivered as a separate, temporary 15-minute link served directly from Cloudflare R2 storage.
                     <br />
-                    4. <strong>Backup Email:</strong> Ko-fi automatically sends a confirmation email containing a personalized, temporary, buyer-bound download link to your inbox.
+                    4. <strong>Backup Email:</strong> Paddle automatically sends a purchase confirmation containing your download URL to your inbox. Download links can be used up to 20 times.
                     <br /><br />
-                    The legal basis for processing your order and email details is <strong>Art. 6(1)(b) GDPR</strong> (performance of a contract to deliver the digital good). 
-                    The buyer-bound limitation of download links serves the protection of digital copyright against unauthorized distribution, which constitutes our legitimate interest according to <strong>Art. 6(1)(f) GDPR</strong>.
+                    The legal basis is <strong>Art. 6(1)(b) GDPR</strong> (performance of a contract). The buyer-bound limitation of download links serves the protection of digital copyright (<strong>Art. 6(1)(f) GDPR</strong>).
                   </>
                 )}
               </p>
