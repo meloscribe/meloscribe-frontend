@@ -536,6 +536,7 @@ function App() {
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
+  const [formatFilter, setFormatFilter] = useState<'All' | 'Viral Part' | 'Full Arrangement'>('All');
 
   // Toast notifications state
   const [toast, setToast] = useState<string | null>(null);
@@ -559,8 +560,14 @@ function App() {
     const matchesDifficulty = 
       difficultyFilter === 'All' || 
       song.difficulty === difficultyFilter;
+
+    const isSongCondensed = song.condensed || song.isCondensed;
+    const matchesFormat = 
+      formatFilter === 'All' ||
+      (formatFilter === 'Viral Part' && isSongCondensed) ||
+      (formatFilter === 'Full Arrangement' && !isSongCondensed);
       
-    return matchesSearch && matchesDifficulty;
+    return matchesSearch && matchesDifficulty && matchesFormat;
   });
 
   useEffect(() => {
@@ -802,22 +809,28 @@ function App() {
                           <div className="visualizer-bar" />
                         </div>
   
-                        {/* Difficulty/Format Badge */}
-                        <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-                          <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[10px] sm:text-xs font-semibold border ${
+                        {/* Badges Container */}
+                        <div className="absolute top-2 left-0 right-0 px-2 sm:top-4 sm:px-4 flex items-center justify-between gap-1 sm:gap-2">
+                          {/* Difficulty Badge */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
+                            song.difficulty === 'Easy'
+                              ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
+                              : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
+                          }`}>
+                            {song.difficulty}
+                          </span>
+
+                          {/* Format Badge */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
                             song.condensed || song.isCondensed
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : song.difficulty === 'Easy'
-                                ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
-                                : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
+                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.condensed || song.isCondensed ? 'Viral Part' : song.difficulty === 'Original' ? 'Full Song' : 'Easy'}
+                            {song.condensed || song.isCondensed ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
-                        </div>
-  
-                        {/* Price Badge */}
-                        <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
-                          <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[10px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
+
+                          {/* Price Badge */}
+                          <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
                             {song.price}
                           </span>
                         </div>
@@ -937,23 +950,46 @@ function App() {
                 </svg>
               </div>
 
-              {/* Difficulty Filter */}
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <span className="text-sm text-gray-500 dark:text-gray-400">Filter:</span>
-                <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                  {['All', 'Original', 'Easy'].map((diff) => (
-                    <button
-                      key={diff}
-                      onClick={() => setDifficultyFilter(diff)}
-                      className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
-                        difficultyFilter === diff
-                          ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
-                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
-                      }`}
-                    >
-                      {diff}
-                    </button>
-                  ))}
+              {/* Filters Container */}
+              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end">
+                {/* Difficulty Filter */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{language === 'de' ? 'Schwierigkeit:' : 'Difficulty:'}</span>
+                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                    {['All', 'Original', 'Easy'].map((diff) => (
+                      <button
+                        key={diff}
+                        onClick={() => setDifficultyFilter(diff)}
+                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
+                          difficultyFilter === diff
+                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                        }`}
+                      >
+                        {diff}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Format Filter */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Format:</span>
+                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                    {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
+                      <button
+                        key={form}
+                        onClick={() => setFormatFilter(form as any)}
+                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                          formatFilter === form
+                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                        }`}
+                      >
+                        {form === 'All' ? 'All' : form === 'Viral Part' ? 'Viral Part' : 'Full Arrangement'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1003,22 +1039,28 @@ function App() {
                           <div className="visualizer-bar" />
                         </div>
   
-                        {/* Difficulty/Format Badge */}
-                        <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-                          <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[10px] sm:text-xs font-semibold border ${
+                        {/* Badges Container */}
+                        <div className="absolute top-2 left-0 right-0 px-2 sm:top-4 sm:px-4 flex items-center justify-between gap-1 sm:gap-2">
+                          {/* Difficulty Badge */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
+                            song.difficulty === 'Easy'
+                              ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
+                              : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
+                          }`}>
+                            {song.difficulty}
+                          </span>
+
+                          {/* Format Badge */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
                             song.condensed || song.isCondensed
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : song.difficulty === 'Easy'
-                                ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
-                                : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
+                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.condensed || song.isCondensed ? 'Viral Part' : song.difficulty === 'Original' ? 'Full Song' : 'Easy'}
+                            {song.condensed || song.isCondensed ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
-                        </div>
-  
-                        {/* Price Badge */}
-                        <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
-                          <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[10px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle">
+
+                          {/* Price Badge */}
+                          <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
                             {song.price}
                           </span>
                         </div>
