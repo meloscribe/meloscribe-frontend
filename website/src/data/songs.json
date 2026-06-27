@@ -8,7 +8,7 @@
     "kofiId": "",
     "coverImage": "",
     "hidden": true,
-    "globalPaymentsDisabled": false
+    "globalPaymentsDisabled": true
   },
   {
     "id": "1",
