@@ -332,7 +332,7 @@
     "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
     "audioPreviewUrl": "/audio/river_flows_in_you.ogg",
     "paymentsDisabled": true,
-    "hidden": true
+    "hidden": false
   },
   {
     "id": "33",
