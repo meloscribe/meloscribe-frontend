@@ -83,8 +83,8 @@ export default function Refunds({ onBack, language }: RefundsProps) {
               </h2>
               <p className="text-sm">
                 {language === 'de'
-                   ? 'Um eine Rückerstattung zu beantragen, wende dich bitte unter Angabe deines Kaufbelegs und der Rechnungsnummer an info@meloscribe.dev. Unser Händler Paddle bearbeitet alle berechtigten Rückerstattungsanträge.'
-                   : 'To request a refund, please contact us at info@meloscribe.dev with your proof of purchase and invoice number. Our billing partner Paddle handles the processing of all approved refund requests.'}
+                   ? 'Um eine Rückerstattung zu beantragen, wende dich bitte unter Angabe deines Kaufbelegs und der Rechnungsnummer an <a href="mailto:info@meloscribe.dev" class="text-neon-cyan hover:underline">info@meloscribe.dev</a>. Unser Händler Paddle bearbeitet alle berechtigten Rückerstattungsanträge.'
+                   : 'To request a refund, please contact us at <a href="mailto:info@meloscribe.dev" class="text-neon-cyan hover:underline">info@meloscribe.dev</a> with your proof of purchase and invoice number. Our billing partner Paddle handles the processing of all approved refund requests.'}
               </p>
             </div>
 

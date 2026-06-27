@@ -8,12 +8,12 @@ export interface SocialPlatformConfig {
 }
 
 export const socialPlatforms: SocialPlatformConfig[] = [
-  { name: 'TikTok', handle: '@meloscribe', url: 'https://tiktok.com/@meloscribe', followers: 42000 },
-  { name: 'YouTube', handle: '@meloscribe', url: 'https://youtube.com/@meloscribe', followers: 5400 },
-  { name: 'Instagram', handle: '@meloscribe', url: 'https://instagram.com/@meloscribe', followers: 3200 },
-  { name: 'Pinterest', handle: '@meloscribe', url: 'https://pinterest.com/@meloscribe', followers: 1200 },
-  { name: 'Facebook', handle: '@meloscribe', url: 'https://facebook.com/meloscribe', followers: 400 },
-  { name: 'Threads', handle: '@meloscribe', url: 'https://threads.net/@meloscribe', followers: 800 }
+  { name: 'TikTok', handle: '@meloscribe', url: 'https://tiktok.com/@meloscribe', followers: 42 },
+  { name: 'YouTube', handle: '@meloscribe', url: 'https://youtube.com/@meloscribe', followers: 15 },
+  { name: 'Instagram', handle: '@meloscribe', url: 'https://instagram.com/@meloscribe', followers: 18 },
+  { name: 'Pinterest', handle: '@meloscribe', url: 'https://pinterest.com/@meloscribe', followers: 0 },
+  { name: 'Facebook', handle: '@meloscribe', url: 'https://facebook.com/meloscribe', followers: 0 },
+  { name: 'Threads', handle: '@meloscribe', url: 'https://threads.net/@meloscribe', followers: 0 }
 ];
 
 export const kofiUrl = 'https://ko-fi.com/meloscribe';
@@ -27,7 +27,7 @@ export function formatFollowersCount(count: number): string {
   if (count >= 1000) {
     return (count / 1000).toFixed(0) + 'K+';
   }
-  return count.toString();
+  return count.toString() + '+';
 }
 
 export const formattedTotalFollowers = formatFollowersCount(totalFollowers);
@@ -42,11 +42,10 @@ export function formatSheetsCount(count: number): string {
 
 export const formattedTotalSheets = formatSheetsCount(totalSheets);
 
-// Downloads: manually updated — Ko-fi has no public purchases API.
-// Update this number periodically from your Ko-fi dashboard.
-export const totalDownloads = 500;
+// Customers: actual purchases from Paddle/Ko-fi
+export const totalCustomers = 14;
 
-export function formatDownloadsCount(count: number): string {
+export function formatCustomersCount(count: number): string {
   if (count >= 1000000) {
     return (count / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
   }
@@ -56,4 +55,5 @@ export function formatDownloadsCount(count: number): string {
   return count.toString();
 }
 
-export const formattedTotalDownloads = formatDownloadsCount(totalDownloads);
+export const formattedTotalCustomers = formatCustomersCount(totalCustomers);
+

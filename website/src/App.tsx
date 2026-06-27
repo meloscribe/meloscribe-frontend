@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Music, ShoppingBag, Coffee, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
-import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalDownloads, formatDownloadsCount, kofiUrl } from './data/siteConfig';
+import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, kofiUrl } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
 import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
@@ -39,7 +39,7 @@ const translations = {
     threads: 'Threads',
     statsFollowers: 'Total Followers',
     statsSheets: 'Sheet Arrangements',
-    statsDownloads: 'Downloads',
+    statsCustomers: 'Customers',
     copyright: 'All rights reserved.',
     imprint: 'Imprint',
     privacy: 'Privacy Policy',
@@ -71,7 +71,7 @@ const translations = {
     threads: 'Threads',
     statsFollowers: 'Follower insgesamt',
     statsSheets: 'Noten Arrangements',
-    statsDownloads: 'Downloads',
+    statsCustomers: 'Kunden',
     copyright: 'Alle Rechte vorbehalten.',
     imprint: 'Impressum',
     privacy: 'Datenschutz',
@@ -103,7 +103,7 @@ const translations = {
     threads: 'Threads',
     statsFollowers: 'Total des abonnés',
     statsSheets: 'Arrangements',
-    statsDownloads: 'Téléchargements',
+    statsCustomers: 'Clients',
     copyright: 'Tous droits réservés.',
     imprint: 'Mentions légales',
     privacy: 'Politique de confidentialité',
@@ -135,7 +135,7 @@ const translations = {
     threads: 'Threads',
     statsFollowers: 'Seguidores totales',
     statsSheets: 'Arreglos de partituras',
-    statsDownloads: 'Descargas',
+    statsCustomers: 'Clientes',
     copyright: 'Todos los derechos reservados.',
     imprint: 'Aviso legal',
     privacy: 'Política de privacidad',
@@ -167,7 +167,7 @@ const translations = {
     threads: 'Threads',
     statsFollowers: 'Follower totali',
     statsSheets: 'Arrangamenti spartiti',
-    statsDownloads: 'Download',
+    statsCustomers: 'Clienti',
     copyright: 'Tutti i diritti riservati.',
     imprint: 'Note legali',
     privacy: 'Informativa sulla privacy',
@@ -348,7 +348,7 @@ function App() {
     const current = (i18n.resolvedLanguage || i18n.language) as Language;
     return ['en', 'de', 'fr', 'es', 'it'].includes(current) ? current : 'en';
   });
-  const [liveDownloads, setLiveDownloads] = useState<string>(formattedTotalDownloads);
+  const [liveCustomers, setLiveCustomers] = useState<string>(formattedTotalCustomers);
   const t = translations[language];
 
   // Audio Preview States & Refs
@@ -476,15 +476,15 @@ function App() {
     }
   }, [i18n.resolvedLanguage, i18n.language]);
 
-  // Fetch live downloads from the backend on mount
+  // Fetch live customers from the backend on mount
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/public/stats`);
         if (res.ok) {
           const data = await res.json();
-          if (data && typeof data.downloads === 'number') {
-            setLiveDownloads(formatDownloadsCount(data.downloads));
+          if (data && typeof data.customers === 'number') {
+            setLiveCustomers(formatCustomersCount(data.customers));
           }
         }
       } catch (err) {
@@ -892,8 +892,8 @@ function App() {
                   <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsSheets}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{liveDownloads}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsDownloads}</div>
+                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{liveCustomers}</div>
+                  <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsCustomers}</div>
                 </div>
               </div>
             </div>

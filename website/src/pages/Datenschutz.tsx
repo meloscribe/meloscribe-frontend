@@ -63,7 +63,7 @@ export default function Datenschutz({ onBack, language }: DatenschutzProps) {
                 <p>Wolfgelts 10</p>
                 <p>88353 Kißlegg</p>
                 <p>{language === 'de' ? 'Deutschland' : 'Germany'}</p>
-                <p>E-Mail: <strong>info@meloscribe.dev</strong></p>
+                <p>E-Mail: <a href="mailto:info@meloscribe.dev" className="hover:text-neon-pink transition-colors"><strong>info@meloscribe.dev</strong></a></p>
               </div>
             </div>
 
