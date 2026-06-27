@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play } from 'lucide-react';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface PaddleModalProps {
   songTitle: string;
   songArtist: string;
   language: string;
-  isCondensed?: boolean;
+  format?: 'viral_part' | 'full_arrangement';
 }
 
 const translations = {
@@ -99,8 +99,43 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, isCondensed = false }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement' }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [loadingVideo, setLoadingVideo] = useState(false);
+  const [showLightbox, setShowLightbox] = useState(false);
+
+  const isCondensed = format === 'viral_part';
+
+  useEffect(() => {
+    if (isOpen && songTitle) {
+      setLoadingVideo(true);
+      setVideoUrl(null);
+      
+      const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+      
+      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8787'
+        : 'https://api.meloscribe.dev';
+         
+      fetch(`${apiBaseUrl}/api/public/preview-video?song_name=${encodeURIComponent(cleanTitle)}`)
+        .then(res => {
+          if (res.ok) return res.json();
+          throw new Error("Failed to fetch video URL");
+        })
+        .then(data => {
+          if (data && data.download_url) {
+            setVideoUrl(data.download_url);
+          }
+        })
+        .catch(err => {
+          console.error("Preview video fetch error:", err);
+        })
+        .finally(() => {
+          setLoadingVideo(false);
+        });
+    }
+  }, [isOpen, songTitle]);
 
   if (!isOpen) return null;
 
@@ -184,7 +219,10 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
         <div className="p-6 overflow-y-auto space-y-6 relative z-10">
           {/* Song Overview Card */}
           <div className="flex items-center gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
-            <div className="w-16 h-16 rounded-lg bg-gray-100 dark:bg-dark-950 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center">
+            <div 
+              onClick={() => videoUrl && setShowLightbox(true)}
+              className={`w-16 h-16 rounded-lg bg-gray-100 dark:bg-dark-950 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
+            >
               {/* Cover Art Image or Fallback */}
               <img 
                 src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
@@ -194,7 +232,14 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <Music className="w-6 h-6 text-neon-cyan absolute" />
+              <Music className="w-6 h-6 text-neon-cyan absolute group-hover/thumb:opacity-0 transition-opacity" />
+              
+              {/* Play Overlay */}
+              {videoUrl && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                  <Play className="w-6 h-6 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
+                </div>
+              )}
             </div>
             
             <div className="flex-1 min-w-0">
@@ -296,6 +341,44 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           <span className="text-gray-500 dark:text-gray-500">{t.merchantOfRecord}</span>
         </div>
       </div>
+
+      {/* Lightbox Pop-up */}
+      {showLightbox && videoUrl && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-200">
+          <div 
+            className="absolute inset-0 cursor-pointer" 
+            onClick={() => setShowLightbox(false)}
+          />
+          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col aspect-video">
+            
+            {/* Header / Title bar */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-dark-600/50 bg-dark-900/50 relative z-10">
+              <div>
+                <span className="text-xs font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
+                <h4 className="text-sm font-semibold text-white mt-0.5">{songTitle}</h4>
+              </div>
+              <button 
+                onClick={() => setShowLightbox(false)}
+                className="p-1.5 rounded-lg bg-dark-700/50 border border-dark-500/50 text-gray-400 hover:text-white transition-all duration-200 focus:outline-none cursor-pointer"
+                aria-label="Close preview"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Video Player */}
+            <div className="flex-1 bg-black flex items-center justify-center relative">
+              <video 
+                src={videoUrl}
+                controls
+                autoPlay
+                playsInline
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

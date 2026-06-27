@@ -329,7 +329,8 @@
     "price": "3 €",
     "kofiId": "6d30b731a2",
     "coverImage": "/covers/River Flows in You.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
+    "audioPreviewUrl": "/audio/river_flows_in_you.ogg"
   },
   {
     "id": "33",

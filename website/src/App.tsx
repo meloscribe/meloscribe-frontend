@@ -403,7 +403,7 @@ function App() {
     }
 
     const audioUrl = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
-    const isCondensed = song.isCondensed || song.condensed;
+    const isCondensed = song.format === 'viral_part';
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? (isCondensed ? 15 : 0);
 
     const audio = new Audio(audioUrl);
@@ -561,7 +561,7 @@ function App() {
       difficultyFilter === 'All' || 
       song.difficulty === difficultyFilter;
 
-    const isSongCondensed = song.condensed || song.isCondensed;
+    const isSongCondensed = song.format === 'viral_part';
     const matchesFormat = 
       formatFilter === 'All' ||
       (formatFilter === 'Viral Part' && isSongCondensed) ||
@@ -822,11 +822,11 @@ function App() {
 
                           {/* Format Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.condensed || song.isCondensed
+                            song.format === 'viral_part'
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.condensed || song.isCondensed ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {song.format === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
 
                           {/* Price Badge */}
@@ -1052,11 +1052,11 @@ function App() {
 
                           {/* Format Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.condensed || song.isCondensed
+                            song.format === 'viral_part'
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.condensed || song.isCondensed ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {song.format === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
 
                           {/* Price Badge */}
@@ -1227,7 +1227,7 @@ function App() {
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
           language={language}
-          isCondensed={selectedSong.condensed || selectedSong.isCondensed}
+          format={selectedSong.format}
         />
       )}
 
