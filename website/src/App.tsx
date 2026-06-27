@@ -26,7 +26,7 @@ const translations = {
     scrollToExplore: 'Scroll',
     popularArrangements: 'Popular Arrangements',
     popularDesc: 'Discover our most downloaded piano sheets',
-    downloadSheets: 'Unlock Sheets',
+    downloadSheets: 'Sheets + FREE Videos & MIDI',
     currentlyDisabled: 'Currently Disabled',
     viewAll: 'View All Arrangements',
     joinCommunity: 'Join the Community',
@@ -58,7 +58,7 @@ const translations = {
     scrollToExplore: 'Scrollen',
     popularArrangements: 'Beliebte Arrangements',
     popularDesc: 'Entdecke unsere meist heruntergeladenen Klaviernoten',
-    downloadSheets: 'Noten freischalten',
+    downloadSheets: 'Noten + GRATIS Videos & MIDI',
     currentlyDisabled: 'Derzeit deaktiviert',
     viewAll: 'Alle Arrangements ansehen',
     joinCommunity: 'Werde Teil der Community',
@@ -90,7 +90,7 @@ const translations = {
     scrollToExplore: 'Défiler',
     popularArrangements: 'Arrangements populaires',
     popularDesc: 'Découvrez nos partitions les plus téléchargées',
-    downloadSheets: 'Débloquer les partitions',
+    downloadSheets: 'Partitions + Vidéos & MIDI GRATUITS',
     currentlyDisabled: 'Actuellement désactivé',
     viewAll: 'Voir tous les arrangements',
     joinCommunity: 'Reignez la communauté',
@@ -122,7 +122,7 @@ const translations = {
     scrollToExplore: 'Desplazarse',
     popularArrangements: 'Arreglos populares',
     popularDesc: 'Descubre nuestras partituras de piano más descargadas',
-    downloadSheets: 'Desbloquear partituras',
+    downloadSheets: 'Partituras + Videos & MIDI GRATIS',
     currentlyDisabled: 'Actualmente desactivado',
     viewAll: 'Ver todos los arreglos',
     joinCommunity: 'Únete a la comunidad',
@@ -154,7 +154,7 @@ const translations = {
     scrollToExplore: 'Scorri',
     popularArrangements: 'Arrangamenti popolari',
     popularDesc: 'Scopri i nostri spartiti per pianoforte più scaricati',
-    downloadSheets: 'Sblocca gli spartiti',
+    downloadSheets: 'Spartiti + Video & MIDI GRATIS',
     currentlyDisabled: 'Attualmente disabilitato',
     viewAll: 'Visualizza tutti gli arrangiamenti',
     joinCommunity: 'Unisciti alla comunità',
@@ -349,6 +349,7 @@ function App() {
     return ['en', 'de', 'fr', 'es', 'it'].includes(current) ? current : 'en';
   });
   const [liveCustomers, setLiveCustomers] = useState<string>(formattedTotalCustomers);
+  const [liveFollowers, setLiveFollowers] = useState<string>(formattedTotalFollowers);
   const t = translations[language];
 
   // Audio Preview States & Refs
@@ -476,7 +477,7 @@ function App() {
     }
   }, [i18n.resolvedLanguage, i18n.language]);
 
-  // Fetch live customers from the backend on mount
+  // Fetch live customers and followers from the backend on mount
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -485,6 +486,9 @@ function App() {
           const data = await res.json();
           if (data && typeof data.customers === 'number') {
             setLiveCustomers(formatCustomersCount(data.customers));
+          }
+          if (data && typeof data.followers === 'number') {
+            setLiveFollowers(formatFollowersCount(data.followers));
           }
         }
       } catch (err) {
@@ -798,14 +802,16 @@ function App() {
                           <div className="visualizer-bar" />
                         </div>
   
-                        {/* Difficulty Badge */}
+                        {/* Difficulty/Format Badge */}
                         <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
                           <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[10px] sm:text-xs font-semibold border ${
-                            song.difficulty === 'Easy'
-                              ? 'text-neon-cyan border-neon-cyan/40'
-                              : 'text-neon-pink border-neon-pink/40'
+                            song.condensed || song.isCondensed
+                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
+                              : song.difficulty === 'Easy'
+                                ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
+                                : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
                           }`}>
-                            {song.difficulty}
+                            {song.condensed || song.isCondensed ? 'Viral Part' : song.difficulty === 'Original' ? 'Full Song' : 'Easy'}
                           </span>
                         </div>
   
@@ -883,7 +889,7 @@ function App() {
               <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-16 pt-16 border-t border-gray-200 dark:border-dark-600/50">
                 <div className="text-center">
                   <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">
-                    {formattedTotalFollowers}
+                    {liveFollowers}
                   </div>
                   <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsFollowers}</div>
                 </div>
@@ -996,13 +1002,16 @@ function App() {
                           <div className="visualizer-bar" />
                         </div>
   
+                        {/* Difficulty/Format Badge */}
                         <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
                           <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[10px] sm:text-xs font-semibold border ${
-                            song.difficulty === 'Easy'
-                              ? 'text-neon-cyan border-neon-cyan/40'
-                              : 'text-neon-pink border-neon-pink/40'
+                            song.condensed || song.isCondensed
+                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
+                              : song.difficulty === 'Easy'
+                                ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
+                                : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
                           }`}>
-                            {song.difficulty}
+                            {song.condensed || song.isCondensed ? 'Viral Part' : song.difficulty === 'Original' ? 'Full Song' : 'Easy'}
                           </span>
                         </div>
   
@@ -1032,10 +1041,44 @@ function App() {
                   );
                 })}
               </div>
+              <div className="max-w-2xl mx-auto mt-16 p-6 sm:p-8 rounded-2xl border border-gray-200/80 bg-white/40 dark:border-dark-600/30 dark:bg-dark-800/20 text-center backdrop-blur-md">
+                <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+                  {language === 'de' 
+                    ? 'Suchst du ein Stück aus meinen Videos, das noch nicht hier ist?' 
+                    : 'Looking for a piece from my videos that isn\'t here yet?'}
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
+                  {language === 'de'
+                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload innerhalb von 24 Stunden priorisieren!'
+                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you within 24 hours!'}
+                </p>
+                <button 
+                  onClick={() => navigate('/suggestions')}
+                  className="btn-neon px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer bg-transparent text-sm"
+                >
+                  <Sparkles className="w-4 h-4 text-neon-cyan" />
+                  <span>{language === 'de' ? 'Song vorschlagen' : 'Suggest Song'}</span>
+                </button>
+              </div>
             ) : (
-              <div className="text-center py-20 bg-dark-800/20 rounded-2xl border border-dark-600/30 animate-in fade-in duration-300">
-                <Music className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No arrangements found matching your search.</p>
+              <div className="max-w-2xl mx-auto py-12 p-6 sm:p-8 rounded-2xl border border-dark-600/30 bg-dark-800/20 text-center backdrop-blur-md animate-in fade-in duration-300">
+                <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+                  {language === 'de' 
+                    ? 'Suchst du ein Stück aus meinen Videos, das noch nicht hier ist?' 
+                    : 'Looking for a piece from my videos that isn\'t here yet?'}
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
+                  {language === 'de'
+                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload innerhalb von 24 Stunden priorisieren!'
+                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you within 24 hours!'}
+                </p>
+                <button 
+                  onClick={() => navigate('/suggestions')}
+                  className="btn-neon px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer bg-transparent text-sm"
+                >
+                  <Sparkles className="w-4 h-4 text-neon-cyan" />
+                  <span>{language === 'de' ? 'Song vorschlagen' : 'Suggest Song'}</span>
+                </button>
               </div>
             )}
           </div>
@@ -1140,6 +1183,7 @@ function App() {
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
           language={language}
+          isCondensed={selectedSong.condensed || selectedSong.isCondensed}
         />
       )}
 

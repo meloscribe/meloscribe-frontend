@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Archive, Mail, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Archive, Mail, AlertCircle, Info, Tv } from 'lucide-react';
 
 interface OrderDetailsProps {
   onBack: () => void;
@@ -59,7 +59,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [loading, setLoading] = useState(true);
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | null>(null);
+  const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
 
   const isDe = language === 'de';
   const t = translations[isDe ? 'de' : 'en'];
@@ -93,7 +93,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
     fetchOrderDetails();
   }, [hash, API_BASE, t.orderNotFound]);
 
-  const handleDownload = async (type: 'pdf' | 'zip') => {
+  const handleDownload = async (type: 'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow') => {
     if (!orderInfo || downloadingType) return;
     
     setDownloadingType(type);
@@ -255,8 +255,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   <FileText className="w-5 h-5 text-neon-cyan" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm">
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
                     {isDe ? 'Noten (PDF) herunterladen' : 'Download Sheet PDF'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Die Klaviernoten als hochauflösendes PDF. Perfekt zum Ausdrucken oder für den Tablet-Reader.' 
+                          : 'The piano sheet music as a high-resolution PDF. Perfect for printing or tablet readers.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
                   </h4>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.downloadPdfDesc}</p>
                 </div>
@@ -275,30 +284,167 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </button>
             </div>
 
-            {/* Download ZIP Button */}
+            {/* Download MIDI (Original) */}
             <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
               <div className="flex items-start gap-3 w-full sm:w-auto">
                 <div className="p-2 rounded-lg bg-neon-pink/10 border border-neon-pink/20 flex-shrink-0 mt-0.5">
-                  <Archive className="w-5 h-5 text-neon-pink" />
+                  <Music className="w-5 h-5 text-neon-pink" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm">
-                    {isDe ? 'MIDIs & Videos (.zip) herunterladen' : 'Download MIDI & Video Package (.zip)'}
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'MIDI (Originalgeschwindigkeit)' : 'MIDI (Original Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-pink transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Die Klavier-MIDI-Datei im originalen Tempo. Lade sie in Synthesia, deine DAW oder dein Keyboard.' 
+                          : 'The piano MIDI file at original speed. Load it into Synthesia, your DAW, or digital keyboard.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
                   </h4>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.downloadZipDesc}</p>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Klavier-MIDI-Datei im Originaltempo.' : 'Piano MIDI file in full speed.'}
+                  </p>
                 </div>
               </div>
               <button
-                onClick={() => handleDownload('zip')}
+                onClick={() => handleDownload('midi')}
                 disabled={isLimitReached || downloadingType !== null}
                 className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink bg-gradient-to-r from-neon-cyan/15 to-neon-pink/15 hover:from-neon-cyan/25 hover:to-neon-pink/25 hover:border-neon-pink hover:shadow-neon-pink-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'zip' ? (
+                {downloadingType === 'midi' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'ZIP laden' : 'Download ZIP'}</span>
+                <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
+              </button>
+            </div>
+
+            {/* Download MIDI (Slow) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
+              <div className="flex items-start gap-3 w-full sm:w-auto">
+                <div className="p-2 rounded-lg bg-neon-pink/10 border border-neon-pink/20 flex-shrink-0 mt-0.5">
+                  <Music className="w-5 h-5 text-neon-pink opacity-80" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'MIDI (Verlangsamt zum Üben)' : 'MIDI (Slow Practice Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-pink transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Die Klavier-MIDI-Datei um 30% verlangsamt zum einfacheren Lernen schwieriger Stellen.' 
+                          : 'The piano MIDI file slowed down by 30% for easier practice of complex sections.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Klavier-MIDI-Datei im reduzierten Übungstempo.' : 'Piano MIDI file at reduced speed.'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDownload('midi_slow')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-pink disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {downloadingType === 'midi_slow' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
+                )}
+                <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
+              </button>
+            </div>
+
+            {/* Download Video (Original) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
+              <div className="flex items-start gap-3 w-full sm:w-auto">
+                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
+                  <Tv className="w-5 h-5 text-neon-cyan" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'Video-Tutorial (Originalgeschwindigkeit)' : 'Video Tutorial (Original Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Das 2K HD Keysight Visualisierungsvideo in Originalgeschwindigkeit zum Mitspielen offline.' 
+                          : 'The 2K HD Keysight visualization video at full speed for offline reference.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Lernvideo in Originalgeschwindigkeit (2K HD MP4).' : 'Tutorial video at full speed (2K HD MP4).'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDownload('video')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {downloadingType === 'video' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
+                )}
+                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+              </button>
+            </div>
+
+            {/* Download Video (Slow) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
+              <div className="flex items-start gap-3 w-full sm:w-auto">
+                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
+                  <Tv className="w-5 h-5 text-neon-cyan opacity-80" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'Video-Tutorial (Verlangsamt zum Üben)' : 'Video Tutorial (Slow Practice Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Das Keysight Visualisierungsvideo offline im langsamen Übungstempo (mit Metronom) zum einfachen Nachspielen.' 
+                          : 'The Keysight visualization video at slow speed (with metronome) for easy offline practice.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Lernvideo im langsamen Tempo (2K HD MP4).' : 'Tutorial video in slow tempo (2K HD MP4).'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDownload('video_slow')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {downloadingType === 'video_slow' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
+                )}
+                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+              </button>
+            </div>
+
+            {/* Optional Legacy ZIP (collapsible / secondary) */}
+            <div className="pt-4 border-t border-gray-200/40 dark:border-dark-700/40 flex justify-center">
+              <button
+                onClick={() => handleDownload('zip')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="text-[11px] text-gray-550 dark:text-gray-400 hover:text-neon-pink transition-colors duration-300 flex items-center gap-1 cursor-pointer bg-transparent border-none"
+              >
+                <Archive className="w-3.5 h-3.5" />
+                <span>{isDe ? 'Älteres Komplettpaket (.zip) laden' : 'Download older full package (.zip)'}</span>
               </button>
             </div>
           </div>

@@ -8,6 +8,7 @@ interface PaddleModalProps {
   songTitle: string;
   songArtist: string;
   language: string;
+  isCondensed?: boolean;
 }
 
 const translations = {
@@ -98,7 +99,7 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, isCondensed = false }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   if (!isOpen) return null;
@@ -211,8 +212,16 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   <FileText className="w-3.5 h-3.5 text-neon-cyan" />
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-900 dark:text-white">{t.pdfTitle}</span>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.pdfDesc}</p>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Viral Part Klaviernoten (PDF)' : 'Viral Part sheet music (PDF)') 
+                      : t.pdfTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Präzise Klaviernoten des viralen Song-Ausschnitts (wie im Video).' : 'Precise piano sheets of the viral part of the song (as shown in the video).') 
+                      : t.pdfDesc}
+                  </p>
                 </div>
               </div>
 
@@ -221,8 +230,16 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   <Music className="w-3.5 h-3.5 text-neon-pink" />
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-900 dark:text-white">{t.midiTitle}</span>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.midiDesc}</p>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Viral Part MIDI-Dateien (Normal + Langsam)' : 'Viral Part MIDI Files (Normal + Slow)') 
+                      : t.midiTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Lern-MIDIs des viralen Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the viral section for Synthesia or your DAW.') 
+                      : t.midiDesc}
+                  </p>
                 </div>
               </div>
 
@@ -231,8 +248,16 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   <Tv className="w-3.5 h-3.5 text-neon-cyan" />
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-900 dark:text-white">{t.videoTitle}</span>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.videoDesc}</p>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? '2K HD Video-Tutorials (Viral Part)' : '2K HD Video Tutorials (Viral Part)') 
+                      : t.videoTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Das virale Tutorial-Video offline in normalem & langsamem Tempo.' : 'The viral tutorial video offline in normal & slow speed.') 
+                      : t.videoDesc}
+                  </p>
                 </div>
               </div>
             </div>
