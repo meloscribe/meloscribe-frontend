@@ -8,15 +8,16 @@
   html {
     scroll-behavior: smooth;
     transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+    background-color: #0b0f19;
   }
 
   body {
-    @apply transition-colors duration-500 bg-[#fafafa] text-gray-800;
+    @apply transition-colors duration-500 bg-dark-900 text-white;
     font-feature-settings: 'cv11', 'ss01';
   }
 
-  .dark body {
-    @apply bg-dark-900 text-white;
+  html:not(.dark) body {
+    @apply bg-[#fafafa] text-gray-800;
   }
 
   ::selection {

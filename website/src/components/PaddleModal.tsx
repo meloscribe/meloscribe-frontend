@@ -236,8 +236,8 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
               
               {/* Play Overlay */}
               {videoUrl && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
-                  <Play className="w-6 h-6 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
+                <div className="absolute inset-0 bg-black/35 flex items-center justify-center transition-all duration-300 hover:bg-black/55">
+                  <Play className="w-7 h-7 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
                 </div>
               )}
             </div>
@@ -245,6 +245,33 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             <div className="flex-1 min-w-0">
               <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
               <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
+            </div>
+          </div>
+
+          {/* Format Info Banner */}
+          <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
+            isCondensed 
+              ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
+              : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
+          }`}>
+            <div className="mt-0.5 text-base flex-shrink-0">
+              {isCondensed ? '⚠️' : '✨'}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {isCondensed 
+                  ? (language === 'de' ? 'Ausschnitt / Viral Part Format' : 'Viral Part / Condensed Format')
+                  : (language === 'de' ? 'Vollständiges Arrangement Format' : 'Full Arrangement Format')}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                {isCondensed
+                  ? (language === 'de' 
+                      ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil (Hook) des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
+                      : 'This learning package contains ONLY the viral section (hook) of the song as shown in the video. It does NOT contain the full song.')
+                  : (language === 'de'
+                      ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
+                      : 'This learning package contains the complete arrangement of the song from start to finish.')}
+              </p>
             </div>
           </div>
 

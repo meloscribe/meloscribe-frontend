@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, ShoppingBag, Coffee, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
-import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, kofiUrl } from './data/siteConfig';
+import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
 import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
@@ -11,6 +11,15 @@ import Refunds from './pages/Refunds';
 import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 import OrderDetails from './pages/OrderDetails';
+
+// Format auto-detection helper
+const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
+  if (song.format === 'viral_part') return 'viral_part';
+  if (song.format === 'full_arrangement') return 'full_arrangement';
+  const p = song.price || '';
+  if (p.includes('3')) return 'viral_part';
+  return 'full_arrangement';
+};
 
 // Translations
 const translations = {
@@ -358,6 +367,39 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const debounceTimeoutRef = useRef<number | null>(null);
   const fadeIntervalRef = useRef<number | null>(null);
+  const [transitioning, setTransitioning] = useState(false);
+
+  const playMuteSound = (muted: boolean) => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      if (muted) {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(220, now + 0.15);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } else {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(330, now);
+        osc.frequency.exponentialRampToValueAtTime(550, now + 0.12);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+    } catch (e) {
+      console.warn("Failed to play UI sound", e);
+    }
+  };
 
   // Stop currently playing audio preview
   const stopAudio = () => {
@@ -403,7 +445,7 @@ function App() {
     }
 
     const audioUrl = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
-    const isCondensed = song.format === 'viral_part';
+    const isCondensed = getSongFormat(song) === 'viral_part';
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? (isCondensed ? 15 : 0);
 
     const audio = new Audio(audioUrl);
@@ -561,7 +603,7 @@ function App() {
       difficultyFilter === 'All' || 
       song.difficulty === difficultyFilter;
 
-    const isSongCondensed = song.format === 'viral_part';
+    const isSongCondensed = getSongFormat(song) === 'viral_part';
     const matchesFormat = 
       formatFilter === 'All' ||
       (formatFilter === 'Viral Part' && isSongCondensed) ||
@@ -586,9 +628,15 @@ function App() {
   }, []);
 
   const navigate = (path: string) => {
-    window.history.pushState(null, '', path);
-    setCurrentPath(path);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTransitioning(true);
+    setTimeout(() => {
+      window.history.pushState(null, '', path);
+      setCurrentPath(path);
+      window.scrollTo({ top: 0 });
+      setTimeout(() => {
+        setTransitioning(false);
+      }, 50);
+    }, 200);
   };
 
   const handleDownloadClick = (song: Song) => {
@@ -657,7 +705,11 @@ function App() {
             <div className="flex items-center gap-1.5 sm:gap-3">
               {/* Audio Preview Mute Toggle */}
               <button
-                onClick={() => setIsMuted(!isMuted)}
+                onClick={() => {
+                  const newMuted = !isMuted;
+                  setIsMuted(newMuted);
+                  playMuteSound(newMuted);
+                }}
                 className={`flex items-center justify-center p-1.5 sm:p-2 rounded-lg border transition-all duration-300 ${
                   !isMuted 
                     ? 'bg-neon-cyan/10 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle' 
@@ -680,22 +732,13 @@ function App() {
               {/* Language Dropdown */}
               <LanguageDropdown language={language} setLanguage={setLanguage} />
 
-              {/* Premium Ko-fi Support Button */}
-              <a 
-                href={kofiUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="flex items-center gap-2 p-1.5 sm:px-4 sm:py-2 rounded-lg bg-neon-pink/10 border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/20 hover:border-neon-pink/60 hover:shadow-neon-pink-subtle font-medium text-xs sm:text-sm transition-all duration-300 cursor-pointer"
-              >
-                <Coffee className="w-4 h-4" />
-                <span className="hidden sm:inline">Buy me a Coffee</span>
-              </a>
             </div>
           </div>
         </div>
       </header>
 
       {/* Conditionally render page content */}
+      <main className={`transition-all duration-300 transform ${transitioning ? 'opacity-0 scale-98 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
       {currentPath === '/' ? (
         <>
           {/* Hero */}
@@ -820,13 +863,12 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          {/* Format Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.format === 'viral_part'
+                            getSongFormat(song) === 'viral_part'
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.format === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
 
                           {/* Price Badge */}
@@ -1050,13 +1092,12 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          {/* Format Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.format === 'viral_part'
+                            getSongFormat(song) === 'viral_part'
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {song.format === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
 
                           {/* Price Badge */}
@@ -1092,8 +1133,8 @@ function App() {
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
                   {language === 'de'
-                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload innerhalb von 24 Stunden priorisieren!'
-                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you within 24 hours!'}
+                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload priorisieren!'
+                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you!'}
                 </p>
                 <button 
                   onClick={() => navigate('/suggestions')}
@@ -1113,8 +1154,8 @@ function App() {
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
                   {language === 'de'
-                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload innerhalb von 24 Stunden priorisieren!'
-                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you within 24 hours!'}
+                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload priorisieren!'
+                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you!'}
                 </p>
                 <button 
                   onClick={() => navigate('/suggestions')}
@@ -1142,6 +1183,7 @@ function App() {
       ) : currentPath.startsWith('/order/') ? (
         <OrderDetails onBack={() => navigate('/')} language={language} showToast={showToast} hash={currentPath.substring('/order/'.length)} />
       ) : null}
+      </main>
 
 
       {/* Footer */}
@@ -1157,17 +1199,6 @@ function App() {
               >
                 <Music className="w-5 h-5 text-neon-cyan" />
                 <span className="font-display text-xl font-bold text-gradient">{t.brand}</span>
-              </a>
-
-              {/* Ko-fi link in footer top row */}
-              <a
-                href={kofiUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-neon-pink dark:hover:text-neon-pink transition-colors text-sm font-medium"
-              >
-                <Coffee className="w-4 h-4" />
-                <span>Buy me a Coffee</span>
               </a>
             </div>
 
@@ -1227,7 +1258,7 @@ function App() {
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
           language={language}
-          format={selectedSong.format}
+          format={getSongFormat(selectedSong)}
         />
       )}
 

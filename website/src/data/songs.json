@@ -19,7 +19,7 @@
     "kofiId": "10cc0bc7d7",
     "coverImage": "/covers/Mary On A Cross.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
-    "hidden": true
+    "hidden": false
   },
   {
     "id": "2",
@@ -325,12 +325,14 @@
     "id": "32",
     "title": "River Flows in You",
     "artist": "Yiruma",
-    "difficulty": "Original",
+    "difficulty": "Easy",
     "price": "3 €",
     "kofiId": "6d30b731a2",
     "coverImage": "/covers/River Flows in You.jpg",
     "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
-    "audioPreviewUrl": "/audio/river_flows_in_you.ogg"
+    "audioPreviewUrl": "/audio/river_flows_in_you.ogg",
+    "paymentsDisabled": true,
+    "hidden": false
   },
   {
     "id": "33",
