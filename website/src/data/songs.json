@@ -333,15 +333,5 @@
     "audioPreviewUrl": "/audio/river_flows_in_you.ogg",
     "paymentsDisabled": false,
     "hidden": false
-  },
-  {
-    "id": "33",
-    "title": "Viva la Vida (Part 2)",
-    "artist": "Coldplay",
-    "difficulty": "Original",
-    "price": "2 €",
-    "kofiId": "9c12e8b3b9",
-    "coverImage": "/covers/Viva la Vida Part 2.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
   }
 ]
