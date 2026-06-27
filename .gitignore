@@ -48,3 +48,15 @@ Desktop.ini
 
 # Firebase Cache
 .firebase/
+
+# Large media files and output directories
+*.mp4
+*.wav
+*.mp3
+*.mid
+*.midi
+*.pdf
+ShopVideos/
+**/ShopVideos/
+Keysight export/
+**/Keysight export/
