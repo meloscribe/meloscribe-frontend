@@ -960,7 +960,8 @@ function App() {
 
             {/* Song Cards Grid */}
             {filteredSongs.length > 0 ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
                 {filteredSongs.map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                   return (
@@ -1060,6 +1061,7 @@ function App() {
                   <span>{language === 'de' ? 'Song vorschlagen' : 'Suggest Song'}</span>
                 </button>
               </div>
+            </>
             ) : (
               <div className="max-w-2xl mx-auto py-12 p-6 sm:p-8 rounded-2xl border border-dark-600/30 bg-dark-800/20 text-center backdrop-blur-md animate-in fade-in duration-300">
                 <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
