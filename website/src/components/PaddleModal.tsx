@@ -255,19 +255,19 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
               : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
           }`}>
             <div className="mt-0.5 text-base flex-shrink-0">
-              {isCondensed ? '⚠️' : '✨'}
+              {isCondensed ? '🎬' : '✨'}
             </div>
             <div>
               <p className="font-semibold text-gray-900 dark:text-white">
                 {isCondensed 
-                  ? (language === 'de' ? 'Ausschnitt / Viral Part Format' : 'Viral Part / Condensed Format')
+                  ? (language === 'de' ? 'Viral Part' : 'Viral Part')
                   : (language === 'de' ? 'Vollständiges Arrangement Format' : 'Full Arrangement Format')}
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
                 {isCondensed
                   ? (language === 'de' 
-                      ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil (Hook) des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
-                      : 'This learning package contains ONLY the viral section (hook) of the song as shown in the video. It does NOT contain the full song.')
+                      ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
+                      : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
                   : (language === 'de'
                       ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
                       : 'This learning package contains the complete arrangement of the song from start to finish.')}
@@ -279,6 +279,24 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           <div>
             <h5 className="text-xs font-semibold text-gray-550 dark:text-gray-400 uppercase tracking-wider mb-3">{t.included}</h5>
             <div className="space-y-3">
+              {songTitle.toLowerCase().includes('easy') && (
+                <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {language === 'de' ? 'Vereinfachte Version (Easy)' : 'Simplified Version (Easy)'}
+                    </span>
+                    <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                      {language === 'de' 
+                        ? 'Speziell für Anfänger arrangiert – leicht zu lernen, klingt trotzdem hervorragend.' 
+                        : 'Specially arranged for beginners – easy to learn, yet sounds excellent.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                 <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
                   <FileText className="w-3.5 h-3.5 text-neon-cyan" />
@@ -286,12 +304,12 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                 <div>
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {isCondensed 
-                      ? (language === 'de' ? 'Viral Part Klaviernoten (PDF)' : 'Viral Part sheet music (PDF)') 
+                      ? (language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet music (PDF)') 
                       : t.pdfTitle}
                   </span>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
                     {isCondensed 
-                      ? (language === 'de' ? 'Präzise Klaviernoten des viralen Song-Ausschnitts (wie im Video).' : 'Precise piano sheets of the viral part of the song (as shown in the video).') 
+                      ? (language === 'de' ? 'Präzise Klaviernoten des Song-Ausschnitts wie im Video.' : 'Precise piano sheets of the song section as shown in the video.') 
                       : t.pdfDesc}
                   </p>
                 </div>
@@ -304,12 +322,12 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                 <div>
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {isCondensed 
-                      ? (language === 'de' ? 'Viral Part MIDI-Dateien (Normal + Langsam)' : 'Viral Part MIDI Files (Normal + Slow)') 
+                      ? (language === 'de' ? 'MIDI-Dateien (Normal + Langsam)' : 'MIDI Files (Normal + Slow)') 
                       : t.midiTitle}
                   </span>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
                     {isCondensed 
-                      ? (language === 'de' ? 'Lern-MIDIs des viralen Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the viral section for Synthesia or your DAW.') 
+                      ? (language === 'de' ? 'Lern-MIDIs des Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the song section for Synthesia or your DAW.') 
                       : t.midiDesc}
                   </p>
                 </div>
@@ -322,12 +340,12 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                 <div>
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {isCondensed 
-                      ? (language === 'de' ? '2K HD Video-Tutorials (Viral Part)' : '2K HD Video Tutorials (Viral Part)') 
+                      ? (language === 'de' ? '2K HD Video-Tutorials' : '2K HD Video Tutorials') 
                       : t.videoTitle}
                   </span>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
                     {isCondensed 
-                      ? (language === 'de' ? 'Das virale Tutorial-Video offline in normalem & langsamem Tempo.' : 'The viral tutorial video offline in normal & slow speed.') 
+                      ? (language === 'de' ? 'Das Tutorial-Video offline in normalem & langsamem Tempo.' : 'The tutorial video offline in normal & slow speed.') 
                       : t.videoDesc}
                   </p>
                 </div>

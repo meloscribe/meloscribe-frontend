@@ -738,7 +738,14 @@ function App() {
       </header>
 
       {/* Conditionally render page content */}
-      <main className={`transition-all duration-300 transform ${transitioning ? 'opacity-0 scale-98 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
+      <main 
+        style={{ 
+          perspective: '1200px',
+          transformStyle: 'preserve-3d',
+          transition: 'all 600ms cubic-bezier(0.16, 1, 0.3, 1)'
+        }}
+        className={`transform ${transitioning ? 'opacity-0 translate-y-12 scale-96 blur-md [transform:rotateX(4deg)]' : 'opacity-100 translate-y-0 scale-100 blur-0 [transform:rotateX(0deg)]'}`}
+      >
       {currentPath === '/' ? (
         <>
           {/* Hero */}
