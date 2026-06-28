@@ -479,7 +479,7 @@ function App() {
     }
     debounceTimeoutRef.current = window.setTimeout(() => {
       playAudio(song);
-    }, 1000);
+    }, 250);
   };
 
   const handleCardMouseLeave = () => {
