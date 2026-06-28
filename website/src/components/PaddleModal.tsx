@@ -9,6 +9,7 @@ interface PaddleModalProps {
   songArtist: string;
   language: string;
   format?: 'viral_part' | 'full_arrangement';
+  difficulty?: 'Easy' | 'Original';
 }
 
 const translations = {
@@ -99,7 +100,7 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement' }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original' }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -232,7 +233,6 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <Music className="w-6 h-6 text-neon-cyan absolute group-hover/thumb:opacity-0 transition-opacity" />
               
               {/* Play Overlay */}
               {videoUrl && (
@@ -279,7 +279,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           <div>
             <h5 className="text-xs font-semibold text-gray-550 dark:text-gray-400 uppercase tracking-wider mb-3">{t.included}</h5>
             <div className="space-y-3">
-              {songTitle.toLowerCase().includes('easy') && (
+              {difficulty === 'Easy' && (
                 <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                   <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />

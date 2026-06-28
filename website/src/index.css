@@ -26,8 +26,8 @@
 
   /* Premium Ghost Scrollbar — visible only while scrolling */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
@@ -35,14 +35,14 @@
   ::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 9999px;
-    transition: background 0.4s ease;
+    transition: background 0.3s ease;
   }
-  /* Show on page hover — most browsers will show it during active scroll */
-  html:hover ::-webkit-scrollbar-thumb,
-  body:hover ::-webkit-scrollbar-thumb {
+  body.is-scrolling ::-webkit-scrollbar-thumb,
+  body.is-scrolling::-webkit-scrollbar-thumb {
     background: rgba(0, 245, 255, 0.18);
   }
-  ::-webkit-scrollbar-thumb:hover {
+  body.is-scrolling ::-webkit-scrollbar-thumb:hover,
+  body.is-scrolling::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 245, 255, 0.45) !important;
   }
   /* Firefox */
@@ -50,8 +50,7 @@
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
   }
-  html:hover *,
-  body:hover * {
+  body.is-scrolling * {
     scrollbar-color: rgba(0, 245, 255, 0.18) transparent;
   }
 }
@@ -338,32 +337,4 @@
   100% { transform: scaleY(1); }
 }
 
-/* Custom Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid #0b0f19;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 245, 255, 0.6);
-}

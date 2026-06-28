@@ -221,22 +221,29 @@ function smartSearchMatch(title: string, artist: string, query: string): boolean
   const normArtist = normalizeString(artist);
   const normQuery = normalizeString(query);
   
-  // 1. Spacing check (collapse spaces and see if query matches as a full substring)
-  const collapsedCombined = (normTitle + normArtist).replace(/\s+/g, "");
+  const combined = normTitle + " " + normArtist;
+  const collapsedCombined = combined.replace(/\s+/g, "");
   const collapsedQuery = normQuery.replace(/\s+/g, "");
-  if (collapsedCombined.includes(collapsedQuery)) return true;
   
-  // 2. Token-by-token fuzzy matching
+  // 1. Spacing / substring check
+  if (combined.includes(normQuery) || collapsedCombined.includes(collapsedQuery)) return true;
+  
+  // 2. Full collapsed Levenshtein check (handles spaces omitted + typo)
+  const fullDistance = getLevenshteinDistance(collapsedQuery, collapsedCombined.substring(0, collapsedQuery.length));
+  const maxFullDistance = collapsedQuery.length <= 6 ? 1 : 2;
+  if (fullDistance <= maxFullDistance) return true;
+  
+  // 3. Token-by-token fuzzy matching with prefix comparison
   const queryTokens = normQuery.split(/\s+/).filter(Boolean);
   const songTokens = [...normTitle.split(/\s+/), ...normArtist.split(/\s+/)].filter(Boolean);
   
-  // Every query token must match at least one song token
   return queryTokens.every(qToken => {
     if (normTitle.includes(qToken) || normArtist.includes(qToken)) return true;
     
     return songTokens.some(sToken => {
-      const maxDistance = qToken.length <= 5 ? 1 : 2;
-      return getLevenshteinDistance(qToken, sToken) <= maxDistance;
+      const sPrefix = sToken.substring(0, qToken.length);
+      const maxDistance = qToken.length <= 4 ? 1 : (qToken.length <= 8 ? 2 : 3);
+      return getLevenshteinDistance(qToken, sPrefix) <= maxDistance;
     });
   });
 }
@@ -460,7 +467,7 @@ function App() {
         fadeIntervalRef.current = window.setInterval(() => {
           const elapsed = performance.now() - start;
           const progress = Math.min(elapsed / 300, 1);
-          audio.volume = progress;
+          audio.volume = progress * 0.35;
           if (progress >= 1) {
             clearInterval(fadeIntervalRef.current!);
             fadeIntervalRef.current = null;
@@ -538,6 +545,36 @@ function App() {
       }
     };
     fetchStats();
+
+    // Preload audio files to ensure instant playback on hover
+    try {
+      songsData.forEach(song => {
+        const url = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
+        if (url) {
+          const audio = new Audio();
+          audio.src = url;
+          audio.preload = 'auto';
+        }
+      });
+    } catch (e) {
+      console.warn('Preloading audio failed:', e);
+    }
+
+    // Scrollbar scrolling state logic to hide thumb when inactive
+    let scrollTimeout: number;
+    const handleScrollActive = () => {
+      document.body.classList.add('is-scrolling');
+      clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(() => {
+        document.body.classList.remove('is-scrolling');
+      }, 1000);
+    };
+
+    window.addEventListener('scroll', handleScrollActive, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScrollActive);
+      clearTimeout(scrollTimeout);
+    };
   }, []);
 
   // Initialize Paddle SDK
@@ -1266,6 +1303,7 @@ function App() {
           songArtist={selectedSong.artist}
           language={language}
           format={getSongFormat(selectedSong)}
+          difficulty={selectedSong.difficulty}
         />
       )}
 
