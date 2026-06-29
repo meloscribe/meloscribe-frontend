@@ -252,16 +252,6 @@
     "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
   },
   {
-    "id": "25",
-    "title": "Je te laisserai des mots (Part 1)",
-    "artist": "Patrick Watson",
-    "difficulty": "Original",
-    "price": "2 €",
-    "kofiId": "92ea0ab21f",
-    "coverImage": "/covers/Je te laisserai des mots Part 1.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
-  },
-  {
     "id": "29",
     "title": "My singing Monsters Plant Island",
     "artist": "Unknown",
