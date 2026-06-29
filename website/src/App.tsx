@@ -369,7 +369,10 @@ function App() {
   const t = translations[language];
 
   // Audio Preview States & Refs
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(() => {
+    const saved = localStorage.getItem('isMuted');
+    return saved !== null ? saved === 'true' : true;
+  });
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const debounceTimeoutRef = useRef<number | null>(null);
@@ -481,6 +484,9 @@ function App() {
 
   // Card Mouse Hover handlers with 1s debounce
   const handleCardMouseEnter = (song: Song) => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    if (isMobile) return;
+
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
@@ -745,6 +751,7 @@ function App() {
                 onClick={() => {
                   const newMuted = !isMuted;
                   setIsMuted(newMuted);
+                  localStorage.setItem('isMuted', String(newMuted));
                   playMuteSound(newMuted);
                 }}
                 className={`flex items-center justify-center p-1.5 sm:p-2 rounded-lg border transition-all duration-300 ${
@@ -777,11 +784,9 @@ function App() {
       {/* Conditionally render page content */}
       <main 
         style={{ 
-          perspective: '1200px',
-          transformStyle: 'preserve-3d',
-          transition: 'all 600ms cubic-bezier(0.16, 1, 0.3, 1)'
+          transition: 'all 350ms cubic-bezier(0.32, 0.94, 0.6, 1)'
         }}
-        className={`transform ${transitioning ? 'opacity-0 translate-y-12 scale-96 blur-md [transform:rotateX(4deg)]' : 'opacity-100 translate-y-0 scale-100 blur-0 [transform:rotateX(0deg)]'}`}
+        className={`transform-gpu ${transitioning ? 'opacity-0 translate-y-6 scale-[0.98]' : 'opacity-100 translate-y-0 scale-100'}`}
       >
       {currentPath === '/' ? (
         <>
@@ -907,23 +912,13 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          {/* Price Badge */}
-                          <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
-                            {song.price}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Product Info (Title, Artist, Format) */}
-                      <div className="p-3 pb-0 select-text flex flex-col gap-0.5">
-                        <h4 className="font-display font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate">
-                          {song.title}
-                        </h4>
-                        <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
-                          <span className="truncate">{song.artist}</span>
-                          <span>•</span>
-                          <span className="whitespace-nowrap font-medium text-neon-pink/80 dark:text-neon-pink/70">
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : 'Full Arrangement'}
+                          {/* Format Badge (Viral Part vs Full Arrangement) */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
+                            getSongFormat(song) === 'viral_part'
+                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
+                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
+                          }`}>
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
                         </div>
                       </div>
@@ -939,7 +934,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : t.downloadSheets}
+                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
                         </button>
                       </div>
                     </div>
@@ -1142,23 +1137,13 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          {/* Price Badge */}
-                          <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
-                            {song.price}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Product Info (Title, Artist, Format) */}
-                      <div className="p-3 pb-0 select-text flex flex-col gap-0.5">
-                        <h4 className="font-display font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate">
-                          {song.title}
-                        </h4>
-                        <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
-                          <span className="truncate">{song.artist}</span>
-                          <span>•</span>
-                          <span className="whitespace-nowrap font-medium text-neon-pink/80 dark:text-neon-pink/70">
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : 'Full Arrangement'}
+                          {/* Format Badge (Viral Part vs Full Arrangement) */}
+                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
+                            getSongFormat(song) === 'viral_part'
+                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
+                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
+                          }`}>
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
                           </span>
                         </div>
                       </div>
@@ -1174,7 +1159,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : t.downloadSheets}
+                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
                         </button>
                       </div>
                     </div>

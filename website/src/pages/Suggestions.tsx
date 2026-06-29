@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ChevronUp, Music, Sparkles } from 'lucide-react';
-import { fetchSuggestions, insertSuggestion, incrementVote, Suggestion } from '../lib/supabaseClient';
+import { fetchSuggestions, insertSuggestion, incrementVote, decrementVote, Suggestion } from '../lib/supabaseClient';
 
 interface SuggestionsProps {
   onBack: () => void;
@@ -102,18 +102,34 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
   }, []);
 
   const handleUpvote = async (id: string, currentVotes: number, songTitle: string) => {
-    if (votedIds[id]) return;
+    if (votedIds[id]) {
+      // Unvote logic
+      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, votes: Math.max(0, s.votes - 1) } : s).sort((a, b) => b.votes - a.votes));
+      setVotedIds(prev => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+      localStorage.removeItem(`meloscribe_voted_${id}`);
 
-    // optimistic UI update
-    setSuggestions(prev => prev.map(s => s.id === id ? { ...s, votes: s.votes + 1 } : s).sort((a, b) => b.votes - a.votes));
-    setVotedIds(prev => ({ ...prev, [id]: true }));
-    localStorage.setItem(`meloscribe_voted_${id}`, 'true');
+      try {
+        await decrementVote(id, currentVotes);
+        showToast(isDe ? `Stimme für "${songTitle}" entfernt.` : `Removed vote for "${songTitle}".`);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      // Upvote logic
+      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, votes: s.votes + 1 } : s).sort((a, b) => b.votes - a.votes));
+      setVotedIds(prev => ({ ...prev, [id]: true }));
+      localStorage.setItem(`meloscribe_voted_${id}`, 'true');
 
-    try {
-      await incrementVote(id, currentVotes);
-      showToast(isDe ? `Stimme für "${songTitle}" hinzugefügt!` : `Added vote for "${songTitle}"!`);
-    } catch (err) {
-      console.error(err);
+      try {
+        await incrementVote(id, currentVotes);
+        showToast(isDe ? `Stimme für "${songTitle}" hinzugefügt!` : `Added vote for "${songTitle}"!`);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -303,11 +319,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
                     {/* Upvote Arrow Button */}
                     <button
                       onClick={() => handleUpvote(sug.id, sug.votes, sug.title)}
-                      disabled={hasVoted}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 cursor-pointer ${
                         hasVoted 
-                          ? 'bg-neon-cyan/5 border-neon-cyan/20 text-neon-cyan/60 opacity-60 cursor-not-allowed pointer-events-none'
-                          : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle cursor-pointer'
+                          ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle'
+                          : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle'
                       }`}
                       title={hasVoted ? 'Already voted' : 'Upvote song request'}
                     >

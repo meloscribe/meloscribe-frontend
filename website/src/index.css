@@ -24,34 +24,21 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — visible only while scrolling */
+  /* Premium Ghost Scrollbar — hidden to remove vertical track lines */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    display: none;
+    width: 0px;
+    height: 0px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: transparent;
-    border-radius: 9999px;
-    transition: background 0.3s ease;
-  }
-  body.is-scrolling ::-webkit-scrollbar-thumb,
-  body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.18);
-  }
-  body.is-scrolling ::-webkit-scrollbar-thumb:hover,
-  body.is-scrolling::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 245, 255, 0.45) !important;
   }
   /* Firefox */
   * {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-  }
-  body.is-scrolling * {
-    scrollbar-color: rgba(0, 245, 255, 0.18) transparent;
+    scrollbar-width: none;
   }
 }
 

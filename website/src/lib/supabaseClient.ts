@@ -55,3 +55,21 @@ export async function incrementVote(id: string, currentVotes: number): Promise<S
     created_at: '',
   };
 }
+
+/**
+ * Decrement an existing song's vote count in the backend.
+ */
+export async function decrementVote(id: string, currentVotes: number): Promise<Suggestion> {
+  const res = await fetch(`${API_BASE}/api/public/suggestions/${id}/unvote`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error('Failed to decrement vote');
+  const data = await res.json();
+  return {
+    id,
+    title: '',
+    artist: '',
+    votes: data.votes,
+    created_at: '',
+  };
+}

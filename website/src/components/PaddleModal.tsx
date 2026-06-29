@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play } from 'lucide-react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles } from 'lucide-react';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -111,30 +111,14 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   useEffect(() => {
     if (isOpen && songTitle) {
       setLoadingVideo(true);
-      setVideoUrl(null);
-      
       const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
       
       const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8787'
         : 'https://api.meloscribe.dev';
          
-      fetch(`${apiBaseUrl}/api/public/preview-video?song_name=${encodeURIComponent(cleanTitle)}`)
-        .then(res => {
-          if (res.ok) return res.json();
-          throw new Error("Failed to fetch video URL");
-        })
-        .then(data => {
-          if (data && data.download_url) {
-            setVideoUrl(data.download_url);
-          }
-        })
-        .catch(err => {
-          console.error("Preview video fetch error:", err);
-        })
-        .finally(() => {
-          setLoadingVideo(false);
-        });
+      setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle)}`);
+      setLoadingVideo(false);
     }
   }, [isOpen, songTitle]);
 
