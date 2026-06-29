@@ -202,16 +202,6 @@
     "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
   },
   {
-    "id": "20",
-    "title": "Believer (All Parts)",
-    "artist": "Imagine Dragons",
-    "difficulty": "Original",
-    "price": "5 €",
-    "kofiId": "0eacd716f6",
-    "coverImage": "/covers/Believer.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
-  },
-  {
     "id": "21",
     "title": "Silent Night",
     "artist": "F. X. Gruber",
