@@ -751,6 +751,8 @@ function App() {
     setIsKofiModalOpen(true);
   };
 
+  const scrollbarColor = `rgb(${Math.round(255 * scrollProgress)}, ${Math.round(245 - 200 * scrollProgress)}, ${Math.round(255 - 109 * scrollProgress)})`;
+
   return (
 
     <div className="min-h-screen bg-neon-gradient overflow-x-hidden">
@@ -1376,18 +1378,20 @@ function App() {
         </div>
       )}
 
-      {/* Premium Ghost Scrollbar (Desktop only) */}
+      {/* Premium Ghost Scrollbar (Desktop & Mobile) */}
       <div 
-        className={`fixed right-1.5 top-3 bottom-3 w-1 z-[9999] pointer-events-none hidden md:block transition-opacity duration-300 ${
+        className={`fixed right-1 top-3 bottom-3 w-1 z-[9999] pointer-events-none transition-opacity duration-300 ${
           isScrollingActive ? 'opacity-100' : 'opacity-0'
         }`}
       >
         <div 
-          className="w-full bg-gradient-to-b from-neon-cyan to-neon-pink rounded-full shadow-[0_0_8px_rgba(0,245,255,0.4)]"
+          className="w-full rounded-full"
           style={{
             height: '60px',
             transform: `translateY(${(window.innerHeight - 84) * scrollProgress}px)`,
-            willChange: 'transform'
+            willChange: 'transform, background-color',
+            backgroundColor: scrollbarColor,
+            boxShadow: `0 0 10px ${scrollbarColor}`
           }}
         />
       </div>
