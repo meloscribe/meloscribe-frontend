@@ -330,7 +330,8 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           position: relative !important;
           left: auto !important;
           top: auto !important;
-          width: 100% !important;
+          width: calc(100% + 18px) !important;
+          margin-right: -18px !important;
           height: 650px !important;
           border: none !important;
           background: transparent !important;
