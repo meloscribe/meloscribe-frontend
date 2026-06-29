@@ -72,16 +72,6 @@
     "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
   },
   {
-    "id": "7",
-    "title": "Nuvole Bianche (All Parts)",
-    "artist": "Ludovico Einaudi",
-    "difficulty": "Original",
-    "price": "5 €",
-    "kofiId": "73b15ca92f",
-    "coverImage": "/covers/Nuvole Bianche.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
-  },
-  {
     "id": "9",
     "title": "In This Shirt",
     "artist": "The Irrepressibles",
