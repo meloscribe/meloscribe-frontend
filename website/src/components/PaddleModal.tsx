@@ -260,7 +260,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           paddle.Checkout.open({
             settings: {
               displayMode: 'inline',
-              frameTarget: '.paddle-checkout-frame',
+              frameTarget: 'paddle-checkout-frame',
               frameInitialHeight: '480',
               theme: currentTheme,
               locale: activeLang,
