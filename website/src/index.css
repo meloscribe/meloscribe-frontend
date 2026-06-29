@@ -27,11 +27,18 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Document scrollbar: overlay (no layout gutter), invisible track, neon thumb fades in when scrolling */
+  /* Premium Ghost Scrollbar — constant 6px width, completely transparent track, no layout shift */
   html {
-    overflow-y: overlay; /* Scrollbar floats over content, no reserved space */
+    overflow-y: scroll; /* Force vertical scrollbar gutter to always remain to prevent layout shifts */
     scrollbar-width: none; /* Firefox: hide by default */
   }
+  @media (max-width: 767px) {
+    html {
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     background: transparent;
@@ -44,24 +51,24 @@
   ::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 9999px;
-    transition: background 0.5s ease;
+    transition: background 0.3s ease;
   }
-  /* Thumb appears only while scrolling — class toggled on <html> element */
-  html.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.38);
+  /* Thumb color change is-scrolling class toggled on <html> */
+  html.is-scrolling ::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.42);
   }
-  .dark html.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.55);
+  .dark html.is-scrolling ::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.6);
   }
   /* Firefox: show thin scrollbar only while scrolling */
   html.is-scrolling {
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 245, 255, 0.38) transparent;
+    scrollbar-color: rgba(0, 245, 255, 0.42) transparent;
   }
   .dark html.is-scrolling {
-    scrollbar-color: rgba(0, 245, 255, 0.55) transparent;
+    scrollbar-color: rgba(0, 245, 255, 0.6) transparent;
   }
-  /* Mobile: let OS handle scrollbar (natively invisible/overlaid) */
+  /* Mobile: let OS handle scrollbar */
   @media (max-width: 767px) {
     html {
       overflow-y: auto;
