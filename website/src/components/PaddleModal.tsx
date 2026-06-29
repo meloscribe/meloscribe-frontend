@@ -260,7 +260,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           paddle.Checkout.open({
             settings: {
               displayMode: 'inline',
-              frameTarget: 'paddle-checkout-frame',
+              frameTarget: '.paddle-checkout-frame',
               frameInitialHeight: '480',
               theme: currentTheme,
               locale: activeLang,
@@ -466,7 +466,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
           {/* Right Column: Inline Paddle Checkout Frame */}
           <div className="lg:col-span-7 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-dark-600/50 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-center min-h-[480px]">
-            <div id="paddle-checkout-frame" className="w-full min-h-[480px] bg-transparent">
+            <div id="paddle-checkout-frame" className="paddle-checkout-frame w-full min-h-[480px] bg-transparent">
               <div className="flex flex-col items-center justify-center h-[480px] text-gray-400 dark:text-gray-500">
                 <Loader2 className="w-8 h-8 animate-spin text-neon-cyan mb-2" />
                 <span className="text-sm font-medium">{t.buttonOpening}</span>
