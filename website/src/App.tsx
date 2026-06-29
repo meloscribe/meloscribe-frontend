@@ -648,8 +648,8 @@ function App() {
           const pricesMap: Record<string, string> = {};
           if (result && result.data && result.data.details && result.data.details.lineItems) {
             result.data.details.lineItems.forEach((item: any) => {
-              if (item.price && item.price.id && item.formattedTotals && item.formattedTotals.subtotal) {
-                pricesMap[item.price.id] = item.formattedTotals.subtotal;
+              if (item.price && item.price.id && item.formattedTotals && item.formattedTotals.total) {
+                pricesMap[item.price.id] = item.formattedTotals.total;
               }
             });
             setLocalizedPrices(pricesMap);
