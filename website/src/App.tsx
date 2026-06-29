@@ -377,6 +377,8 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const debounceTimeoutRef = useRef<number | null>(null);
   const fadeIntervalRef = useRef<number | null>(null);
+  // Persistent preload cache — keeps Audio objects alive in memory so the browser doesn't GC them
+  const preloadCacheRef = useRef<Map<string, HTMLAudioElement>>(new Map());
   const [transitioning, setTransitioning] = useState(false);
 
   const playMuteSound = (muted: boolean) => {
@@ -458,28 +460,45 @@ function App() {
     const isCondensed = getSongFormat(song) === 'viral_part';
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? (isCondensed ? 15 : 0);
 
-    const audio = new Audio(audioUrl);
+    // Reuse preloaded audio element from cache to avoid first-load race conditions
+    const cached = preloadCacheRef.current.get(audioUrl);
+    const audio = cached ?? new Audio(audioUrl);
     audioRef.current = audio;
     audio.currentTime = previewStart;
     audio.volume = 0;
 
-    audio.play()
-      .then(() => {
-        setPlayingSongId(song.id);
-        const start = performance.now();
-        fadeIntervalRef.current = window.setInterval(() => {
-          const elapsed = performance.now() - start;
-          const progress = Math.min(elapsed / 300, 1);
-          audio.volume = progress * 0.35;
-          if (progress >= 1) {
-            clearInterval(fadeIntervalRef.current!);
-            fadeIntervalRef.current = null;
-          }
-        }, 16);
-      })
-      .catch((err) => {
-        console.warn('Audio preview autoplay failed or file missing:', err);
-      });
+    const startFade = () => {
+      setPlayingSongId(song.id);
+      const start = performance.now();
+      fadeIntervalRef.current = window.setInterval(() => {
+        const elapsed = performance.now() - start;
+        const progress = Math.min(elapsed / 300, 1);
+        audio.volume = progress * 0.35;
+        if (progress >= 1) {
+          clearInterval(fadeIntervalRef.current!);
+          fadeIntervalRef.current = null;
+        }
+      }, 16);
+    };
+
+    const doPlay = () => {
+      audio.play()
+        .then(startFade)
+        .catch((err) => {
+          console.warn('Audio preview autoplay failed or file missing:', err);
+        });
+    };
+
+    // If the audio is ready to play immediately, do so — otherwise wait for canplay
+    if (audio.readyState >= 3) { // HAVE_FUTURE_DATA or better
+      doPlay();
+    } else {
+      const onReady = () => {
+        audio.removeEventListener('canplay', onReady);
+        doPlay();
+      };
+      audio.addEventListener('canplay', onReady);
+    }
   };
 
   // Card Mouse Hover handlers with 1s debounce
@@ -552,14 +571,15 @@ function App() {
     };
     fetchStats();
 
-    // Preload audio files to ensure instant playback on hover
+    // Preload audio files — store refs so they stay alive in memory (not GC'd)
     try {
       songs.forEach(song => {
         const url = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
-        if (url) {
+        if (url && !preloadCacheRef.current.has(url)) {
           const audio = new Audio();
-          audio.src = url;
           audio.preload = 'auto';
+          audio.src = url;
+          preloadCacheRef.current.set(url, audio);
         }
       });
     } catch (e) {
