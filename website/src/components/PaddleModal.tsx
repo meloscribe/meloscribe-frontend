@@ -280,7 +280,18 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           });
         }
       }, 400);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        const paddle = (window as any).Paddle;
+        if (typeof paddle !== 'undefined' && paddle.Checkout) {
+          try {
+            paddle.Checkout.close();
+            console.log("[Paddle] Cleaned up inline checkout");
+          } catch (e) {
+            console.warn("[Paddle] Error closing checkout:", e);
+          }
+        }
+      };
     }
   }, [isOpen, kofiId, activeLang, songTitle, songArtist]);
 

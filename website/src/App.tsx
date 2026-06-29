@@ -17,7 +17,7 @@ const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
   if (song.format === 'viral_part') return 'viral_part';
   if (song.format === 'full_arrangement') return 'full_arrangement';
   const p = song.price || '';
-  if (p.includes('3')) return 'viral_part';
+  if (p.includes('3') || p.includes('4')) return 'viral_part';
   return 'full_arrangement';
 };
 
