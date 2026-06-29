@@ -82,16 +82,6 @@
     "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
   },
   {
-    "id": "8",
-    "title": "Experience (All Parts)",
-    "artist": "Ludovico Einaudi",
-    "difficulty": "Original",
-    "price": "5 €",
-    "kofiId": "c22482a763",
-    "coverImage": "/covers/Experience.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
-  },
-  {
     "id": "9",
     "title": "In This Shirt",
     "artist": "The Irrepressibles",
