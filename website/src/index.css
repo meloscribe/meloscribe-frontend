@@ -391,7 +391,7 @@
   scrollbar-color: rgba(0, 245, 255, 0.25) transparent;
 }
 .overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .overflow-y-auto::-webkit-scrollbar-track {
   background: transparent;
@@ -399,6 +399,25 @@
 .overflow-y-auto::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, rgba(0, 245, 255, 0.3) 0%, rgba(255, 45, 146, 0.3) 100%);
   border-radius: 99px;
+}
+
+/* Force Paddle inline iframe to stay strictly inside column bounds and hide its own default scrollbars */
+.paddle-frame-inline {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  height: 600px !important;
+  border: none !important;
+  background: transparent !important;
+  overflow: hidden !important;
+}
+
+.paddle-checkout-frame {
+  width: 100% !important;
+  min-height: 480px !important;
+  background: transparent !important;
+  overflow: hidden !important;
 }
 
 

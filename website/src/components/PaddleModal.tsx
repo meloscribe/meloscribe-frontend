@@ -105,6 +105,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
+  const [isCheckoutLoaded, setIsCheckoutLoaded] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -131,10 +132,8 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
   const handleClose = () => {
     if (document.fullscreenElement) {
-      // In fullscreen: just exit fullscreen, keep video/lightbox open
       document.exitFullscreen().catch(() => {});
     } else {
-      // Not in fullscreen: close the lightbox and return to checkout
       setShowLightbox(false);
     }
   };
@@ -216,8 +215,6 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const isCondensed = format === 'viral_part';
-
   useEffect(() => {
     if (isOpen && songTitle) {
       setLoadingVideo(true);
@@ -232,7 +229,11 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
     }
   }, [isOpen, songTitle]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCheckoutLoaded(false);
+    }
+  }, [isOpen, kofiId]);
 
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
@@ -256,6 +257,19 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           const currentTheme = isDark ? 'dark' : 'light';
           
           const downloadHash = generateSecureHash();
+
+          paddle.Update({
+            eventCallback: function(data: any) {
+              console.log("[Paddle Event]:", data.name, data);
+              if (data.name === 'checkout.loaded' || data.name === 'checkout.rendered') {
+                setIsCheckoutLoaded(true);
+              }
+              if (data.name === 'checkout.error' || data.name === 'checkout.warning') {
+                const errMsg = data.data?.error?.message || data.error?.message || JSON.stringify(data);
+                alert("[Paddle Error]: " + errMsg);
+              }
+            }
+          });
           
           paddle.Checkout.open({
             settings: {
@@ -295,6 +309,10 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
     }
   }, [isOpen, kofiId, activeLang, songTitle, songArtist]);
 
+  const isCondensed = format === 'viral_part';
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
       {/* Backdrop */}
@@ -304,7 +322,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-4xl bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[90vh] lg:max-h-[95vh]">
+      <div className="relative w-full max-w-xl bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
         
         {/* Glow Orb in Modal */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
@@ -327,150 +345,155 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           </button>
         </div>
 
-        {/* Modal Body / 2 Columns */}
-        <div className="p-6 overflow-y-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
-          {/* Left Column: Song Details & Included features */}
-          <div className="lg:col-span-5 space-y-6 flex flex-col justify-start">
-            {/* Song Overview Card */}
-            <div className="flex items-center gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
-              <div 
-                onClick={() => videoUrl && setShowLightbox(true)}
-                className={`w-16 h-16 rounded-lg bg-gray-100 dark:bg-dark-950 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
-              >
-                <img 
-                  src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
-                  alt={songTitle}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                {videoUrl && (
-                  <div className="absolute inset-0 bg-black/35 flex items-center justify-center transition-all duration-300 hover:bg-black/55">
-                    <Play className="w-7 h-7 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
-                <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
-              </div>
+        {/* Modal Body / Scrollable Content */}
+        <div className="p-6 overflow-y-auto space-y-6 relative z-10 flex-1">
+          {/* Song Overview Card */}
+          <div className="flex items-center gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
+            <div 
+              onClick={() => videoUrl && setShowLightbox(true)}
+              className={`w-16 h-16 rounded-lg bg-gray-100 dark:bg-dark-950 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
+            >
+              <img 
+                src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
+                alt={songTitle}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {videoUrl && (
+                <div className="absolute inset-0 bg-black/35 flex items-center justify-center transition-all duration-300 hover:bg-black/55">
+                  <Play className="w-7 h-7 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
+                </div>
+              )}
             </div>
-
-            {/* Format Info Banner */}
-            <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
-              isCondensed 
-                ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
-                : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
-            }`}>
-              <div className="mt-0.5 text-base flex-shrink-0">
-                {isCondensed ? '🎬' : '✨'}
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  {isCondensed 
-                    ? (language === 'de' ? 'Viral Part' : 'Viral Part')
-                    : (language === 'de' ? 'Vollständiges Arrangement' : 'Full Arrangement')}
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                  {isCondensed
-                    ? (language === 'de' 
-                        ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
-                        : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
-                    : (language === 'de'
-                        ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende. (Hinweis: Das Vorschauvideo zeigt nur einen kurzen Ausschnitt des Arrangements.)'
-                        : 'This learning package contains the complete arrangement of the song from start to finish. (Note: The preview video shows only a short section of the arrangement.)')}
-                </p>
-              </div>
+            
+            <div className="flex-1 min-w-0">
+              <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
             </div>
+          </div>
 
-            {/* Included Features Checklist */}
+          {/* Format Info Banner */}
+          <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
+            isCondensed 
+              ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
+              : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
+          }`}>
+            <div className="mt-0.5 text-base flex-shrink-0">
+              {isCondensed ? '🎬' : '✨'}
+            </div>
             <div>
-              <h5 className="text-xs font-semibold text-gray-550 dark:text-gray-400 uppercase tracking-wider mb-3">{t.included}</h5>
-              <div className="space-y-3">
-                {difficulty === 'Easy' && (
-                  <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                    <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-900 dark:text-white">
-                        {language === 'de' ? 'Vereinfachte Version (Easy)' : 'Simplified Version (Easy)'}
-                      </span>
-                      <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                        {language === 'de' 
-                          ? 'Speziell für Anfänger arrangiert – leicht zu lernen, klingt trotzdem hervorragend.' 
-                          : 'Specially arranged for beginners – easy to learn, yet sounds excellent.'}
-                      </p>
-                    </div>
-                  </div>
-                )}
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {isCondensed 
+                  ? (language === 'de' ? 'Viral Part' : 'Viral Part')
+                  : (language === 'de' ? 'Vollständiges Arrangement' : 'Full Arrangement')}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                {isCondensed
+                  ? (language === 'de' 
+                      ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
+                      : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
+                  : (language === 'de'
+                      ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende. (Hinweis: Das Vorschauvideo zeigt nur einen kurzen Ausschnitt des Arrangements.)'
+                      : 'This learning package contains the complete arrangement of the song from start to finish. (Note: The preview video shows only a short section of the arrangement.)')}
+              </p>
+            </div>
+          </div>
 
+          {/* Included Features Checklist */}
+          <div>
+            <h5 className="text-xs font-semibold text-gray-550 dark:text-gray-400 uppercase tracking-wider mb-3">{t.included}</h5>
+            <div className="space-y-3">
+              {difficulty === 'Easy' && (
                 <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <FileText className="w-3.5 h-3.5 text-neon-cyan" />
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet music (PDF)') 
-                        : t.pdfTitle}
+                      {language === 'de' ? 'Vereinfachte Version (Easy)' : 'Simplified Version (Easy)'}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Präzise Klaviernoten des Song-Ausschnitts wie im Video.' : 'Precise piano sheets of the song section as shown in the video.') 
-                        : t.pdfDesc}
+                      {language === 'de' 
+                        ? 'Speziell für Anfänger arrangiert – leicht zu lernen, klingt trotzdem hervorragend.' 
+                        : 'Specially arranged for beginners – easy to learn, yet sounds excellent.'}
                     </p>
                   </div>
                 </div>
+              )}
 
-                <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="w-5 h-5 rounded-full bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <Music className="w-3.5 h-3.5 text-neon-pink" />
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? 'MIDI-Dateien (Normal + Langsam)' : 'MIDI Files (Normal + Slow)') 
-                        : t.midiTitle}
-                    </span>
-                    <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Lern-MIDIs des Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the song section for Synthesia or your DAW.') 
-                        : t.midiDesc}
-                    </p>
-                  </div>
+              <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <FileText className="w-3.5 h-3.5 text-neon-cyan" />
                 </div>
+                <div>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet music (PDF)') 
+                      : t.pdfTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Präzise Klaviernoten des Song-Ausschnitts wie im Video.' : 'Precise piano sheets of the song section as shown in the video.') 
+                      : t.pdfDesc}
+                  </p>
+                </div>
+              </div>
 
-                <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <Tv className="w-3.5 h-3.5 text-neon-cyan" />
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? '2K HD Video-Tutorials' : '2K HD Video Tutorials') 
-                        : t.videoTitle}
-                    </span>
-                    <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Das Tutorial-Video offline in normalem & langsamem Tempo.' : 'The tutorial video offline in normal & slow speed.') 
-                        : t.videoDesc}
-                    </p>
-                  </div>
+              <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                <div className="w-5 h-5 rounded-full bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <Music className="w-3.5 h-3.5 text-neon-pink" />
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? 'MIDI-Dateien (Normal + Langsam)' : 'MIDI Files (Normal + Slow)') 
+                      : t.midiTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Lern-MIDIs des Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the song section for Synthesia or your DAW.') 
+                      : t.midiDesc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <Tv className="w-3.5 h-3.5 text-neon-cyan" />
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {isCondensed 
+                      ? (language === 'de' ? '2K HD Video-Tutorials' : '2K HD Video Tutorials') 
+                      : t.videoTitle}
+                  </span>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isCondensed 
+                      ? (language === 'de' ? 'Das Tutorial-Video offline in normalem & langsamem Tempo.' : 'The tutorial video offline in normal & slow speed.') 
+                      : t.videoDesc}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Inline Paddle Checkout Frame */}
-          <div className="lg:col-span-7 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-dark-600/50 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-center min-h-[480px]">
-            <div id="paddle-checkout-frame" className="paddle-checkout-frame w-full min-h-[480px] bg-transparent">
-              <div className="flex flex-col items-center justify-center h-[480px] text-gray-400 dark:text-gray-500">
+          {/* Separator */}
+          <div className="border-t border-gray-200 dark:border-dark-600/50 my-6" />
+
+          {/* Checkout Frame Area */}
+          <div className="relative min-h-[480px]">
+            {/* Loading Spinner - hidden once loaded */}
+            {!isCheckoutLoaded && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-dark-900/95 z-20 rounded-xl">
                 <Loader2 className="w-8 h-8 animate-spin text-neon-cyan mb-2" />
-                <span className="text-sm font-medium">{t.buttonOpening}</span>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.buttonOpening}</span>
               </div>
+            )}
+            
+            <div id="paddle-checkout-frame" className="paddle-checkout-frame w-full min-h-[480px] bg-transparent">
+              {/* Paddle renders inline checkout frame here */}
             </div>
           </div>
         </div>
