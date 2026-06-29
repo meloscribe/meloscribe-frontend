@@ -613,7 +613,9 @@ function App() {
   useEffect(() => {
     const paddle = (window as any).Paddle;
     if (typeof paddle !== 'undefined') {
-      const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'test_0cbda3bab94eea0f567ab457a98';
+      const clientToken = 'test_0cbda3bab94eea0f567ab457a98';
+      console.log("[Paddle] Initializing with Client Token:", clientToken);
+      
       // Automatically detect environment based on token prefix
       if (clientToken.startsWith('live_')) {
         // Use production environment automatically
