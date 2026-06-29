@@ -725,7 +725,7 @@ function App() {
 
     <div className="min-h-screen bg-neon-gradient overflow-x-hidden">
       {/* Ambient Glow Orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="glow-orb-container">
         <div className="glow-orb glow-orb-cyan w-96 h-96 -top-48 -left-48" />
         <div className="glow-orb glow-orb-pink w-96 h-96 top-1/3 -right-48" />
         <div className="glow-orb glow-orb-cyan w-72 h-72 bottom-20 left-1/4 opacity-20" />
@@ -964,7 +964,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 cursor-pointer'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 hover:border-gray-400 dark:hover:border-dark-400 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
@@ -1189,7 +1189,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/45 dark:hover:bg-dark-500/50 dark:hover:border-neon-cyan/45 cursor-pointer'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 hover:border-gray-400 dark:hover:border-dark-400 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />

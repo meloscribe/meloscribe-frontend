@@ -30,33 +30,38 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — thin, overlay, and fades in only during active scrolling */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    background: transparent !important;
+  /* Premium Ghost Scrollbar — thin, overlay, and fades in only during active scrolling on Desktop */
+  @media (min-width: 1024px) {
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background: transparent !important;
+    }
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-track-piece {
+      background: transparent !important;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: transparent;
+      border-radius: 9999px;
+      transition: background 0.3s ease;
+    }
+    body.is-scrolling ::-webkit-scrollbar-thumb,
+    body.is-scrolling::-webkit-scrollbar-thumb {
+      background: rgba(0, 245, 255, 0.35) !important;
+    }
+    .dark body.is-scrolling ::-webkit-scrollbar-thumb,
+    .dark body.is-scrolling::-webkit-scrollbar-thumb {
+      background: rgba(0, 245, 255, 0.5) !important;
+    }
   }
-  ::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track-piece {
-    background: transparent !important;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 9999px;
-    transition: background 0.3s ease;
-  }
-  body.is-scrolling ::-webkit-scrollbar-thumb,
-  body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.3) !important;
-  }
-  .dark body.is-scrolling ::-webkit-scrollbar-thumb,
-  .dark body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.45) !important;
-  }
+
   /* Firefox scrollbar styling */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 245, 255, 0.35) transparent;
+    }
   }
 }
 
@@ -232,6 +237,16 @@
                 radial-gradient(ellipse at 80% 80%, rgba(255, 45, 146, 0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(255, 0, 255, 0.03) 0%, transparent 70%),
                 #0a0a0a;
+  }
+
+  .glow-orb-container {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
   }
 
   .glow-orb {

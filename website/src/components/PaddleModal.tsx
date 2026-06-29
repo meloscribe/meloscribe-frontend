@@ -131,9 +131,16 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
   const handleClose = () => {
     if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
+      document.exitFullscreen()
+        .catch(() => {})
+        .finally(() => {
+          setTimeout(() => {
+            setShowLightbox(false);
+          }, 150);
+        });
+    } else {
+      setShowLightbox(false);
     }
-    setShowLightbox(false);
   };
 
   useEffect(() => {
