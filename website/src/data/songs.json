@@ -122,16 +122,6 @@
     "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
   },
   {
-    "id": "12",
-    "title": "Icarus (All Parts)",
-    "artist": "Tony Ann",
-    "difficulty": "Original",
-    "price": "5 €",
-    "kofiId": "25e4417488",
-    "coverImage": "/covers/Icarus.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
-  },
-  {
     "id": "13",
     "title": "Mockingbird",
     "artist": "Eminem",
