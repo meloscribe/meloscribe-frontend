@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -21,8 +21,8 @@ const translations = {
     pdfDesc: 'Accurately transcribed piano sheets for printing or tablets.',
     midiTitle: 'High-Quality MIDI Files (Normal + Slow)',
     midiDesc: 'Load the MIDIs into Synthesia, your DAW, or your digital piano.',
-    videoTitle: '2K HD Video Tutorials offline',
-    videoDesc: 'Includes videos in original speed and reduced practice speed.',
+    videoTitle: '2K HD Practice Videos',
+    videoDesc: 'Includes the original performance and a slowed-down version with a metronome track for easy practicing.',
     buttonPay: 'Secure Payment with Paddle',
     buttonOpening: 'Opening secure checkout...',
     errorLoad: 'The payment system could not be loaded. Please disable your adblocker and try again.',
@@ -38,8 +38,8 @@ const translations = {
     pdfDesc: 'Präzise transkribierte Klaviernoten zum Ausdrucken oder für Tablets.',
     midiTitle: 'High-Quality MIDI-Dateien (Normal + Langsam)',
     midiDesc: 'Lade die MIDIs in Synthesia, deine DAW oder dein Digitalpiano.',
-    videoTitle: '2K HD Video-Tutorials offline',
-    videoDesc: 'Enthält Videos in Originalgeschwindigkeit und reduzierter Übungsgeschwindigkeit.',
+    videoTitle: '2K HD Übungsvideos',
+    videoDesc: 'Enthält die Originalversion und eine verlangsamte Version mit Metronom-Spur zum einfachen Üben.',
     buttonPay: 'Sicher bezahlen mit Paddle',
     buttonOpening: 'Öffne sicheren Checkout...',
     errorLoad: 'Das Zahlungssystem konnte nicht geladen werden. Bitte deaktiviere deinen Werbeblocker und versuche es erneut.',
@@ -55,8 +55,8 @@ const translations = {
     pdfDesc: 'Partitions de piano précisément transcrites pour impression ou tablettes.',
     midiTitle: 'Fichiers MIDI haute qualité (Normal + Lent)',
     midiDesc: 'Chargez les fichiers MIDI dans Synthesia, votre DAW ou votre piano numérique.',
-    videoTitle: 'Tutoriels Vidéo 2K HD hors ligne',
-    videoDesc: 'Comprend des vidéos à vitesse originale et à vitesse d\'apprentissage réduite.',
+    videoTitle: 'Vidéos de pratique 2K HD',
+    videoDesc: 'Comprend la performance originale et une version ralentie avec une piste de métronome pour s\'entraîner facilement.',
     buttonPay: 'Paiement sécurisé avec Paddle',
     buttonOpening: 'Ouverture du paiement sécurisé...',
     errorLoad: 'Le système de paiement n\'a pas pu être chargé. Veuillez désactiver votre bloqueur de publicité et réessayer.',
@@ -72,8 +72,8 @@ const translations = {
     pdfDesc: 'Partituras de piano transcritas con precisión para imprimir o usar en tabletas.',
     midiTitle: 'Archivos MIDI de alta calidad (Normal + Lento)',
     midiDesc: 'Carga los MIDIs en Synthesia, tu DAW o tu piano digital.',
-    videoTitle: 'Tutoriales en video 2K HD sin conexión',
-    videoDesc: 'Incluye videos a velocidad original y velocidad de práctica reducida.',
+    videoTitle: 'Videos de práctica 2K HD',
+    videoDesc: 'Incluye la interpretación original y una versión más lenta con pista de metrónomo para practicar fácilmente.',
     buttonPay: 'Pago seguro con Paddle',
     buttonOpening: 'Abriendo pago seguro...',
     errorLoad: 'No se pudo cargar el sistema de pago. Desactiva tu bloqueador de anuncios e inténtalo de nuevo.',
@@ -89,8 +89,8 @@ const translations = {
     pdfDesc: 'Spartiti per pianoforte trascritti con precisione per la stampa o tablet.',
     midiTitle: 'File MIDI di alta qualità (Normale + Lento)',
     midiDesc: 'Carica i MIDI in Synthesia, nella tua DAW o sul tuo pianoforte digitale.',
-    videoTitle: 'Tutorial video 2K HD offline',
-    videoDesc: 'Include video a velocità originale e velocità di pratica ridotta.',
+    videoTitle: 'Video di pratica 2K HD',
+    videoDesc: 'Include l\'esecuzione originale e una versione rallentata con traccia metronomo per esercitarsi facilmente.',
     buttonPay: 'Pagamento sicuro con Paddle',
     buttonOpening: 'Apertura del pagamento sicuro...',
     errorLoad: 'Il sistema di pagamento non può essere caricato. Disattiva il blocco degli annunci e riprova.',
@@ -105,6 +105,80 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (showLightbox) {
+        videoRef.current.play().catch(err => {
+          console.warn("[Player] Autoplay failed:", err);
+        });
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [showLightbox]);
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
+  const togglePlay = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(() => {});
+      }
+    }
+  };
+
+  const handleSeek = (val: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = val;
+      setCurrentTime(val);
+    }
+  };
+
+  const toggleMute = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (videoRef.current) {
+      const newMuted = !isMuted;
+      videoRef.current.muted = newMuted;
+      setIsMuted(newMuted);
+    }
+  };
+
+  const toggleFullscreen = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (videoContainerRef.current) {
+      if (!document.fullscreenElement) {
+        videoContainerRef.current.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
+
+  const formatTime = (timeInSeconds: number) => {
+    if (isNaN(timeInSeconds)) return '0:00';
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   const isCondensed = format === 'viral_part';
 
@@ -371,14 +445,17 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
         </div>
       </div>
 
-      {/* Lightbox Pop-up */}
-      {showLightbox && videoUrl && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-200">
+      {/* Lightbox Pop-up (Eagerly preloaded, shown/hidden with CSS opacity to keep buffer warm) */}
+      {videoUrl && (
+        <div className={`fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl transition-all duration-300 ${
+          showLightbox ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}>
           <div 
             className="absolute inset-0 cursor-pointer" 
             onClick={() => setShowLightbox(false)}
           />
-          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col">
+          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col transition-transform duration-300"
+               style={{ transform: showLightbox ? 'scale(1)' : 'scale(0.95)' }}>
             
             {/* Header / Title bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-dark-600/50 bg-dark-900/50 relative z-10">
@@ -396,14 +473,103 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             </div>
 
             {/* Video Player */}
-            <div className="w-full aspect-video bg-black flex items-center justify-center relative rounded-b-2xl overflow-hidden">
+            <div 
+              ref={videoContainerRef}
+              className="w-full aspect-video bg-black flex items-center justify-center relative rounded-b-2xl overflow-hidden group/player"
+            >
               <video 
+                ref={videoRef}
                 src={videoUrl}
-                controls
-                autoPlay
                 playsInline
-                className="w-full h-full object-contain"
+                preload="auto"
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+                onClick={togglePlay}
+                className="w-full h-full object-contain cursor-pointer"
               />
+
+              {/* Big Center Play/Pause button overlay */}
+              {!isPlaying && (
+                <div 
+                  onClick={togglePlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/25 cursor-pointer pointer-events-none"
+                >
+                  <div className="w-16 h-16 rounded-full bg-dark-900/70 border border-dark-600/30 flex items-center justify-center text-white backdrop-blur-sm transform hover:scale-105 transition-all">
+                    <Play className="w-8 h-8 fill-current ml-1 text-neon-cyan" />
+                  </div>
+                </div>
+              )}
+
+              {/* Custom Themed Controller Bar */}
+              <div 
+                className="absolute bottom-4 left-4 right-4 bg-dark-900/85 border border-dark-600/50 backdrop-blur-md px-4 py-3 rounded-xl flex flex-col gap-2 transition-all duration-300 opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100 z-20"
+              >
+                {/* Timeline row */}
+                <div className="relative w-full group/slider h-2 flex items-center cursor-pointer select-none">
+                  <input 
+                    type="range"
+                    min={0}
+                    max={duration || 100}
+                    value={currentTime}
+                    onChange={(e) => handleSeek(Number(e.target.value))}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  {/* Track background */}
+                  <div className="w-full h-1 bg-gray-700/60 rounded-full group-hover/slider:h-1.5 transition-all" />
+                  {/* Neon gradient fill */}
+                  <div 
+                    className="absolute left-0 h-1 bg-gradient-to-r from-neon-cyan to-neon-pink rounded-full group-hover/slider:h-1.5 transition-all pointer-events-none" 
+                    style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+                  />
+                  {/* Thumb indicator */}
+                  <div 
+                    className="absolute w-3.5 h-3.5 bg-white rounded-full border-2 border-neon-pink shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity pointer-events-none"
+                    style={{ left: `calc(${(currentTime / (duration || 1)) * 100}% - 7px)` }}
+                  />
+                </div>
+
+                {/* Buttons row */}
+                <div className="flex items-center justify-between mt-1 select-none">
+                  <div className="flex items-center gap-4">
+                    {/* Play/Pause */}
+                    <button 
+                      onClick={togglePlay} 
+                      className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
+                      aria-label={isPlaying ? "Pause video" : "Play video"}
+                    >
+                      {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                    </button>
+
+                    {/* Time Counter */}
+                    <span className="text-xs font-mono text-gray-300">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    {/* Volume Mute toggle */}
+                    <button 
+                      onClick={toggleMute} 
+                      className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
+                      aria-label={isMuted ? "Unmute video" : "Mute video"}
+                    >
+                      {isMuted ? <VolumeX className="w-4.5 h-4.5" /> : <Volume2 className="w-4.5 h-4.5" />}
+                    </button>
+
+                    {/* Fullscreen toggle */}
+                    <button 
+                      onClick={toggleFullscreen} 
+                      className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
+                      aria-label="Toggle fullscreen"
+                    >
+                      {isFullscreen ? <Minimize className="w-4.5 h-4.5" /> : <Maximize className="w-4.5 h-4.5" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
