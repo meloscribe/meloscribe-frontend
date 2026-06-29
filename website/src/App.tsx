@@ -569,12 +569,11 @@ function App() {
     // Scrollbar scrolling state logic to hide thumb when inactive
     let scrollTimeout: number;
     const handleScrollActive = () => {
-      if (window.innerWidth < 768) return; // Skip on mobile to save GPU cycles
       document.body.classList.add('is-scrolling');
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {
         document.body.classList.remove('is-scrolling');
-      }, 1000);
+      }, 1200);
     };
 
     window.addEventListener('scroll', handleScrollActive, { passive: true });
@@ -964,7 +963,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 hover:border-gray-400 dark:hover:border-dark-400 cursor-pointer active:scale-[0.98]'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
@@ -1189,7 +1188,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 hover:border-gray-400 dark:hover:border-dark-400 cursor-pointer active:scale-[0.98]'
+                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />

@@ -131,14 +131,10 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
   const handleClose = () => {
     if (document.fullscreenElement) {
-      document.exitFullscreen()
-        .catch(() => {})
-        .finally(() => {
-          setTimeout(() => {
-            setShowLightbox(false);
-          }, 150);
-        });
+      // In fullscreen: just exit fullscreen, keep video/lightbox open
+      document.exitFullscreen().catch(() => {});
     } else {
+      // Not in fullscreen: close the lightbox and return to checkout
       setShowLightbox(false);
     }
   };

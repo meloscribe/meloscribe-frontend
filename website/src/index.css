@@ -7,9 +7,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    transition: background-color 0.3s ease, color 0.3s ease;
     background-color: #0b0f19;
-    overflow-y: overlay;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -19,7 +17,6 @@
     font-feature-settings: 'cv11', 'ss01';
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   html:not(.dark) body {
@@ -30,38 +27,36 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — thin, overlay, and fades in only during active scrolling on Desktop */
-  @media (min-width: 1024px) {
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-      background: transparent !important;
-    }
-    ::-webkit-scrollbar-track,
-    ::-webkit-scrollbar-track-piece {
-      background: transparent !important;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: transparent;
-      border-radius: 9999px;
-      transition: background 0.3s ease;
-    }
-    body.is-scrolling ::-webkit-scrollbar-thumb,
-    body.is-scrolling::-webkit-scrollbar-thumb {
-      background: rgba(0, 245, 255, 0.35) !important;
-    }
-    .dark body.is-scrolling ::-webkit-scrollbar-thumb,
-    .dark body.is-scrolling::-webkit-scrollbar-thumb {
-      background: rgba(0, 245, 255, 0.5) !important;
-    }
+  /* Premium Ghost Scrollbar — completely invisible track, thumb fades in/out smoothly */
+  html {
+    scrollbar-width: none; /* Firefox: hide native scrollbar, we draw our own */
   }
-
-  /* Firefox scrollbar styling */
-  @supports not selector(::-webkit-scrollbar) {
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0, 245, 255, 0.35) transparent;
-    }
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+  /* When scrolling: expand scrollbar width and show neon thumb with smooth fade */
+  body.is-scrolling::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track-piece {
+    background: transparent !important;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.35);
+    border-radius: 9999px;
+  }
+  .dark body.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.5);
+  }
+  /* Firefox: show a thin scrollbar only while scrolling */
+  body.is-scrolling {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 245, 255, 0.35) transparent;
+  }
+  .dark body.is-scrolling {
+    scrollbar-color: rgba(0, 245, 255, 0.5) transparent;
   }
 }
 
@@ -239,20 +234,19 @@
                 #0a0a0a;
   }
 
+  /* Desktop: fixed orbs with float animation */
   .glow-orb-container {
     position: fixed;
     inset: 0;
     overflow: hidden;
     pointer-events: none;
     z-index: 0;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
   }
 
   .glow-orb {
     @apply absolute rounded-full blur-3xl opacity-20 pointer-events-none;
     animation: float 8s ease-in-out infinite;
-    will-change: transform, opacity;
+    will-change: transform;
     transform: translate3d(0, 0, 0);
   }
 
@@ -269,12 +263,21 @@
     animation-delay: -4s;
   }
 
-  /* Mobile hardware optimization for glow orbs */
+  /* Mobile: absolute positioning so orbs scroll with content, no blur/animation for perf */
   @media (max-width: 767px) {
+    .glow-orb-container {
+      position: absolute;
+      height: 100%;
+      min-height: 100vh;
+    }
     .glow-orb {
       animation: none !important;
-      filter: blur(50px) !important;
+      filter: blur(40px) !important;
       will-change: auto;
+      opacity: 0.15;
+    }
+    .dark .glow-orb {
+      opacity: 0.2;
     }
   }
 
