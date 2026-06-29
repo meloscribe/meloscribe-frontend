@@ -360,6 +360,8 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 function App() {
   const { i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrollingActive, setIsScrollingActive] = useState(false);
   const [language, setLanguageState] = useState<Language>(() => {
     const current = (i18n.resolvedLanguage || i18n.language) as Language;
     return ['en', 'de', 'fr', 'es', 'it'].includes(current) ? current : 'en';
@@ -584,20 +586,23 @@ function App() {
       console.warn('Preloading audio failed:', e);
     }
 
-    // Scrollbar fade-in/out: toggle class on <html> (document scrollbar owner in WebKit)
+    // Premium Ghost Scrollbar: tracks scroll progress percentage and sets active state for fade animation
     let scrollTimeout: number;
-    const handleScrollActive = () => {
-      if (window.innerWidth < 768) return; // Skip on mobile to save GPU cycles
-      document.documentElement.classList.add('is-scrolling');
+    const handleScrollProgress = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress(window.scrollY / totalHeight);
+      }
+      setIsScrollingActive(true);
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {
-        document.documentElement.classList.remove('is-scrolling');
-      }, 1200);
+        setIsScrollingActive(false);
+      }, 1000);
     };
 
-    window.addEventListener('scroll', handleScrollActive, { passive: true });
+    window.addEventListener('scroll', handleScrollProgress, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScrollActive);
+      window.removeEventListener('scroll', handleScrollProgress);
       clearTimeout(scrollTimeout);
     };
   }, []);
@@ -1370,6 +1375,22 @@ function App() {
           <span className="text-sm font-medium">{toast}</span>
         </div>
       )}
+
+      {/* Premium Ghost Scrollbar (Desktop only) */}
+      <div 
+        className={`fixed right-1.5 top-3 bottom-3 w-1 z-[9999] pointer-events-none hidden md:block transition-opacity duration-300 ${
+          isScrollingActive ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <div 
+          className="w-full bg-gradient-to-b from-neon-cyan to-neon-pink rounded-full shadow-[0_0_8px_rgba(0,245,255,0.4)]"
+          style={{
+            height: '60px',
+            transform: `translateY(${(window.innerHeight - 84) * scrollProgress}px)`,
+            willChange: 'transform'
+          }}
+        />
+      </div>
     </div>
   );
 }

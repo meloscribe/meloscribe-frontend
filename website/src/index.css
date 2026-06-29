@@ -27,53 +27,14 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — constant 6px width, completely transparent track, no layout shift */
+  /* Hide default native browser scrollbars globally to prevent layout shifts */
   html {
-    overflow-y: scroll; /* Force vertical scrollbar gutter to always remain to prevent layout shifts */
-    scrollbar-width: none; /* Firefox: hide by default */
+    scrollbar-width: none; /* Firefox */
   }
-  @media (max-width: 767px) {
-    html {
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
-  }
-
   html::-webkit-scrollbar {
-    width: 6px;
-    background: transparent;
-  }
-  html::-webkit-scrollbar-track,
-  html::-webkit-scrollbar-track-piece {
-    background: transparent !important;
-    border: none !important;
-  }
-  html::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 9999px;
-    transition: background 0.3s ease;
-  }
-  /* Thumb color change is-scrolling class toggled on <html> */
-  html.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.42);
-  }
-  .dark html.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.6);
-  }
-  /* Firefox: show thin scrollbar only while scrolling */
-  html.is-scrolling {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 245, 255, 0.42) transparent;
-  }
-  .dark html.is-scrolling {
-    scrollbar-color: rgba(0, 245, 255, 0.6) transparent;
-  }
-  /* Mobile: let OS handle scrollbar */
-  @media (max-width: 767px) {
-    html {
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
+    display: none !important; /* Safari, Chrome, Edge, Opera */
+    width: 0 !important;
+    height: 0 !important;
   }
 }
 
