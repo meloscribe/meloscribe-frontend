@@ -586,13 +586,13 @@ function App() {
       console.warn('Preloading audio failed:', e);
     }
 
-    // Scrollbar scrolling state logic to hide thumb when inactive
+    // Scrollbar fade-in/out: toggle class on <html> (document scrollbar owner in WebKit)
     let scrollTimeout: number;
     const handleScrollActive = () => {
-      document.body.classList.add('is-scrolling');
+      document.documentElement.classList.add('is-scrolling');
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {
-        document.body.classList.remove('is-scrolling');
+        document.documentElement.classList.remove('is-scrolling');
       }, 1200);
     };
 
@@ -753,7 +753,7 @@ function App() {
       {/* Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ${
         scrolled
-          ? 'backdrop-blur-xl bg-white/85 border-gray-200/60 dark:bg-dark-900/90 dark:border-dark-600/50'
+          ? 'header-blur bg-white/85 border-gray-200/60 dark:bg-dark-900/90 dark:border-dark-600/50'
           : 'bg-transparent border-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

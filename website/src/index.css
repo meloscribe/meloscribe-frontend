@@ -27,36 +27,46 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — completely invisible track, thumb fades in/out smoothly */
+  /* Document scrollbar: overlay (no layout gutter), invisible track, neon thumb fades in when scrolling */
   html {
-    scrollbar-width: none; /* Firefox: hide native scrollbar, we draw our own */
+    overflow-y: overlay; /* Scrollbar floats over content, no reserved space */
+    scrollbar-width: none; /* Firefox: hide by default */
   }
   ::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-  }
-  /* When scrolling: expand scrollbar width and show neon thumb with smooth fade */
-  body.is-scrolling::-webkit-scrollbar {
     width: 6px;
+    background: transparent;
   }
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-track-piece {
     background: transparent !important;
+    border: none !important;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.35);
+    background: transparent;
     border-radius: 9999px;
+    transition: background 0.5s ease;
   }
-  .dark body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.5);
+  /* Thumb appears only while scrolling — class toggled on <html> element */
+  html.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.38);
   }
-  /* Firefox: show a thin scrollbar only while scrolling */
-  body.is-scrolling {
+  .dark html.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.55);
+  }
+  /* Firefox: show thin scrollbar only while scrolling */
+  html.is-scrolling {
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 245, 255, 0.35) transparent;
+    scrollbar-color: rgba(0, 245, 255, 0.38) transparent;
   }
-  .dark body.is-scrolling {
-    scrollbar-color: rgba(0, 245, 255, 0.5) transparent;
+  .dark html.is-scrolling {
+    scrollbar-color: rgba(0, 245, 255, 0.55) transparent;
+  }
+  /* Mobile: let OS handle scrollbar (natively invisible/overlaid) */
+  @media (max-width: 767px) {
+    html {
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
   }
 }
 
@@ -67,6 +77,18 @@
 
   .neon-text-pink {
     text-shadow: 0 0 6px rgba(255, 45, 146, 0.4);
+  }
+
+  /* backdrop-blur only on desktop \u2014 disabled on mobile to prevent scroll jank */
+  .header-blur {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  @media (max-width: 767px) {
+    .header-blur {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
   }
 
   .sheet-card {
@@ -263,21 +285,21 @@
     animation-delay: -4s;
   }
 
-  /* Mobile: absolute positioning so orbs scroll with content, no blur/animation for perf */
+  /* Mobile: hide GPU-intensive fixed blur elements; rely on CSS background gradients instead */
   @media (max-width: 767px) {
     .glow-orb-container {
-      position: absolute;
-      height: 100%;
-      min-height: 100vh;
+      display: none;
     }
-    .glow-orb {
-      animation: none !important;
-      filter: blur(40px) !important;
-      will-change: auto;
-      opacity: 0.15;
+    /* Boost static background gradients to compensate for hidden orbs */
+    .bg-neon-gradient {
+      background: radial-gradient(ellipse at 20% 20%, rgba(0, 245, 255, 0.07) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(255, 45, 146, 0.07) 0%, transparent 60%),
+                  #fafafa;
     }
-    .dark .glow-orb {
-      opacity: 0.2;
+    .dark .bg-neon-gradient {
+      background: radial-gradient(ellipse at 20% 20%, rgba(0, 245, 255, 0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(255, 45, 146, 0.12) 0%, transparent 60%),
+                  #0a0a0a;
     }
   }
 
