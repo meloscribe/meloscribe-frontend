@@ -245,7 +245,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
               <p className="font-semibold text-gray-900 dark:text-white">
                 {isCondensed 
                   ? (language === 'de' ? 'Viral Part' : 'Viral Part')
-                  : (language === 'de' ? 'Vollständiges Arrangement Format' : 'Full Arrangement Format')}
+                  : (language === 'de' ? 'Vollständiges Arrangement' : 'Full Arrangement')}
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
                 {isCondensed
@@ -253,8 +253,8 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                       ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
                       : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
                   : (language === 'de'
-                      ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
-                      : 'This learning package contains the complete arrangement of the song from start to finish.')}
+                      ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende. (Hinweis: Das Vorschauvideo zeigt nur einen kurzen Ausschnitt des Arrangements.)'
+                      : 'This learning package contains the complete arrangement of the song from start to finish. (Note: The preview video shows only a short section of the arrangement.)')}
               </p>
             </div>
           </div>
@@ -378,7 +378,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             className="absolute inset-0 cursor-pointer" 
             onClick={() => setShowLightbox(false)}
           />
-          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col aspect-video">
+          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col">
             
             {/* Header / Title bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-dark-600/50 bg-dark-900/50 relative z-10">
@@ -396,7 +396,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             </div>
 
             {/* Video Player */}
-            <div className="flex-1 bg-black flex items-center justify-center relative">
+            <div className="w-full aspect-video bg-black flex items-center justify-center relative rounded-b-2xl overflow-hidden">
               <video 
                 src={videoUrl}
                 controls
