@@ -7,13 +7,19 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     background-color: #0b0f19;
+    overflow-y: overlay;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
-    @apply transition-colors duration-500 bg-dark-900 text-white;
+    background-color: #0b0f19;
+    @apply text-white;
     font-feature-settings: 'cv11', 'ss01';
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   html:not(.dark) body {
@@ -24,13 +30,15 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — thin and fades in only during active scrolling */
+  /* Premium Ghost Scrollbar — thin, overlay, and fades in only during active scrolling */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
+    background: transparent !important;
   }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track-piece {
+    background: transparent !important;
   }
   ::-webkit-scrollbar-thumb {
     background: transparent;
@@ -39,11 +47,11 @@
   }
   body.is-scrolling ::-webkit-scrollbar-thumb,
   body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.18);
+    background: rgba(0, 245, 255, 0.3) !important;
   }
   .dark body.is-scrolling ::-webkit-scrollbar-thumb,
   .dark body.is-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(0, 245, 255, 0.25);
+    background: rgba(0, 245, 255, 0.45) !important;
   }
   /* Firefox scrollbar styling */
   * {

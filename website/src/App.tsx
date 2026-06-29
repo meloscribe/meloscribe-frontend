@@ -569,6 +569,7 @@ function App() {
     // Scrollbar scrolling state logic to hide thumb when inactive
     let scrollTimeout: number;
     const handleScrollActive = () => {
+      if (window.innerWidth < 768) return; // Skip on mobile to save GPU cycles
       document.body.classList.add('is-scrolling');
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {

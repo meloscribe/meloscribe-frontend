@@ -116,6 +116,34 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   const [volume, setVolume] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const mouseMoveTimeout = useRef<number | null>(null);
+
+  const handleMouseMove = () => {
+    setControlsVisible(true);
+    if (mouseMoveTimeout.current) {
+      window.clearTimeout(mouseMoveTimeout.current);
+    }
+    mouseMoveTimeout.current = window.setTimeout(() => {
+      setControlsVisible(false);
+    }, 2000);
+  };
+
+  const handleClose = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    setShowLightbox(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (mouseMoveTimeout.current) {
+        window.clearTimeout(mouseMoveTimeout.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (videoRef.current) {
       if (showLightbox) {
@@ -457,10 +485,12 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
         }`}>
           <div 
             className="absolute inset-0 cursor-pointer" 
-            onClick={() => setShowLightbox(false)}
+            onClick={handleClose}
           />
           <div 
             ref={videoContainerRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => setControlsVisible(false)}
             className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10 z-10 group/player flex items-center justify-center transition-transform duration-300"
             style={{ transform: showLightbox ? 'scale(1)' : 'scale(0.95)' }}
           >
@@ -475,20 +505,24 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onDurationChange={(e) => setDuration(e.currentTarget.duration)}
               onClick={togglePlay}
-              className="w-full h-full object-contain cursor-pointer"
+              className={`w-full h-full object-contain ${controlsVisible ? 'cursor-pointer' : 'cursor-none'}`}
             />
 
             {/* Floating Top-Right Close Button */}
             <button 
-              onClick={() => setShowLightbox(false)}
-              className="absolute top-4 right-4 z-30 p-2 rounded-xl bg-black/60 border border-white/10 text-white/80 hover:text-white hover:bg-black/85 backdrop-blur-md transition-all duration-300 cursor-pointer opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100"
+              onClick={handleClose}
+              className={`absolute top-4 right-4 z-30 p-2 rounded-xl bg-black/60 border border-white/10 text-white/80 hover:text-white hover:bg-black/85 backdrop-blur-md transition-opacity duration-300 cursor-pointer ${
+                controlsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
               aria-label="Close preview"
             >
               <X className="w-4.5 h-4.5" />
             </button>
 
             {/* Floating Top-Left Song Details banner */}
-            <div className="absolute top-4 left-4 z-30 pointer-events-none flex flex-col bg-black/60 border border-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl opacity-0 group-hover/player:opacity-100 transition-all duration-300">
+            <div className={`absolute top-4 left-4 z-30 pointer-events-none flex flex-col bg-black/60 border border-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl transition-opacity duration-300 ${
+              controlsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}>
               <span className="text-[9px] font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
               <h4 className="text-xs font-semibold text-white mt-0.5">{songTitle}</h4>
             </div>
@@ -507,7 +541,9 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
             {/* Custom Themed Controller Bar */}
             <div 
-              className="absolute bottom-4 left-4 right-4 bg-dark-900/85 border border-dark-600/50 backdrop-blur-md px-4 py-3 rounded-xl flex flex-col gap-2 transition-all duration-300 opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100 z-20"
+              className={`absolute bottom-4 left-4 right-4 bg-dark-900/85 border border-dark-600/50 backdrop-blur-md px-4 py-3 rounded-xl flex flex-col gap-2 transition-opacity duration-300 z-20 ${
+                controlsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
             >
               {/* Timeline row */}
               <div className="relative w-full group/slider h-2 flex items-center cursor-pointer select-none">
