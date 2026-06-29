@@ -385,4 +385,20 @@
   100% { transform: scaleY(1); }
 }
 
+/* Style custom scrollbar for modal containers and checkouts */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 245, 255, 0.25) transparent;
+}
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgba(0, 245, 255, 0.3) 0%, rgba(255, 45, 146, 0.3) 100%);
+  border-radius: 99px;
+}
+
 
