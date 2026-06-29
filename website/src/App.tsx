@@ -624,7 +624,15 @@ function App() {
       }
 
       paddle.Initialize({
-        token: clientToken
+        token: clientToken,
+        eventCallback: function(data: any) {
+          console.log("[Paddle Event]:", data.name, data);
+          if (data.name === 'checkout.error' || data.name === 'checkout.warning') {
+            console.error("[Paddle Error Detail]:", data);
+            const errMsg = data.data?.error?.message || data.error?.message || JSON.stringify(data);
+            alert("[Paddle Error]: " + errMsg);
+          }
+        }
       });
 
       // Fetch dynamic, localized geotargeted prices for products
