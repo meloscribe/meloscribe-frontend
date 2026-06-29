@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
-import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount } from './data/siteConfig';
+import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
 import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
@@ -554,7 +554,7 @@ function App() {
 
     // Preload audio files to ensure instant playback on hover
     try {
-      songsData.forEach(song => {
+      songs.forEach(song => {
         const url = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
         if (url) {
           const audio = new Audio();
@@ -583,7 +583,9 @@ function App() {
     };
   }, []);
 
-  // Initialize Paddle SDK
+  const [localizedPrices, setLocalizedPrices] = useState<Record<string, string>>({});
+
+  // Initialize Paddle SDK & Fetch Price Previews
   useEffect(() => {
     const paddle = (window as any).Paddle;
     if (typeof paddle !== 'undefined') {
@@ -592,6 +594,31 @@ function App() {
       paddle.Initialize({
         token: import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'pt_sandbox_kJw0HdqYxRtf9s9D1Pj5wN7b5B5'
       });
+
+      // Fetch dynamic, localized geotargeted prices for products
+      const priceIds = songs
+        .filter(s => s.kofiId && s.kofiId.startsWith("pri_"))
+        .map(s => s.kofiId);
+
+      if (priceIds.length > 0) {
+        paddle.PricePreview({
+          items: priceIds.map(id => ({ priceId: id, quantity: 1 }))
+        })
+        .then((result: any) => {
+          const pricesMap: Record<string, string> = {};
+          if (result && result.data && result.data.details && result.data.details.lineItems) {
+            result.data.details.lineItems.forEach((item: any) => {
+              if (item.price && item.price.id && item.formattedTotals && item.formattedTotals.subtotal) {
+                pricesMap[item.price.id] = item.formattedTotals.subtotal;
+              }
+            });
+            setLocalizedPrices(pricesMap);
+          }
+        })
+        .catch((err: any) => {
+          console.warn("[Paddle Pricing] Price preview request failed:", err);
+        });
+      }
     }
   }, []);
 
@@ -934,7 +961,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.kofiId] || song.price)}
                         </button>
                       </div>
                     </div>
@@ -1159,7 +1186,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.kofiId] || song.price)}
                         </button>
                       </div>
                     </div>
