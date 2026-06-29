@@ -59,9 +59,10 @@ npm run dev
 - [x] Enabled dual-state upvote/unvote toggling on community suggestions page
 - [x] Configured seekable video stream proxy to bypass R2 CORS restrictions
 - [x] Disabled hover audio on mobile/touch screens
+- [x] Implemented dynamic client-side IP-based localized price previews via Paddle.PricePreview()
 
 ## Active Blockers / Next Steps
 
-- **BLOCKED — Paddle Domain Verification abgelehnt**: Paddle Dashboard zeigt "Action required" — Domain-Review für meloscribe.dev wurde nicht bestanden. Support-Ticket an sellers@paddle.com verschickt zur Klärung der genauen Anforderungen und des undokumentierten 10%-Flat-Fee-Tarifs. Bis zur Freischaltung ist kein Live-Checkout möglich.
+- **BLOCKED — Paddle Domain Verification abgelehnt**: Paddle Dashboard zeigt "Action required" — Domain-Review für meloscribe.dev wurde nicht bestanden. Support-Ticket an sellers@paddle.com verschickt zur Klärung der genauen Anforderungen und des undokumentierten 10%-Flat-Fee-Tarifs. Bis zur Freischaltung is kein Live-Checkout möglich.
 - Paddle-Webhook End-to-End-Test (Checkout → webhook → `/order/:hash` → R2 Download) steht aus.
 - Paddle-Webhook-Signaturprüfung auf dem Backend verifizieren sobald Freischaltung erfolgt.
