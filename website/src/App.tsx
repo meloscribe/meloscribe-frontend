@@ -1380,17 +1380,17 @@ function App() {
 
       {/* Premium Ghost Scrollbar (Desktop & Mobile) */}
       <div 
-        className={`fixed right-1 top-3 bottom-3 w-1 z-[9999] pointer-events-none transition-opacity duration-300 ${
+        className={`fixed right-1 top-3 bottom-3 w-1.5 z-[9999] pointer-events-none transition-opacity duration-300 ${
           isScrollingActive ? 'opacity-100' : 'opacity-0'
         }`}
       >
         <div 
           className="w-full rounded-full"
           style={{
-            height: '60px',
-            transform: `translateY(${(window.innerHeight - 84) * scrollProgress}px)`,
-            willChange: 'transform, background-color',
-            backgroundColor: scrollbarColor,
+            height: '70px',
+            transform: `translateY(${(window.innerHeight - 94) * scrollProgress}px)`,
+            willChange: 'transform',
+            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${scrollbarColor} 25%, ${scrollbarColor} 75%, rgba(0,0,0,0) 100%)`,
             boxShadow: `0 0 10px ${scrollbarColor}`
           }}
         />

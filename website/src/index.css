@@ -64,6 +64,25 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.5s ease, background-color 0.5s ease;
   }
 
+  @media (max-width: 767px) {
+    .sheet-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      @apply bg-white dark:bg-[#121624];
+      transition: transform 0.2s ease, border-color 0.2s ease !important;
+    }
+    /* Globally strip expensive blur overlays on mobile to prevent GPU scroll stutters */
+    .backdrop-blur-md,
+    .backdrop-blur-lg,
+    .backdrop-blur-sm,
+    footer,
+    header,
+    .header-blur {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+
   .dark .sheet-card {
     @apply border-dark-500/50 bg-dark-800/80;
   }
