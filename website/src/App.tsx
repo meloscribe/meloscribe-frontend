@@ -1378,20 +1378,20 @@ function App() {
         </div>
       )}
 
-      {/* Premium Ghost Scrollbar (Desktop & Mobile) */}
+      {/* Premium Ghost Scrollbar (Desktop only to prevent mobile URL bar layout jumps) */}
       <div 
-        className={`fixed right-1 top-3 bottom-3 w-1.5 z-[9999] pointer-events-none transition-opacity duration-300 ${
-          isScrollingActive ? 'opacity-100' : 'opacity-0'
+        className={`fixed right-1 top-3 bottom-3 w-[3px] z-[9999] pointer-events-none hidden md:block transition-opacity duration-300 ${
+          isScrollingActive ? 'opacity-65' : 'opacity-0'
         }`}
       >
         <div 
           className="w-full rounded-full"
           style={{
-            height: '70px',
-            transform: `translateY(${(window.innerHeight - 94) * scrollProgress}px)`,
+            height: '45px',
+            transform: `translateY(${(window.innerHeight - 69) * scrollProgress}px)`,
             willChange: 'transform',
-            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${scrollbarColor} 25%, ${scrollbarColor} 75%, rgba(0,0,0,0) 100%)`,
-            boxShadow: `0 0 10px ${scrollbarColor}`
+            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${scrollbarColor} 15%, ${scrollbarColor} 85%, rgba(0,0,0,0) 100%)`,
+            boxShadow: `0 0 5px ${scrollbarColor}`
           }}
         />
       </div>

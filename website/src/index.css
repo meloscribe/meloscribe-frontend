@@ -27,14 +27,16 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Hide default native browser scrollbars globally to prevent layout shifts */
-  html {
-    scrollbar-width: none; /* Firefox */
-  }
-  html::-webkit-scrollbar {
-    display: none !important; /* Safari, Chrome, Edge, Opera */
-    width: 0 !important;
-    height: 0 !important;
+  /* Hide default native browser scrollbars on desktop only to allow custom scrollbar */
+  @media (min-width: 768px) {
+    html {
+      scrollbar-width: none; /* Firefox */
+    }
+    html::-webkit-scrollbar {
+      display: none !important; /* Safari, Chrome, Edge, Opera */
+      width: 0 !important;
+      height: 0 !important;
+    }
   }
 }
 
