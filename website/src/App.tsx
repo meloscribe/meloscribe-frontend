@@ -35,7 +35,7 @@ const translations = {
     scrollToExplore: 'Scroll',
     popularArrangements: 'Popular Arrangements',
     popularDesc: 'Discover our most downloaded piano sheets',
-    downloadSheets: 'Sheets + FREE Videos & MIDI',
+    downloadSheets: 'Buy Sheets',
     currentlyDisabled: 'Currently Disabled',
     viewAll: 'View All Arrangements',
     joinCommunity: 'Join the Community',
@@ -67,7 +67,7 @@ const translations = {
     scrollToExplore: 'Scrollen',
     popularArrangements: 'Beliebte Arrangements',
     popularDesc: 'Entdecke unsere meist heruntergeladenen Klaviernoten',
-    downloadSheets: 'Noten + GRATIS Videos & MIDI',
+    downloadSheets: 'Noten kaufen',
     currentlyDisabled: 'Derzeit deaktiviert',
     viewAll: 'Alle Arrangements ansehen',
     joinCommunity: 'Werde Teil der Community',
@@ -99,7 +99,7 @@ const translations = {
     scrollToExplore: 'Défiler',
     popularArrangements: 'Arrangements populaires',
     popularDesc: 'Découvrez nos partitions les plus téléchargées',
-    downloadSheets: 'Partitions + Vidéos & MIDI GRATUITS',
+    downloadSheets: 'Acheter',
     currentlyDisabled: 'Actuellement désactivé',
     viewAll: 'Voir tous les arrangements',
     joinCommunity: 'Reignez la communauté',
@@ -131,7 +131,7 @@ const translations = {
     scrollToExplore: 'Desplazarse',
     popularArrangements: 'Arreglos populares',
     popularDesc: 'Descubre nuestras partituras de piano más descargadas',
-    downloadSheets: 'Partituras + Videos & MIDI GRATIS',
+    downloadSheets: 'Comprar',
     currentlyDisabled: 'Actualmente desactivado',
     viewAll: 'Ver todos los arreglos',
     joinCommunity: 'Únete a la comunidad',
@@ -163,7 +163,7 @@ const translations = {
     scrollToExplore: 'Scorri',
     popularArrangements: 'Arrangamenti popolari',
     popularDesc: 'Scopri i nostri spartiti per pianoforte più scaricati',
-    downloadSheets: 'Spartiti + Video & MIDI GRATIS',
+    downloadSheets: 'Acquista',
     currentlyDisabled: 'Attualmente disabilitato',
     viewAll: 'Visualizza tutti gli arrangiamenti',
     joinCommunity: 'Unisciti alla comunità',
@@ -897,7 +897,7 @@ function App() {
                         </div>
   
                         {/* Badges Container */}
-                        <div className="absolute top-2 left-0 right-0 px-2 sm:top-4 sm:px-4 flex items-center justify-between gap-1 sm:gap-2">
+                        <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between">
                           {/* Difficulty Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
                             song.difficulty === 'Easy'
@@ -907,17 +907,23 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            getSongFormat(song) === 'viral_part'
-                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
-                          }`}>
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
-                          </span>
-
                           {/* Price Badge */}
                           <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
                             {song.price}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Product Info (Title, Artist, Format) */}
+                      <div className="p-3 pb-0 select-text flex flex-col gap-0.5">
+                        <h4 className="font-display font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate">
+                          {song.title}
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+                          <span className="truncate">{song.artist}</span>
+                          <span>•</span>
+                          <span className="whitespace-nowrap font-medium text-neon-pink/80 dark:text-neon-pink/70">
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : 'Full Arrangement'}
                           </span>
                         </div>
                       </div>
@@ -1126,7 +1132,7 @@ function App() {
                         </div>
   
                         {/* Badges Container */}
-                        <div className="absolute top-2 left-0 right-0 px-2 sm:top-4 sm:px-4 flex items-center justify-between gap-1 sm:gap-2">
+                        <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between">
                           {/* Difficulty Badge */}
                           <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
                             song.difficulty === 'Easy'
@@ -1136,17 +1142,23 @@ function App() {
                             {song.difficulty}
                           </span>
 
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            getSongFormat(song) === 'viral_part'
-                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
-                          }`}>
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
-                          </span>
-
                           {/* Price Badge */}
                           <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-neon-cyan/15 dark:bg-neon-cyan/20 backdrop-blur-sm text-[9px] sm:text-xs font-bold text-neon-cyan border border-neon-cyan/45 shadow-neon-cyan-subtle flex-shrink-0">
                             {song.price}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Product Info (Title, Artist, Format) */}
+                      <div className="p-3 pb-0 select-text flex flex-col gap-0.5">
+                        <h4 className="font-display font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate">
+                          {song.title}
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+                          <span className="truncate">{song.artist}</span>
+                          <span>•</span>
+                          <span className="whitespace-nowrap font-medium text-neon-pink/80 dark:text-neon-pink/70">
+                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : 'Full Arrangement'}
                           </span>
                         </div>
                       </div>
