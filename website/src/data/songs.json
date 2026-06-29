@@ -272,16 +272,6 @@
     "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
   },
   {
-    "id": "27",
-    "title": "Aria Math (Part 1)",
-    "artist": "C418",
-    "difficulty": "Original",
-    "price": "2 €",
-    "kofiId": "e0c9e9f9f7",
-    "coverImage": "/covers/Aria Math Part 1.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
-  },
-  {
     "id": "28",
     "title": "Divenire (Part 2)",
     "artist": "Ludovico Einaudi",
