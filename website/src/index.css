@@ -39,25 +39,25 @@
     }
   }
 
-  ::-webkit-scrollbar {
+  html::-webkit-scrollbar {
     width: 6px;
     background: transparent;
   }
-  ::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track-piece {
+  html::-webkit-scrollbar-track,
+  html::-webkit-scrollbar-track-piece {
     background: transparent !important;
     border: none !important;
   }
-  ::-webkit-scrollbar-thumb {
+  html::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 9999px;
     transition: background 0.3s ease;
   }
   /* Thumb color change is-scrolling class toggled on <html> */
-  html.is-scrolling ::-webkit-scrollbar-thumb {
+  html.is-scrolling::-webkit-scrollbar-thumb {
     background: rgba(0, 245, 255, 0.42);
   }
-  .dark html.is-scrolling ::-webkit-scrollbar-thumb {
+  .dark html.is-scrolling::-webkit-scrollbar-thumb {
     background: rgba(0, 245, 255, 0.6);
   }
   /* Firefox: show thin scrollbar only while scrolling */

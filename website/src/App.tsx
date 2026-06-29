@@ -435,7 +435,6 @@ function App() {
           clearInterval(fadeIntervalRef.current!);
           fadeIntervalRef.current = null;
           audio.pause();
-          audio.src = '';
           setPlayingSongId(null);
         }
       }, 16);
@@ -531,7 +530,6 @@ function App() {
       }
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.src = '';
       }
       setPlayingSongId(null);
     }
