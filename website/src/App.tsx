@@ -613,7 +613,7 @@ function App() {
   useEffect(() => {
     const paddle = (window as any).Paddle;
     if (typeof paddle !== 'undefined') {
-      const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'pt_sandbox_kJw0HdqYxRtf9s9D1Pj5wN7b5B5';
+      const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'test_0cbda3bab94eea0f567ab457a98';
       // Automatically detect environment based on token prefix
       if (clientToken.startsWith('live_')) {
         // Use production environment automatically
