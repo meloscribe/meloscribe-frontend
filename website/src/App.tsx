@@ -649,7 +649,9 @@ function App() {
           if (result && result.data && result.data.details && result.data.details.lineItems) {
             result.data.details.lineItems.forEach((item: any) => {
               if (item.price && item.price.id && item.formattedTotals && item.formattedTotals.total) {
-                pricesMap[item.price.id] = item.formattedTotals.total;
+                const rawTotal = item.formattedTotals.total;
+                const cleanedTotal = rawTotal.replace(/(\.00|,00)(?=\s*[a-zA-Z$€£]|$)/g, '');
+                pricesMap[item.price.id] = cleanedTotal;
               }
             });
             setLocalizedPrices(pricesMap);
