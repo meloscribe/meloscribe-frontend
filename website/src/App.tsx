@@ -589,10 +589,16 @@ function App() {
   useEffect(() => {
     const paddle = (window as any).Paddle;
     if (typeof paddle !== 'undefined') {
-      // Use sandbox env for development and testing
-      paddle.Environment.set('sandbox');
+      const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'pt_sandbox_kJw0HdqYxRtf9s9D1Pj5wN7b5B5';
+      // Automatically detect environment based on token prefix
+      if (clientToken.startsWith('live_')) {
+        // Use production environment automatically
+      } else {
+        paddle.Environment.set('sandbox');
+      }
+
       paddle.Initialize({
-        token: import.meta.env.VITE_PADDLE_CLIENT_TOKEN || 'pt_sandbox_kJw0HdqYxRtf9s9D1Pj5wN7b5B5'
+        token: clientToken
       });
 
       // Fetch dynamic, localized geotargeted prices for products

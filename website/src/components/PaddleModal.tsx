@@ -113,6 +113,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -159,6 +160,10 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
       const newMuted = !isMuted;
       videoRef.current.muted = newMuted;
       setIsMuted(newMuted);
+      if (!newMuted && volume === 0) {
+        setVolume(0.5);
+        videoRef.current.volume = 0.5;
+      }
     }
   };
 
@@ -454,123 +459,139 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             className="absolute inset-0 cursor-pointer" 
             onClick={() => setShowLightbox(false)}
           />
-          <div className="relative w-full max-w-3xl bg-dark-950 border border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col transition-transform duration-300"
-               style={{ transform: showLightbox ? 'scale(1)' : 'scale(0.95)' }}>
-            
-            {/* Header / Title bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-dark-600/50 bg-dark-900/50 relative z-10">
-              <div>
-                <span className="text-xs font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
-                <h4 className="text-sm font-semibold text-white mt-0.5">{songTitle}</h4>
-              </div>
-              <button 
-                onClick={() => setShowLightbox(false)}
-                className="p-1.5 rounded-lg bg-dark-700/50 border border-dark-500/50 text-gray-400 hover:text-white transition-all duration-200 focus:outline-none cursor-pointer"
-                aria-label="Close preview"
-              >
-                <X className="w-4 h-4" />
-              </button>
+          <div 
+            ref={videoContainerRef}
+            className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10 z-10 group/player flex items-center justify-center transition-transform duration-300"
+            style={{ transform: showLightbox ? 'scale(1)' : 'scale(0.95)' }}
+          >
+            {/* Eagerly preloaded video element */}
+            <video 
+              ref={videoRef}
+              src={videoUrl}
+              playsInline
+              preload="auto"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+              onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+              onClick={togglePlay}
+              className="w-full h-full object-contain cursor-pointer"
+            />
+
+            {/* Floating Top-Right Close Button */}
+            <button 
+              onClick={() => setShowLightbox(false)}
+              className="absolute top-4 right-4 z-30 p-2 rounded-xl bg-black/60 border border-white/10 text-white/80 hover:text-white hover:bg-black/85 backdrop-blur-md transition-all duration-300 cursor-pointer opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100"
+              aria-label="Close preview"
+            >
+              <X className="w-4.5 h-4.5" />
+            </button>
+
+            {/* Floating Top-Left Song Details banner */}
+            <div className="absolute top-4 left-4 z-30 pointer-events-none flex flex-col bg-black/60 border border-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl opacity-0 group-hover/player:opacity-100 transition-all duration-300">
+              <span className="text-[9px] font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
+              <h4 className="text-xs font-semibold text-white mt-0.5">{songTitle}</h4>
             </div>
 
-            {/* Video Player */}
-            <div 
-              ref={videoContainerRef}
-              className="w-full aspect-video bg-black flex items-center justify-center relative rounded-b-2xl overflow-hidden group/player"
-            >
-              <video 
-                ref={videoRef}
-                src={videoUrl}
-                playsInline
-                preload="auto"
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                onDurationChange={(e) => setDuration(e.currentTarget.duration)}
-                onClick={togglePlay}
-                className="w-full h-full object-contain cursor-pointer"
-              />
-
-              {/* Big Center Play/Pause button overlay */}
-              {!isPlaying && (
-                <div 
-                  onClick={togglePlay}
-                  className="absolute inset-0 flex items-center justify-center bg-black/25 cursor-pointer pointer-events-none"
-                >
-                  <div className="w-16 h-16 rounded-full bg-dark-900/70 border border-dark-600/30 flex items-center justify-center text-white backdrop-blur-sm transform hover:scale-105 transition-all">
-                    <Play className="w-8 h-8 fill-current ml-1 text-neon-cyan" />
-                  </div>
-                </div>
-              )}
-
-              {/* Custom Themed Controller Bar */}
+            {/* Big Center Play/Pause button overlay */}
+            {!isPlaying && (
               <div 
-                className="absolute bottom-4 left-4 right-4 bg-dark-900/85 border border-dark-600/50 backdrop-blur-md px-4 py-3 rounded-xl flex flex-col gap-2 transition-all duration-300 opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100 z-20"
+                onClick={togglePlay}
+                className="absolute inset-0 flex items-center justify-center bg-black/25 cursor-pointer pointer-events-none"
               >
-                {/* Timeline row */}
-                <div className="relative w-full group/slider h-2 flex items-center cursor-pointer select-none">
-                  <input 
-                    type="range"
-                    min={0}
-                    max={duration || 100}
-                    value={currentTime}
-                    onChange={(e) => handleSeek(Number(e.target.value))}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                  />
-                  {/* Track background */}
-                  <div className="w-full h-1 bg-gray-700/60 rounded-full group-hover/slider:h-1.5 transition-all" />
-                  {/* Neon gradient fill */}
-                  <div 
-                    className="absolute left-0 h-1 bg-gradient-to-r from-neon-cyan to-neon-pink rounded-full group-hover/slider:h-1.5 transition-all pointer-events-none" 
-                    style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
-                  />
-                  {/* Thumb indicator */}
-                  <div 
-                    className="absolute w-3.5 h-3.5 bg-white rounded-full border-2 border-neon-pink shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity pointer-events-none"
-                    style={{ left: `calc(${(currentTime / (duration || 1)) * 100}% - 7px)` }}
-                  />
+                <div className="w-16 h-16 rounded-full bg-dark-900/70 border border-dark-600/30 flex items-center justify-center text-white backdrop-blur-sm transform hover:scale-105 transition-all">
+                  <Play className="w-8 h-8 fill-current ml-1 text-neon-cyan" />
+                </div>
+              </div>
+            )}
+
+            {/* Custom Themed Controller Bar */}
+            <div 
+              className="absolute bottom-4 left-4 right-4 bg-dark-900/85 border border-dark-600/50 backdrop-blur-md px-4 py-3 rounded-xl flex flex-col gap-2 transition-all duration-300 opacity-0 group-hover/player:opacity-100 focus-within/player:opacity-100 z-20"
+            >
+              {/* Timeline row */}
+              <div className="relative w-full group/slider h-2 flex items-center cursor-pointer select-none">
+                <input 
+                  type="range"
+                  min={0}
+                  max={duration || 100}
+                  value={currentTime}
+                  onChange={(e) => handleSeek(Number(e.target.value))}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+                {/* Track background */}
+                <div className="w-full h-1 bg-gray-700/60 rounded-full group-hover/slider:h-1.5 transition-all" />
+                {/* Neon gradient fill */}
+                <div 
+                  className="absolute left-0 h-1 bg-gradient-to-r from-neon-cyan to-neon-pink rounded-full group-hover/slider:h-1.5 transition-all pointer-events-none" 
+                  style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+                />
+                {/* Thumb indicator */}
+                <div 
+                  className="absolute w-3.5 h-3.5 bg-white rounded-full border-2 border-neon-pink shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity pointer-events-none"
+                  style={{ left: `calc(${(currentTime / (duration || 1)) * 100}% - 7px)` }}
+                />
+              </div>
+
+              {/* Buttons row */}
+              <div className="flex items-center justify-between mt-1 select-none">
+                <div className="flex items-center gap-4">
+                  {/* Play/Pause */}
+                  <button 
+                    onClick={togglePlay} 
+                    className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
+                    aria-label={isPlaying ? "Pause video" : "Play video"}
+                  >
+                    {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                  </button>
+
+                  {/* Time Counter */}
+                  <span className="text-xs font-mono text-gray-300">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
                 </div>
 
-                {/* Buttons row */}
-                <div className="flex items-center justify-between mt-1 select-none">
-                  <div className="flex items-center gap-4">
-                    {/* Play/Pause */}
-                    <button 
-                      onClick={togglePlay} 
-                      className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
-                      aria-label={isPlaying ? "Pause video" : "Play video"}
-                    >
-                      {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-                    </button>
-
-                    {/* Time Counter */}
-                    <span className="text-xs font-mono text-gray-300">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    {/* Volume Mute toggle */}
+                <div className="flex items-center gap-4">
+                  {/* Volume Mute toggle & Slider */}
+                  <div className="flex items-center gap-1.5 group/volume">
                     <button 
                       onClick={toggleMute} 
                       className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
                       aria-label={isMuted ? "Unmute video" : "Mute video"}
                     >
-                      {isMuted ? <VolumeX className="w-4.5 h-4.5" /> : <Volume2 className="w-4.5 h-4.5" />}
+                      {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
-
-                    {/* Fullscreen toggle */}
-                    <button 
-                      onClick={toggleFullscreen} 
-                      className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
-                      aria-label="Toggle fullscreen"
-                    >
-                      {isFullscreen ? <Minimize className="w-4.5 h-4.5" /> : <Maximize className="w-4.5 h-4.5" />}
-                    </button>
+                    <input 
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      value={isMuted ? 0 : volume}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        setVolume(val);
+                        if (videoRef.current) {
+                          videoRef.current.volume = val;
+                          videoRef.current.muted = val === 0;
+                          setIsMuted(val === 0);
+                        }
+                      }}
+                      className="w-0 group-hover/volume:w-16 focus-within/volume:w-16 h-1 bg-gray-500 rounded-full appearance-none cursor-pointer transition-all duration-300 accent-neon-cyan opacity-0 group-hover/volume:opacity-100 outline-none"
+                    />
                   </div>
+
+                  {/* Fullscreen toggle */}
+                  <button 
+                    onClick={toggleFullscreen} 
+                    className="text-gray-300 hover:text-white transition-all cursor-pointer focus:outline-none hover:scale-105"
+                    aria-label="Toggle fullscreen"
+                  >
+                    {isFullscreen ? <Minimize className="w-4.5 h-4.5" /> : <Maximize className="w-4.5 h-4.5" />}
+                  </button>
                 </div>
               </div>
-
             </div>
+
           </div>
         </div>
       )}

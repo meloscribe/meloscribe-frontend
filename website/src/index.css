@@ -24,21 +24,31 @@
     @apply bg-neon-cyan/30 text-white;
   }
 
-  /* Premium Ghost Scrollbar — hidden to remove vertical track lines */
+  /* Premium Ghost Scrollbar — thin and fades in only during active scrolling */
   ::-webkit-scrollbar {
-    display: none;
-    width: 0px;
-    height: 0px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: transparent;
+    border-radius: 9999px;
+    transition: background 0.3s ease;
   }
-  /* Firefox */
+  body.is-scrolling ::-webkit-scrollbar-thumb,
+  body.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.18);
+  }
+  .dark body.is-scrolling ::-webkit-scrollbar-thumb,
+  .dark body.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.25);
+  }
+  /* Firefox scrollbar styling */
   * {
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
   }
 }
 
@@ -108,14 +118,17 @@
   }
 
   .btn-neon:hover {
-    @apply border-neon-cyan text-gray-900;
+    @apply scale-105 border-neon-cyan-light text-gray-900;
     background: linear-gradient(135deg, rgba(0, 245, 255, 0.15) 0%, rgba(255, 45, 146, 0.15) 100%);
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+    box-shadow: 0 0 25px rgba(0, 245, 255, 0.45),
+                0 0 50px rgba(255, 45, 146, 0.25);
   }
 
   .dark .btn-neon:hover {
-    @apply text-white shadow-neon-cyan;
+    @apply text-white border-neon-cyan-light scale-105;
     background: linear-gradient(135deg, rgba(0, 245, 255, 0.2) 0%, rgba(255, 45, 146, 0.2) 100%);
+    box-shadow: 0 0 25px rgba(0, 245, 255, 0.45),
+                0 0 50px rgba(255, 45, 146, 0.25);
   }
 
   /* Glassmorphic Browse Sheets primary button */
@@ -216,6 +229,8 @@
   .glow-orb {
     @apply absolute rounded-full blur-3xl opacity-20 pointer-events-none;
     animation: float 8s ease-in-out infinite;
+    will-change: transform, opacity;
+    transform: translate3d(0, 0, 0);
   }
 
   .dark .glow-orb {
@@ -229,6 +244,15 @@
   .glow-orb-pink {
     @apply bg-neon-pink;
     animation-delay: -4s;
+  }
+
+  /* Mobile hardware optimization for glow orbs */
+  @media (max-width: 767px) {
+    .glow-orb {
+      animation: none !important;
+      filter: blur(50px) !important;
+      will-change: auto;
+    }
   }
 
   .link-underline {
