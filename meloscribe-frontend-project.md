@@ -53,6 +53,12 @@ npm run dev
 - [x] Mobile layout fixes: header, footer, logo, language toggle, Buy Me Coffee button
 - [x] `vercel.json` SPA fallback routing (all paths → `index.html`)
 - [x] Vercel deployment linked to GitHub main branch
+- [x] Product card visual redesign (Format badge on top-right, price inside the buy button, text block removed)
+- [x] Persistent player mute preference stored in localStorage
+- [x] Fixed iOS page transition blank screen in Safari by using state transitions
+- [x] Enabled dual-state upvote/unvote toggling on community suggestions page
+- [x] Configured seekable video stream proxy to bypass R2 CORS restrictions
+- [x] Disabled hover audio on mobile/touch screens
 
 ## Active Blockers / Next Steps
 
