@@ -315,6 +315,20 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+      <style dangerouslySetInnerHTML={{ __html: `
+        .paddle-frame,
+        .paddle-frame-inline,
+        #paddle-checkout-frame iframe {
+          position: relative !important;
+          left: auto !important;
+          top: auto !important;
+          width: 100% !important;
+          height: 600px !important;
+          border: none !important;
+          background: transparent !important;
+          overflow: hidden !important;
+        }
+      ` }} />
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity duration-300"
