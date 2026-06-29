@@ -589,6 +589,7 @@ function App() {
     // Scrollbar fade-in/out: toggle class on <html> (document scrollbar owner in WebKit)
     let scrollTimeout: number;
     const handleScrollActive = () => {
+      if (window.innerWidth < 768) return; // Skip on mobile to save GPU cycles
       document.documentElement.classList.add('is-scrolling');
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {
@@ -709,7 +710,14 @@ function App() {
   });
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    let lastValue = false;
+    const handleScroll = () => {
+      const newValue = window.scrollY > 50;
+      if (newValue !== lastValue) {
+        lastValue = newValue;
+        setScrolled(newValue);
+      }
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
