@@ -11,7 +11,6 @@ import Refunds from './pages/Refunds';
 import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 import OrderDetails from './pages/OrderDetails';
-import AdminDashboard from './pages/AdminDashboard';
 
 // Format auto-detection helper
 const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
@@ -1314,8 +1313,6 @@ function App() {
         <Suggestions onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath === '/success' ? (
         <Success onBack={() => navigate('/')} language={language} showToast={showToast} />
-      ) : currentPath === '/admin' ? (
-        <AdminDashboard onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath.startsWith('/order/') ? (
         <OrderDetails onBack={() => navigate('/')} language={language} showToast={showToast} hash={currentPath.substring('/order/'.length)} />
       ) : null}
