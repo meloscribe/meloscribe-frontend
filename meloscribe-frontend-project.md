@@ -48,8 +48,8 @@ npm run dev
 - [x] Global audio preview hover system on catalog page
 - [x] Diacritic-cleaning, space-insensitive, typo-tolerant search
 - [x] Secure 3-step Paddle payment flow with permanent `/order/:hash` success pages
-- [x] R2 presigned download links (15 min TTL, max 20 downloads per purchase)
-- [x] SQLite `purchases` table with `download_hash` + `download_count`
+- [x] R2 presigned download links (15 min TTL, max 100 downloads per purchase)
+- [x] SQLite `purchases` table with `download_hash` + `download_count` + `downloaded_types`
 - [x] Mobile layout fixes: header, footer, logo, language toggle, Buy Me Coffee button
 - [x] `vercel.json` SPA fallback routing (all paths → `index.html`)
 - [x] Vercel deployment linked to GitHub main branch
@@ -60,9 +60,11 @@ npm run dev
 - [x] Configured seekable video stream proxy to bypass R2 CORS restrictions
 - [x] Disabled hover audio on mobile/touch screens
 - [x] Implemented dynamic client-side IP-based localized price previews via Paddle.PricePreview()
+- [x] Intercepted client checkout completion events to redirect parent window using transaction ID (`txn_`), resolving success page verification timeouts
+- [x] Completely hid desktop & mobile checkout iframe scrollbars
+- [x] Removed legacy ZIP package cards to optimize duplicate Cloudflare R2 storage usage
 
 ## Active Blockers / Next Steps
 
-- **BLOCKED — Paddle Domain Verification abgelehnt**: Paddle Dashboard zeigt "Action required" — Domain-Review für meloscribe.dev wurde nicht bestanden. Support-Ticket an sellers@paddle.com verschickt zur Klärung der genauen Anforderungen und des undokumentierten 10%-Flat-Fee-Tarifs. Bis zur Freischaltung is kein Live-Checkout möglich.
-- Paddle-Webhook End-to-End-Test (Checkout → webhook → `/order/:hash` → R2 Download) steht aus.
-- Paddle-Webhook-Signaturprüfung auf dem Backend verifizieren sobald Freischaltung erfolgt.
+- **BLOCKED — Paddle Domain Verification abgelehnt**: Paddle Dashboard zeigt "Action required" — Domain-Review für meloscribe.dev wurde nicht bestanden. Support-Ticket an sellers@paddle.com verschickt zur Klärung der genauen Anforderungen und des undokumentierten 10%-Flat-Fee-Tarifs. Bis zur Freischaltung ist kein Live-Checkout möglich.
+- End-to-end sandbox checkout flows have been fully verified with client event redirection and direct transaction lookup fallback; live webhook sign verification will be tested once production domain verification is approved.
