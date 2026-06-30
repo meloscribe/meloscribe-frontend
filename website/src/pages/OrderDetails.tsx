@@ -20,12 +20,12 @@ const translations = {
     subtitle: 'Access your sheet music and practice tools. Bookmark this page if you want to access it later.',
     invalidHash: 'Invalid or expired order link.',
     orderNotFound: 'Order details could not be found. Please contact support.',
-    downloadLimitReached: 'You have reached the maximum download limit of 100 downloads for this package. Contact support for reset.',
+    downloadLimitReached: 'You have reached the maximum download limit of 50 downloads for this package. Contact support for reset.',
     downloading: 'Preparing download...',
     downloadSuccess: 'Download started successfully!',
     loadingInfo: 'Loading order details...',
     downloadsUsed: 'Downloads used',
-    maxDownloads: 'of 100 downloads max',
+    maxDownloads: 'of 50 downloads max',
     downloadPdf: 'Download Piano PDF',
     downloadPdfDesc: 'Sheet music optimized for print and tablet readers.',
     secureSsl: 'Secure SSL Connection',
@@ -37,12 +37,12 @@ const translations = {
     subtitle: 'Greife auf deine Klaviernoten und Übungsdateien zu. Speichere diesen Link, um später wiederzukommen.',
     invalidHash: 'Ungültiger oder abgelaufener Bestell-Link.',
     orderNotFound: 'Bestell-Details wurden nicht gefunden. Bitte kontaktiere den Support.',
-    downloadLimitReached: 'Du hast das maximale Download-Limit von 100 Klicks erreicht. Kontaktiere den Support für eine Freischaltung.',
+    downloadLimitReached: 'Du hast das maximale Download-Limit von 50 Klicks erreicht. Kontaktiere den Support für eine Freischaltung.',
     downloading: 'Bereite Download vor...',
     downloadSuccess: 'Download erfolgreich gestartet!',
     loadingInfo: 'Lade Bestell-Details...',
     downloadsUsed: 'Downloads verbraucht',
-    maxDownloads: 'von maximal 100 Downloads',
+    maxDownloads: 'von maximal 50 Downloads',
     downloadPdf: 'Klaviernoten PDF laden',
     downloadPdfDesc: 'Noten optimiert zum Ausdrucken und für Tablets.',
     secureSsl: 'Sichere SSL-Verbindung',
@@ -124,8 +124,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
         const errMsg = errData.error || (isDe ? 'Download failed' : 'Download failed'); // wait, let's match exact lines
         showToast(errMsg);
         if (res.status === 403) {
-          // Sync UI count to 100 if limit hit
-          setOrderInfo(prev => prev ? { ...prev, download_count: 100 } : null);
+          // Sync UI count to 50 if limit hit
+          setOrderInfo(prev => prev ? { ...prev, download_count: 50 } : null);
         }
       }
     } catch (err) {
@@ -159,7 +159,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
             {isDe ? 'Fehler' : 'Access Denied'}
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{error}</p>
+          <p className="text-gray-550 dark:text-gray-400 text-sm mb-6">{error}</p>
           <button 
             onClick={onBack}
             className="flex items-center gap-2 text-sm text-neon-cyan hover:text-neon-cyan/80 mx-auto cursor-pointer transition-colors duration-300"
@@ -172,8 +172,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
     );
   }
 
-  const isLimitReached = orderInfo ? orderInfo.download_count >= 100 : false;
-  const downloadPct = orderInfo ? Math.min((orderInfo.download_count / 100) * 100, 100) : 0;
+  const isLimitReached = orderInfo ? orderInfo.download_count >= 50 : false;
+  const downloadPct = orderInfo ? Math.min((orderInfo.download_count / 50) * 100, 100) : 0;
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] flex items-center justify-center">
@@ -222,12 +222,12 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
             </div>
 
-            {/* Limit Progress */}
-            <div className="w-full sm:w-48">
+          {/* Limit Progress */}
+          <div className="w-full sm:w-56">
               <div className="flex justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                 <span>{t.downloadsUsed}</span>
                 <span className="font-mono font-bold text-gray-900 dark:text-white">
-                  {orderInfo?.download_count} / 100
+                  {orderInfo?.download_count} / 50
                 </span>
               </div>
               <div className="w-full h-2 bg-gray-200 dark:bg-dark-950 rounded-full overflow-hidden border border-gray-300/30 dark:border-dark-600/20">
@@ -240,11 +240,46 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   style={{ width: `${downloadPct}%` }}
                 />
               </div>
-              <span className="text-[10px] text-gray-500 dark:text-gray-500 block mt-1 text-right">
-                {t.maxDownloads}
-              </span>
+              <div className="flex items-center justify-between mt-1.5">
+                <a 
+                  href={`mailto:support@meloscribe.dev?subject=${encodeURIComponent(isDe ? 'Freischaltung Download-Limit' : 'Reset Download Limit')} - Order #${hash}`}
+                  className="text-[10px] text-neon-cyan hover:underline hover:text-neon-cyan/80 transition-colors font-medium cursor-pointer"
+                >
+                  {isDe ? 'Support anschreiben' : 'Email support'}
+                </a>
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-gray-500 dark:text-gray-500">
+                    {t.maxDownloads}
+                  </span>
+                  <span className="group relative inline-block cursor-help text-gray-400 hover:text-neon-cyan transition-colors">
+                    <Info className="w-3 h-3" />
+                    <span className="absolute bottom-full right-0 mb-2 w-56 p-2 bg-dark-900/95 border border-dark-600 text-gray-300 text-[10px] rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                      {isDe 
+                        ? 'Aus Sicherheitsgründen gibt es maximal 50 Downloads, damit Links nicht missbräuchlich geteilt werden.' 
+                        : 'For security reasons, downloads are capped at 50 to prevent unauthorized link sharing.'}
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Limit Reached Warning Box */}
+          {isLimitReached && (
+            <div className="mt-2 mb-6 p-4 rounded-xl border border-neon-pink/20 bg-neon-pink/5 text-xs text-neon-pink flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-300">
+              <span className="leading-relaxed">
+                {isDe 
+                  ? 'Limit erreicht? Kein Stress. Schreib mir kurz an support@meloscribe.dev und ich schalte dich wieder frei.' 
+                  : 'Limit reached? No stress. Message me at support@meloscribe.dev and I will get you unlocked.'}
+              </span>
+              <a 
+                href={`mailto:support@meloscribe.dev?subject=${encodeURIComponent(isDe ? 'Freischaltung Download-Limit' : 'Reset Download Limit')} - Order #${hash}`}
+                className="px-3.5 py-1.5 bg-neon-pink hover:bg-neon-pink/90 text-white font-bold rounded-lg text-xs transition-all shrink-0 cursor-pointer text-center w-full sm:w-auto"
+              >
+                {isDe ? 'Support mailen' : 'Email support'}
+              </a>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="space-y-4">

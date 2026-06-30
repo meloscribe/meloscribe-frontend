@@ -380,9 +380,27 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const debounceTimeoutRef = useRef<number | null>(null);
   const fadeIntervalRef = useRef<number | null>(null);
-  // Persistent preload cache — keeps Audio objects alive in memory so the browser doesn't GC them
   const preloadCacheRef = useRef<Map<string, HTMLAudioElement>>(new Map());
   const [transitioning, setTransitioning] = useState(false);
+
+  const [allSongs, setAllSongs] = useState<Song[]>(songs);
+
+  useEffect(() => {
+    const fetchDynamicSongs = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/public/songs`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setAllSongs(data);
+          }
+        }
+      } catch (err) {
+        console.warn("[App] Dynamic catalog loading bypassed (using fallback):", err);
+      }
+    };
+    fetchDynamicSongs();
+  }, []);
 
   const playMuteSound = (muted: boolean) => {
     try {
@@ -574,7 +592,7 @@ function App() {
 
     // Preload audio files — store refs so they stay alive in memory (not GC'd)
     try {
-      songs.forEach(song => {
+      allSongs.forEach(song => {
         const url = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
         if (url && !preloadCacheRef.current.has(url)) {
           const audio = new Audio();
@@ -606,7 +624,7 @@ function App() {
       window.removeEventListener('scroll', handleScrollProgress);
       clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [allSongs]);
 
   const [localizedPrices, setLocalizedPrices] = useState<Record<string, string>>({});
 
@@ -637,7 +655,7 @@ function App() {
       });
 
       // Fetch dynamic, localized geotargeted prices for products
-      const priceIds = songs
+      const priceIds = allSongs
         .filter(s => s.kofiId && s.kofiId.startsWith("pri_"))
         .map(s => s.kofiId);
 
@@ -663,7 +681,7 @@ function App() {
         });
       }
     }
-  }, []);
+  }, [allSongs]);
 
   // Dark/Light Theme state
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -707,7 +725,7 @@ function App() {
     }
   }, [toast]);
 
-  const filteredSongs = songs.filter((song) => {
+  const filteredSongs = allSongs.filter((song) => {
     if (song.hidden) return false;
     
     const matchesSearch = smartSearchMatch(song.title, song.artist, searchQuery);
@@ -934,7 +952,7 @@ function App() {
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
-                {songs.filter(song => !song.hidden).slice(0, 3).map((song) => {
+                {allSongs.filter(song => !song.hidden).slice(0, 3).map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                   return (
                     <div
