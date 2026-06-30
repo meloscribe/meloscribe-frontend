@@ -57,8 +57,8 @@ const translations = {
   },
   de: {
     brand: 'meloscribe',
-    tagline: 'Arrangiert nach Gehör.',
-    taglineHighlight: 'Gespielt von dir.',
+    tagline: 'Arranged by ear.',
+    taglineHighlight: 'Played by you.',
     subtitle: 'Präzise Klaviernoten und Arrangements für Pop und Filmsoundtracks. Kein Rätselraten, kein endloses Suchen. ',
     subtitleHighlight: 'Noten greifen und losspielen.',
     badgeText: 'Jede Woche neue Noten',
@@ -89,8 +89,8 @@ const translations = {
   },
   fr: {
     brand: 'meloscribe',
-    tagline: 'Arrangé à l\'oreille.',
-    taglineHighlight: 'Joué par vous.',
+    tagline: 'Arranged by ear.',
+    taglineHighlight: 'Played by you.',
     subtitle: 'Partitions et arrangements de piano précis pour les bandes sonores pop et cinématographiques. Pas de devinettes, pas de recherche sans fin. ',
     subtitleHighlight: 'Prenez vos partitions et commencez à jouer.',
     badgeText: 'Nouvelles partitions chaque semaine',
@@ -121,8 +121,8 @@ const translations = {
   },
   es: {
     brand: 'meloscribe',
-    tagline: 'Arreglado de oído.',
-    taglineHighlight: 'Tocado por ti.',
+    tagline: 'Arranged by ear.',
+    taglineHighlight: 'Played by you.',
     subtitle: 'Partituras y arreglos de piano precisos para bandas sonoras de pop y cine. Sin adivinanzas, sin búsquedas interminables. ',
     subtitleHighlight: 'Consigue tus partituras y empieza a jugar.',
     badgeText: 'Nuevas partituras añadidas semanalmente',
@@ -153,8 +153,8 @@ const translations = {
   },
   it: {
     brand: 'meloscribe',
-    tagline: 'Arrangiato a orecchio.',
-    taglineHighlight: 'Suonato da te.',
+    tagline: 'Arranged by ear.',
+    taglineHighlight: 'Played by you.',
     subtitle: 'Spartiti e arrangiamenti per pianoforte precisi per colonne sonore pop e cinematografiche. Nessuna congettura, nessuna ricerca infinita. ',
     subtitleHighlight: 'Prendi i tuoi spartiti e inizia a suonare.',
     badgeText: 'Nuovi spartiti aggiunti ogni settimana',
