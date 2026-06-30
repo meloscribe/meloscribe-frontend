@@ -909,7 +909,7 @@ function App() {
               <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
                 {t.subtitle}
                 <br className="hidden sm:block" />
-                <span className="text-neon-pink">{t.subtitleHighlight}</span>
+                <span className="premium-gradient-text">{t.subtitleHighlight}</span>
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
