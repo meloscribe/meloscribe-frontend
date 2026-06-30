@@ -33,8 +33,8 @@ const translations = {
     browseSheets: 'Browse Sheets',
     followUs: 'Follow Us',
     scrollToExplore: 'Scroll',
-    popularArrangements: 'Popular Arrangements',
-    popularDesc: 'Discover our most downloaded piano sheets',
+    popularArrangements: 'Recent Arrangements',
+    popularDesc: 'Discover our latest piano sheets and arrangements',
     downloadSheets: 'Buy Sheets',
     currentlyDisabled: 'Currently Disabled',
     viewAll: 'View All Arrangements',
@@ -65,8 +65,8 @@ const translations = {
     browseSheets: 'Noten durchsuchen',
     followUs: 'Folgen',
     scrollToExplore: 'Scrollen',
-    popularArrangements: 'Beliebte Arrangements',
-    popularDesc: 'Entdecke unsere meist heruntergeladenen Klaviernoten',
+    popularArrangements: 'Neueste Arrangements',
+    popularDesc: 'Entdecke unsere neuesten Klaviernoten und Arrangements',
     downloadSheets: 'Noten kaufen',
     currentlyDisabled: 'Derzeit deaktiviert',
     viewAll: 'Alle Arrangements ansehen',
@@ -97,8 +97,8 @@ const translations = {
     browseSheets: 'Parcourir les partitions',
     followUs: 'Suivez-nous',
     scrollToExplore: 'Défiler',
-    popularArrangements: 'Arrangements populaires',
-    popularDesc: 'Découvrez nos partitions les plus téléchargées',
+    popularArrangements: 'Arrangements récents',
+    popularDesc: 'Découvrez nos dernières partitions et arrangements',
     downloadSheets: 'Acheter',
     currentlyDisabled: 'Actuellement désactivé',
     viewAll: 'Voir tous les arrangements',
@@ -129,8 +129,8 @@ const translations = {
     browseSheets: 'Explorar partituras',
     followUs: 'Síguenos',
     scrollToExplore: 'Desplazarse',
-    popularArrangements: 'Arreglos populares',
-    popularDesc: 'Descubre nuestras partituras de piano más descargadas',
+    popularArrangements: 'Arreglos recientes',
+    popularDesc: 'Descubre nuestras últimas partituras y arreglos',
     downloadSheets: 'Comprar',
     currentlyDisabled: 'Actualmente desactivado',
     viewAll: 'Ver todos los arreglos',
@@ -161,8 +161,8 @@ const translations = {
     browseSheets: 'Sfoglia gli spartiti',
     followUs: 'Seguici',
     scrollToExplore: 'Scorri',
-    popularArrangements: 'Arrangamenti popolari',
-    popularDesc: 'Scopri i nostri spartiti per pianoforte più scaricati',
+    popularArrangements: 'Arrangamenti recenti',
+    popularDesc: 'Scopri i nostri ultimi spartiti e arrangiamenti',
     downloadSheets: 'Acquista',
     currentlyDisabled: 'Attualmente disabilitato',
     viewAll: 'Visualizza tutti gli arrangiamenti',
@@ -1311,14 +1311,19 @@ function App() {
           <div className="flex flex-col gap-8">
             {/* Top row - Logo + Socials */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-              <a 
-                href="/" 
-                onClick={(e) => { e.preventDefault(); navigate('/'); }}
-                className="flex items-center gap-2"
-              >
-                <Music className="w-5 h-5 text-neon-cyan" />
-                <span className="font-display text-xl font-bold text-gradient">{t.brand}</span>
-              </a>
+              <div className="flex flex-col items-center sm:items-start gap-1">
+                <a 
+                  href="/" 
+                  onClick={(e) => { e.preventDefault(); navigate('/'); }}
+                  className="flex items-center gap-2"
+                >
+                  <Music className="w-5 h-5 text-neon-cyan" />
+                  <span className="font-display text-xl font-bold text-gradient">{t.brand}</span>
+                </a>
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                  Arranged by ear. Played by you.
+                </span>
+              </div>
             </div>
 
             {/* Bottom row - Copyright + Legal */}
