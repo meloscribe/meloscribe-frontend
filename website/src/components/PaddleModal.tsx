@@ -272,6 +272,13 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                   }, 200);
                 }
               }
+              if (data.name === 'checkout.completed') {
+                console.log("[Paddle Completed]:", data);
+                const transactionId = data.data?.transaction_id || data.data?.id || '';
+                if (transactionId) {
+                  window.location.href = `/success?checkout_id=${transactionId}`;
+                }
+              }
               if (data.name === 'checkout.error' || data.name === 'checkout.warning') {
                 const errMsg = data.data?.error?.message || data.error?.message || JSON.stringify(data);
                 alert("[Paddle Error]: " + errMsg);
@@ -330,15 +337,21 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
           position: relative !important;
           left: auto !important;
           top: auto !important;
-          width: calc(100% + 18px) !important;
-          margin-right: -18px !important;
+          width: calc(100% + 24px) !important;
+          margin-right: -24px !important;
           height: 650px !important;
           border: none !important;
           background: transparent !important;
           overflow: hidden !important;
           scrollbar-width: none !important;
         }
-        #paddle-checkout-frame iframe::-webkit-scrollbar {
+        #paddle-checkout-frame {
+          width: 100% !important;
+          overflow: hidden !important;
+          scrollbar-width: none !important;
+        }
+        #paddle-checkout-frame iframe::-webkit-scrollbar,
+        #paddle-checkout-frame::-webkit-scrollbar {
           display: none !important;
           width: 0 !important;
           height: 0 !important;

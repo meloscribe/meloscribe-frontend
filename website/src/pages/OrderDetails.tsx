@@ -20,16 +20,14 @@ const translations = {
     subtitle: 'Access your sheet music and practice tools. Bookmark this page if you want to access it later.',
     invalidHash: 'Invalid or expired order link.',
     orderNotFound: 'Order details could not be found. Please contact support.',
-    downloadLimitReached: 'You have reached the maximum download limit of 20 downloads for this package. Contact support for reset.',
+    downloadLimitReached: 'You have reached the maximum download limit of 100 downloads for this package. Contact support for reset.',
     downloading: 'Preparing download...',
     downloadSuccess: 'Download started successfully!',
     loadingInfo: 'Loading order details...',
     downloadsUsed: 'Downloads used',
-    maxDownloads: 'of 20 downloads max',
+    maxDownloads: 'of 100 downloads max',
     downloadPdf: 'Download Piano PDF',
     downloadPdfDesc: 'Sheet music optimized for print and tablet readers.',
-    downloadZip: 'Download Assets (.zip)',
-    downloadZipDesc: 'Includes MIDIs (Normal/Slow) and HD Video Tutorials.',
     secureSsl: 'Secure SSL Connection',
     merchantOfRecord: 'Payments processed by Paddle',
     backHome: 'Back to Home'
@@ -39,16 +37,14 @@ const translations = {
     subtitle: 'Greife auf deine Klaviernoten und Übungsdateien zu. Speichere diesen Link, um später wiederzukommen.',
     invalidHash: 'Ungültiger oder abgelaufener Bestell-Link.',
     orderNotFound: 'Bestell-Details wurden nicht gefunden. Bitte kontaktiere den Support.',
-    downloadLimitReached: 'Du hast das maximale Download-Limit von 20 Klicks erreicht. Kontaktiere den Support für eine Freischaltung.',
+    downloadLimitReached: 'Du hast das maximale Download-Limit von 100 Klicks erreicht. Kontaktiere den Support für eine Freischaltung.',
     downloading: 'Bereite Download vor...',
     downloadSuccess: 'Download erfolgreich gestartet!',
     loadingInfo: 'Lade Bestell-Details...',
     downloadsUsed: 'Downloads verbraucht',
-    maxDownloads: 'von maximal 20 Downloads',
+    maxDownloads: 'von maximal 100 Downloads',
     downloadPdf: 'Klaviernoten PDF laden',
     downloadPdfDesc: 'Noten optimiert zum Ausdrucken und für Tablets.',
-    downloadZip: 'Lernpaket laden (.zip)',
-    downloadZipDesc: 'Enthält MIDIs (Normal/Langsam) und HD-Video-Tutorials.',
     secureSsl: 'Sichere SSL-Verbindung',
     merchantOfRecord: 'Zahlungsabwickler: Paddle',
     backHome: 'Zurück zur Startseite'
@@ -114,18 +110,22 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           
           showToast(t.downloadSuccess);
           
-          // Increment download count in UI state
-          setOrderInfo(prev => prev ? { ...prev, download_count: prev.download_count + 1 } : null);
+          // Update download count from response or increment fallback
+          if (data.download_count !== undefined) {
+            setOrderInfo(prev => prev ? { ...prev, download_count: data.download_count } : null);
+          } else {
+            setOrderInfo(prev => prev ? { ...prev, download_count: prev.download_count + 1 } : null);
+          }
         } else {
           showToast(isDe ? 'Fehler beim Herunterladen' : 'Error triggering download');
         }
       } else {
         const errData = await res.json().catch(() => ({}));
-        const errMsg = errData.error || (isDe ? 'Download fehlgeschlagen' : 'Download failed');
+        const errMsg = errData.error || (isDe ? 'Download failed' : 'Download failed'); // wait, let's match exact lines
         showToast(errMsg);
         if (res.status === 403) {
-          // Sync UI count to 20 if limit hit
-          setOrderInfo(prev => prev ? { ...prev, download_count: 20 } : null);
+          // Sync UI count to 100 if limit hit
+          setOrderInfo(prev => prev ? { ...prev, download_count: 100 } : null);
         }
       }
     } catch (err) {
@@ -172,8 +172,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
     );
   }
 
-  const isLimitReached = orderInfo ? orderInfo.download_count >= 20 : false;
-  const downloadPct = orderInfo ? Math.min((orderInfo.download_count / 20) * 100, 100) : 0;
+  const isLimitReached = orderInfo ? orderInfo.download_count >= 100 : false;
+  const downloadPct = orderInfo ? Math.min((orderInfo.download_count / 100) * 100, 100) : 0;
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] flex items-center justify-center">
@@ -226,8 +226,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             <div className="w-full sm:w-48">
               <div className="flex justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                 <span>{t.downloadsUsed}</span>
-                <span className={isLimitReached ? 'text-neon-pink font-bold' : ''}>
-                  {orderInfo?.download_count} / 20
+                <span className="font-mono font-bold text-gray-900 dark:text-white">
+                  {orderInfo?.download_count} / 100
                 </span>
               </div>
               <div className="w-full h-2 bg-gray-200 dark:bg-dark-950 rounded-full overflow-hidden border border-gray-300/30 dark:border-dark-600/20">
@@ -433,18 +433,6 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
                 )}
                 <span>{isDe ? 'Video laden' : 'Download Video'}</span>
-              </button>
-            </div>
-
-            {/* Optional Legacy ZIP (collapsible / secondary) */}
-            <div className="pt-4 border-t border-gray-200/40 dark:border-dark-700/40 flex justify-center">
-              <button
-                onClick={() => handleDownload('zip')}
-                disabled={isLimitReached || downloadingType !== null}
-                className="text-[11px] text-gray-550 dark:text-gray-400 hover:text-neon-pink transition-colors duration-300 flex items-center gap-1 cursor-pointer bg-transparent border-none"
-              >
-                <Archive className="w-3.5 h-3.5" />
-                <span>{isDe ? 'Älteres Komplettpaket (.zip) laden' : 'Download older full package (.zip)'}</span>
               </button>
             </div>
           </div>
