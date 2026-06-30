@@ -282,6 +282,80 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 )}
                 <span>{isDe ? 'PDF laden' : 'Download PDF'}</span>
               </button>
+                        {/* Download Video (Original) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
+              <div className="flex items-start gap-3 w-full sm:w-auto">
+                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
+                  <Tv className="w-5 h-5 text-neon-cyan" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'Video-Tutorial (Originalgeschwindigkeit)' : 'Video Tutorial (Original Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Das 2K HD Keysight Visualisierungsvideo in Originalgeschwindigkeit zum Mitspielen offline.' 
+                          : 'The 2K HD Keysight visualization video at full speed for offline reference.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Lernvideo in Originalgeschwindigkeit (2K HD MP4).' : 'Tutorial video at full speed (2K HD MP4).'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDownload('video')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {downloadingType === 'video' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
+                )}
+                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+              </button>
+            </div>
+
+            {/* Download Video (Slow) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
+              <div className="flex items-start gap-3 w-full sm:w-auto">
+                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
+                  <Tv className="w-5 h-5 text-neon-cyan opacity-80" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    {isDe ? 'Video-Tutorial (Verlangsamt zum Üben)' : 'Video Tutorial (Slow Practice Speed)'}
+                    <span className="group relative inline-block cursor-help">
+                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
+                        {isDe 
+                          ? 'Das Keysight Visualisierungsvideo offline im langsamen Übungstempo (mit Metronom) zum einfachen Nachspielen.' 
+                          : 'The Keysight visualization video at slow speed (with metronome) for easy offline practice.'}
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
+                      </span>
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                    {isDe ? 'Lernvideo im langsamen Tempo (2K HD MP4).' : 'Tutorial video in slow tempo (2K HD MP4).'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDownload('video_slow')}
+                disabled={isLimitReached || downloadingType !== null}
+                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {downloadingType === 'video_slow' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
+                )}
+                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+              </button>
             </div>
 
             {/* Download MIDI (Original) */}
@@ -358,83 +432,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 )}
                 <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
               </button>
-            </div>
-
-            {/* Download Video (Original) */}
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
-              <div className="flex items-start gap-3 w-full sm:w-auto">
-                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
-                  <Tv className="w-5 h-5 text-neon-cyan" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'Video-Tutorial (Originalgeschwindigkeit)' : 'Video Tutorial (Original Speed)'}
-                    <span className="group relative inline-block cursor-help">
-                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
-                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Das 2K HD Keysight Visualisierungsvideo in Originalgeschwindigkeit zum Mitspielen offline.' 
-                          : 'The 2K HD Keysight visualization video at full speed for offline reference.'}
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
-                      </span>
-                    </span>
-                  </h4>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Lernvideo in Originalgeschwindigkeit (2K HD MP4).' : 'Tutorial video at full speed (2K HD MP4).'}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleDownload('video')}
-                disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {downloadingType === 'video' ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                ) : (
-                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
-                )}
-                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
-              </button>
-            </div>
-
-            {/* Download Video (Slow) */}
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
-              <div className="flex items-start gap-3 w-full sm:w-auto">
-                <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
-                  <Tv className="w-5 h-5 text-neon-cyan opacity-80" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'Video-Tutorial (Verlangsamt zum Üben)' : 'Video Tutorial (Slow Practice Speed)'}
-                    <span className="group relative inline-block cursor-help">
-                      <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
-                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Das Keysight Visualisierungsvideo offline im langsamen Übungstempo (mit Metronom) zum einfachen Nachspielen.' 
-                          : 'The Keysight visualization video at slow speed (with metronome) for easy offline practice.'}
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
-                      </span>
-                    </span>
-                  </h4>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Lernvideo im langsamen Tempo (2K HD MP4).' : 'Tutorial video in slow tempo (2K HD MP4).'}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleDownload('video_slow')}
-                disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {downloadingType === 'video_slow' ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                ) : (
-                  <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
-                )}
-                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
-              </button>
-            </div>
+            </div>      </div>
           </div>
         </div>
 
