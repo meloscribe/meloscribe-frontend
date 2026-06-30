@@ -27,8 +27,8 @@ const translations = {
     brand: 'meloscribe',
     tagline: 'Arranged by ear.',
     taglineHighlight: 'Played by you.',
-    subtitle: 'Accurate piano sheets and arrangements for pop and cinematic soundtracks. No guesswork, no endless searching. ',
-    subtitleHighlight: 'Grab your sheets and start playing.',
+    subtitle: 'Handcrafted piano arrangements for your favorite soundtracks. ',
+    subtitleHighlight: 'Ready to play.',
     badgeText: 'New sheets added weekly',
     browseSheets: 'Browse Sheets',
     followUs: 'Follow Us',
@@ -59,8 +59,8 @@ const translations = {
     brand: 'meloscribe',
     tagline: 'Arranged by ear.',
     taglineHighlight: 'Played by you.',
-    subtitle: 'Präzise Klaviernoten und Arrangements für Pop und Filmsoundtracks. Kein Rätselraten, kein endloses Suchen. ',
-    subtitleHighlight: 'Noten greifen und losspielen.',
+    subtitle: 'Handgefertigte Klavierarrangements für deine Lieblings-Soundtracks. ',
+    subtitleHighlight: 'Bereit zum Spielen.',
     badgeText: 'Jede Woche neue Noten',
     browseSheets: 'Noten durchsuchen',
     followUs: 'Folgen',
@@ -700,6 +700,13 @@ function App() {
 
   // Routing State
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  // Redirect /admin immediately to homepage
+  useEffect(() => {
+    if (window.location.pathname === '/admin') {
+      window.location.replace('/');
+    }
+  }, []);
 
   // Ko-fi Modal State
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
