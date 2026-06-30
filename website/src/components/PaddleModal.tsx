@@ -10,6 +10,7 @@ interface PaddleModalProps {
   language: string;
   format?: 'viral_part' | 'full_arrangement';
   difficulty?: 'Easy' | 'Original';
+  videoPreviewUrl?: string;
 }
 
 const translations = {
@@ -100,7 +101,7 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original' }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -218,16 +219,20 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   useEffect(() => {
     if (isOpen && songTitle) {
       setLoadingVideo(true);
-      const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-      
-      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8787'
-        : 'https://api.meloscribe.dev';
-         
-      setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle)}`);
-      setLoadingVideo(false);
+      if (videoPreviewUrl) {
+        setVideoUrl(videoPreviewUrl);
+        setLoadingVideo(false);
+      } else {
+        const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+        const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:8787'
+          : 'https://api.meloscribe.dev';
+           
+        setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle)}`);
+        setLoadingVideo(false);
+      }
     }
-  }, [isOpen, songTitle]);
+  }, [isOpen, songTitle, videoPreviewUrl]);
 
   useEffect(() => {
     if (!isOpen) {

@@ -317,7 +317,9 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 )}
                 <span>{isDe ? 'PDF laden' : 'Download PDF'}</span>
               </button>
-                        {/* Download Video (Original) */}
+            </div>
+
+            {/* Download Video (Original) */}
             <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">
               <div className="flex items-start gap-3 w-full sm:w-auto">
                 <div className="p-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex-shrink-0 mt-0.5">
@@ -467,7 +469,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 )}
                 <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
               </button>
-            </div>      </div>
+            </div>
           </div>
         </div>
 

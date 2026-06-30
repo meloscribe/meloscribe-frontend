@@ -1405,6 +1405,7 @@ function App() {
           language={language}
           format={getSongFormat(selectedSong)}
           difficulty={selectedSong.difficulty}
+          videoPreviewUrl={selectedSong.videoPreviewUrl}
         />
       )}
 
