@@ -776,11 +776,7 @@ function App() {
       </div>
 
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ${
-        scrolled
-          ? 'header-blur bg-white/85 border-gray-200/60 dark:bg-dark-900/90 dark:border-dark-600/50'
-          : 'bg-transparent border-transparent'
-      }`}>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b header-blur bg-white/80 border-gray-200/50 dark:bg-dark-900/80 dark:border-dark-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo and Nav links */}

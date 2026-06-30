@@ -538,7 +538,10 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
                 </div>
               )}
               
-              <div id="paddle-checkout-frame" className="paddle-checkout-frame w-full min-h-[480px] bg-transparent">
+              <div 
+                id="paddle-checkout-frame" 
+                className={`paddle-checkout-frame w-full min-h-[480px] bg-transparent transition-opacity duration-300 ${isCheckoutLoaded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}
+              >
                 {/* Paddle renders inline checkout frame here */}
               </div>
             </div>
