@@ -25,8 +25,8 @@ const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
 const translations = {
   en: {
     brand: 'meloscribe',
-    tagline: 'Play the Songs',
-    taglineHighlight: 'You Love.',
+    tagline: 'Arranged by ear.',
+    taglineHighlight: 'Played by you.',
     subtitle: 'Accurate piano sheets and arrangements for pop and cinematic soundtracks. No guesswork, no endless searching. ',
     subtitleHighlight: 'Grab your sheets and start playing.',
     badgeText: 'New sheets added weekly',
@@ -57,8 +57,8 @@ const translations = {
   },
   de: {
     brand: 'meloscribe',
-    tagline: 'Spiele die Lieder',
-    taglineHighlight: 'die du liebst.',
+    tagline: 'Arrangiert nach Gehör.',
+    taglineHighlight: 'Gespielt von dir.',
     subtitle: 'Präzise Klaviernoten und Arrangements für Pop und Filmsoundtracks. Kein Rätselraten, kein endloses Suchen. ',
     subtitleHighlight: 'Noten greifen und losspielen.',
     badgeText: 'Jede Woche neue Noten',
@@ -89,8 +89,8 @@ const translations = {
   },
   fr: {
     brand: 'meloscribe',
-    tagline: 'Jouez les morceaux',
-    taglineHighlight: 'que vous aimez.',
+    tagline: 'Arrangé à l\'oreille.',
+    taglineHighlight: 'Joué par vous.',
     subtitle: 'Partitions et arrangements de piano précis pour les bandes sonores pop et cinématographiques. Pas de devinettes, pas de recherche sans fin. ',
     subtitleHighlight: 'Prenez vos partitions et commencez à jouer.',
     badgeText: 'Nouvelles partitions chaque semaine',
@@ -121,8 +121,8 @@ const translations = {
   },
   es: {
     brand: 'meloscribe',
-    tagline: 'Toca las canciones',
-    taglineHighlight: 'que amas.',
+    tagline: 'Arreglado de oído.',
+    taglineHighlight: 'Tocado por ti.',
     subtitle: 'Partituras y arreglos de piano precisos para bandas sonoras de pop y cine. Sin adivinanzas, sin búsquedas interminables. ',
     subtitleHighlight: 'Consigue tus partituras y empieza a jugar.',
     badgeText: 'Nuevas partituras añadidas semanalmente',
@@ -153,8 +153,8 @@ const translations = {
   },
   it: {
     brand: 'meloscribe',
-    tagline: 'Suona le canzoni',
-    taglineHighlight: 'che ami.',
+    tagline: 'Arrangiato a orecchio.',
+    taglineHighlight: 'Suonato da te.',
     subtitle: 'Spartiti e arrangiamenti per pianoforte precisi per colonne sonore pop e cinematografiche. Nessuna congettura, nessuna ricerca infinita. ',
     subtitleHighlight: 'Prendi i tuoi spartiti e inizia a suonare.',
     badgeText: 'Nuovi spartiti aggiunti ogni settimana',
