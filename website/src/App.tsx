@@ -54,6 +54,26 @@ const translations = {
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
     refunds: 'Refund Policy',
+    allArrangements: 'All Arrangements',
+    allArrangementsDesc: 'Explore our full catalog of premium piano sheets and learning packages.',
+    searchPlaceholder: 'Search songs or artists...',
+    difficulty: 'Difficulty:',
+    missingSongTitle: "Looking for a piece from my videos that isn't here yet?",
+    missingSongDesc: 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you!',
+    suggestSongBtn: 'Suggest Song',
+    switchLight: 'Switch to Light Mode',
+    switchDark: 'Switch to Dark Mode',
+    formatLabel: 'Format:',
+    formatAll: 'All',
+    formatViral: 'Viral Part',
+    formatFull: 'Full Arrangement',
+    formatFullCondensed: 'Full Arr.',
+    suggestions: 'Suggestions',
+    taglineSubtitle: 'Arranged by ear. Played by you.',
+    navSheets: 'Sheets',
+    navSuggestions: 'Suggestions',
+    muteAudio: 'Mute Audio Preview',
+    unmuteAudio: 'Unmute Audio Preview',
   },
   de: {
     brand: 'meloscribe',
@@ -86,6 +106,26 @@ const translations = {
     privacy: 'Datenschutz',
     terms: 'Nutzungsbedingungen',
     refunds: 'Erstattungsrichtlinie',
+    allArrangements: 'Alle Arrangements',
+    allArrangementsDesc: 'Entdecke unseren gesamten Katalog an Premium-Klaviernoten und Lernpaketen.',
+    searchPlaceholder: 'Suche nach Liedern oder Künstlern...',
+    difficulty: 'Schwierigkeit:',
+    missingSongTitle: 'Suchst du ein Stück aus meinen Videos, das noch nicht hier ist?',
+    missingSongDesc: 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload priorisieren!',
+    suggestSongBtn: 'Song vorschlagen',
+    switchLight: 'In den hellen Modus wechseln',
+    switchDark: 'In den dunklen Modus wechseln',
+    formatLabel: 'Format:',
+    formatAll: 'Alle',
+    formatViral: 'Viral Part',
+    formatFull: 'Komplettes Arrangement',
+    formatFullCondensed: 'Komplett',
+    suggestions: 'Vorschläge',
+    taglineSubtitle: 'Arranged by ear. Played by you.',
+    navSheets: 'Noten',
+    navSuggestions: 'Wunschliste',
+    muteAudio: 'Audio-Vorschau stummschalten',
+    unmuteAudio: 'Audio-Vorschau aktivieren',
   },
   fr: {
     brand: 'meloscribe',
@@ -118,6 +158,26 @@ const translations = {
     privacy: 'Politique de confidentialité',
     terms: 'Conditions d\'utilisation',
     refunds: 'Politique de remboursement',
+    allArrangements: 'Tous les Arrangements',
+    allArrangementsDesc: 'Explorez notre catalogue complet de partitions de piano haut de gamme et de packs d\'apprentissage.',
+    searchPlaceholder: 'Rechercher des chansons ou des artistes...',
+    difficulty: 'Difficulté :',
+    missingSongTitle: 'Vous cherchez un morceau de mes vidéos qui n\'est pas encore là ?',
+    missingSongDesc: 'Je migre actuellement tout mon catalogue vers cette nouvelle plateforme. Si la chanson que vous souhaitez manque, cliquez simplement sur le bouton ci-dessous pour la suggérer, et je donnerai la priorité au téléchargement pour vous !',
+    suggestSongBtn: 'Suggérer une chanson',
+    switchLight: 'Passer en mode clair',
+    switchDark: 'Passer en mode sombre',
+    formatLabel: 'Format :',
+    formatAll: 'Tous',
+    formatViral: 'Partie virale',
+    formatFull: 'Arrangement complet',
+    formatFullCondensed: 'Arr. complet',
+    suggestions: 'Suggestions',
+    taglineSubtitle: 'Arranged by ear. Played by you.',
+    navSheets: 'Partitions',
+    navSuggestions: 'Suggestions',
+    muteAudio: 'Couper l\'aperçu audio',
+    unmuteAudio: 'Activer l\'aperçu audio',
   },
   es: {
     brand: 'meloscribe',
@@ -150,6 +210,26 @@ const translations = {
     privacy: 'Política de privacidad',
     terms: 'Condiciones de servicio',
     refunds: 'Política de reembolso',
+    allArrangements: 'Todos los Arreglos',
+    allArrangementsDesc: 'Explora nuestro catálogo completo de partituras de piano premium y paquetes de aprendizaje.',
+    searchPlaceholder: 'Buscar canciones o artistas...',
+    difficulty: 'Dificultad:',
+    missingSongTitle: '¿Buscas una pieza de mis videos que aún no esté aquí?',
+    missingSongDesc: 'Actualmente estoy migrando todo mi catálogo a esta nueva plataforma. Si falta la canción que deseas, simplemente haz clic en el botón de abajo para sugerirla, ¡y priorizaré subirla para ti!',
+    suggestSongBtn: 'Sugerir canción',
+    switchLight: 'Cambiar a modo claro',
+    switchDark: 'Cambiar a modo oscuro',
+    formatLabel: 'Formato:',
+    formatAll: 'Todos',
+    formatViral: 'Parte viral',
+    formatFull: 'Arreglo completo',
+    formatFullCondensed: 'Arr. compl.',
+    suggestions: 'Sugerencias',
+    taglineSubtitle: 'Arranged by ear. Played by you.',
+    navSheets: 'Partituras',
+    navSuggestions: 'Sugerencias',
+    muteAudio: 'Silenciar vista previa de audio',
+    unmuteAudio: 'Activar vista previa de audio',
   },
   it: {
     brand: 'meloscribe',
@@ -182,9 +262,27 @@ const translations = {
     privacy: 'Informativa sulla privacy',
     terms: 'Termini di servizio',
     refunds: 'Politica di rimborso',
+    allArrangements: 'Tutti gli Arrangiamenti',
+    allArrangementsDesc: 'Esplora il nostro catalogo completo di spartiti per pianoforte premium e pacchetti di abbandono.',
+    searchPlaceholder: 'Cerca canzoni o artisti...',
+    difficulty: 'Difficoltà:',
+    missingSongTitle: 'Cerchi un pezzo dei miei video che non c\'è ancora?',
+    missingSongDesc: 'Sto attualmente migrando tutto il mio catalogo su questa nuova piattaforma. Si la canzone che desideri manca, basta fare clic sul pulsante qui sotto per suggerirla e darò la priorità al caricamento per te!',
+    suggestSongBtn: 'Suggerisci canzone',
+    switchLight: 'Passa alla modalità chiara',
+    switchDark: 'Passa alla modalità scura',
+    formatLabel: 'Formato:',
+    formatAll: 'Tutti',
+    formatViral: 'Parte virale',
+    formatFull: 'Arrangiamento completo',
+    formatFullCondensed: 'Arr. compl.',
+    suggestions: 'Suggerimenti',
+    taglineSubtitle: 'Arranged by ear. Played by you.',
+    navSheets: 'Spartiti',
+    navSuggestions: 'Suggerimenti',
+    muteAudio: 'Disattiva l\'anteprima audio',
+    unmuteAudio: 'Attiva l\'anteprima audio',
   },
-};
-
 // Smart Search Helpers
 function normalizeString(str: string): string {
   return str
@@ -827,7 +925,7 @@ function App() {
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
-                  Sheets
+                  {t.navSheets}
                 </a>
                 <a 
                   href="/suggestions" 
@@ -838,7 +936,7 @@ function App() {
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
-                  Suggestions
+                  {t.navSuggestions}
                 </a>
               </nav>
             </div>
@@ -858,7 +956,7 @@ function App() {
                     ? 'bg-neon-cyan/10 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle' 
                     : 'bg-gray-100 border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan hover:border-neon-cyan'
                 }`}
-                title={isMuted ? 'Unmute Audio Preview' : 'Mute Audio Preview'}
+                title={isMuted ? t.unmuteAudio : t.muteAudio}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 animate-pulse" />}
               </button>
@@ -867,7 +965,7 @@ function App() {
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="flex items-center justify-center p-1.5 sm:p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan dark:hover:text-neon-cyan hover:border-neon-cyan dark:hover:border-neon-cyan transition-all duration-300"
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                title={theme === 'dark' ? t.switchLight : t.switchDark}
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
@@ -1017,7 +1115,7 @@ function App() {
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {getSongFormat(song) === 'viral_part' ? t.formatViral : <><span className="inline md:hidden">{t.formatFullCondensed}</span><span className="hidden md:inline">{t.formatFull}</span></>}
                           </span>
                         </div>
                       </div>
@@ -1112,11 +1210,11 @@ function App() {
             <div className="text-center mb-12">
               <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4 animate-in fade-in slide-in-from-top-3 duration-300">
                 <span className="text-gradient neon-text-cyan">
-                  {language === 'de' ? 'Alle Arrangements' : language === 'fr' ? 'Tous les Arrangements' : 'All Arrangements'}
+                  {t.allArrangements}
                 </span>
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-                {language === 'de' ? 'Entdecke unseren gesamten Katalog an Premium-Klaviernoten und Lernpaketen.' : 'Explore our full catalog of premium piano sheets and learning packages.'}
+                {t.allArrangementsDesc}
               </p>
             </div>
 
@@ -1126,7 +1224,7 @@ function App() {
               <div className="relative w-full sm:max-w-md">
                 <input
                   type="text"
-                  placeholder={language === 'de' ? 'Suche nach Liedern oder Künstlern...' : 'Search songs or artists...'}
+                  placeholder={t.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-4 py-2.5 pl-10 rounded-lg bg-white border border-gray-300 text-gray-800 placeholder-gray-400 dark:bg-dark-800 dark:border-dark-600 dark:text-gray-100 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan/40 focus:border-neon-cyan dark:focus:border-neon-cyan transition-[border-color,box-shadow] duration-300"
@@ -1140,7 +1238,7 @@ function App() {
               <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end">
                 {/* Difficulty Filter */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{language === 'de' ? 'Schwierigkeit:' : 'Difficulty:'}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
                   <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
                     {['All', 'Original', 'Easy'].map((diff) => (
                       <button
@@ -1160,7 +1258,7 @@ function App() {
 
                 {/* Format Filter */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Format:</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.formatLabel}</span>
                   <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
                     {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
                       <button
@@ -1172,7 +1270,7 @@ function App() {
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
                         }`}
                       >
-                        {form === 'All' ? 'All' : form === 'Viral Part' ? 'Viral Part' : 'Full Arrangement'}
+                        {form === 'All' ? t.formatAll : form === 'Viral Part' ? t.formatViral : t.formatFull}
                       </button>
                     ))}
                   </div>
@@ -1242,7 +1340,7 @@ function App() {
                               ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
                               : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
                           }`}>
-                            {getSongFormat(song) === 'viral_part' ? 'Viral Part' : <><span className="inline md:hidden">Full Arr.</span><span className="hidden md:inline">Full Arrangement</span></>}
+                            {getSongFormat(song) === 'viral_part' ? t.formatViral : <><span className="inline md:hidden">{t.formatFullCondensed}</span><span className="hidden md:inline">{t.formatFull}</span></>}
                           </span>
                         </div>
                       </div>
@@ -1267,42 +1365,34 @@ function App() {
               </div>
               <div className="max-w-2xl mx-auto mt-16 p-6 sm:p-8 rounded-2xl border border-gray-200/80 bg-white/40 dark:border-dark-600/30 dark:bg-dark-800/20 text-center backdrop-blur-md">
                 <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
-                  {language === 'de' 
-                    ? 'Suchst du ein Stück aus meinen Videos, das noch nicht hier ist?' 
-                    : 'Looking for a piece from my videos that isn\'t here yet?'}
+                  {t.missingSongTitle}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
-                  {language === 'de'
-                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload priorisieren!'
-                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you!'}
+                  {t.missingSongDesc}
                 </p>
                 <button 
                   onClick={() => navigate('/suggestions')}
                   className="btn-neon px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer bg-transparent text-sm"
                 >
                   <Sparkles className="w-4 h-4 text-neon-cyan" />
-                  <span>{language === 'de' ? 'Song vorschlagen' : 'Suggest Song'}</span>
+                  <span>{t.suggestSongBtn}</span>
                 </button>
               </div>
             </>
             ) : (
               <div className="max-w-2xl mx-auto py-12 p-6 sm:p-8 rounded-2xl border border-dark-600/30 bg-dark-800/20 text-center backdrop-blur-md animate-in fade-in duration-300">
                 <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
-                  {language === 'de' 
-                    ? 'Suchst du ein Stück aus meinen Videos, das noch nicht hier ist?' 
-                    : 'Looking for a piece from my videos that isn\'t here yet?'}
+                  {t.missingSongTitle}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
-                  {language === 'de'
-                    ? 'Ich migriere derzeit meinen gesamten Katalog auf diese neue Plattform. Wenn der gewünschte Song fehlt, klicke einfach auf den Button unten und schlage ihn mir vor. Ich werde den Upload priorisieren!'
-                    : 'I am currently migrating my entire catalog to this new platform. If the song you want is missing, just click the button below to suggest it, and I will prioritize uploading it for you!'}
+                  {t.missingSongDesc}
                 </p>
                 <button 
                   onClick={() => navigate('/suggestions')}
                   className="btn-neon px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer bg-transparent text-sm"
                 >
                   <Sparkles className="w-4 h-4 text-neon-cyan" />
-                  <span>{language === 'de' ? 'Song vorschlagen' : 'Suggest Song'}</span>
+                  <span>{t.suggestSongBtn}</span>
                 </button>
               </div>
             )}
@@ -1342,7 +1432,7 @@ function App() {
                   <span className="font-display text-xl font-bold text-gradient">{t.brand}</span>
                 </a>
                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                  Arranged by ear. Played by you.
+                  {t.taglineSubtitle}
                 </span>
               </div>
             </div>
@@ -1358,7 +1448,7 @@ function App() {
                   onClick={(e) => { e.preventDefault(); navigate('/suggestions'); }}
                   className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
                 >
-                  Suggestions
+                  {t.suggestions}
                 </a>
                 <a 
                   href="/imprint" 

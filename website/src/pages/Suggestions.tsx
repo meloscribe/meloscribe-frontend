@@ -64,20 +64,122 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
   const [artist, setArtist] = useState('');
 
   // Translations
-  const isDe = language === 'de';
-  const isFr = language === 'fr';
-
-  const t = {
-    title: isDe ? 'Community Wunschliste' : isFr ? 'Demandes de la Communauté' : 'Community Requests',
-    subtitle: isDe ? 'Stimme für deine Lieblingssongs ab oder schlage neue vor. Die am besten bewerteten Songs werden zuerst arrangiert.' : isFr ? 'Votez pour vos chansons préférées ou suggérez-en de nouvelles. Les arrangements sont créés selon la demande.' : 'Vote for your favorite tracks or suggest new ones. Arrangements are created based on community demand.',
-    suggestHeading: isDe ? 'Siehst du deinen Song nicht? Schlage ihn vor...' : isFr ? 'Vous ne voyez pas votre chanson ? Suggérez-la...' : "Don't see your song? Suggest it here...",
-    inputTitle: isDe ? 'Songtitel *' : isFr ? 'Titre de la chanson *' : 'Song Title *',
-    inputArtist: isDe ? 'Künstler / Interpret *' : isFr ? 'Artiste / Groupe *' : 'Artist / Band *',
-    btnSubmit: isDe ? 'Vorschlag senden' : isFr ? 'Envoyer la demande' : 'Submit Suggestion',
-    leaderboard: isDe ? 'Rangliste' : isFr ? 'Classement' : 'Leaderboard',
-    noSuggestions: isDe ? 'Noch keine Wünsche eingegangen. Sei der Erste!' : isFr ? 'Aucune demande pour le moment. Soyez le premier !' : 'No suggestions yet. Be the first to make a request!',
-    backBtn: isDe ? 'Zurück' : isFr ? 'Retour' : 'Back',
+  const translations = {
+    en: {
+      title: 'Community Requests',
+      subtitle: 'Vote for your favorite tracks or suggest new ones. Arrangements are created based on community demand.',
+      suggestHeading: "Don't see your song? Suggest it here...",
+      inputTitle: 'Song Title *',
+      inputArtist: 'Artist / Band *',
+      btnSubmit: 'Submit Suggestion',
+      leaderboard: 'Leaderboard',
+      noSuggestions: 'No suggestions yet. Be the first to make a request!',
+      backBtn: 'Back',
+      voteRemoved: 'Removed vote for "{song}".',
+      voteAdded: 'Added vote for "{song}"!',
+      fillFields: 'Please fill in all required fields!',
+      alreadyVoted: 'Match found! You have already voted for "{title}".',
+      similarVoted: 'Close match found! Added your vote to the existing request: {title}.',
+      suggestSuccess: 'Successfully suggested: "{song}"',
+      suggestError: 'Error saving your request.',
+      placeholderTitle: 'e.g. In The End',
+      placeholderArtist: 'e.g. Linkin Park',
+      requestsLabel: 'requests',
+      loading: 'Loading suggestions...'
+    },
+    de: {
+      title: 'Community Wunschliste',
+      subtitle: 'Stimme für deine Lieblingssongs ab oder schlage neue vor. Die am besten bewerteten Songs werden zuerst arrangiert.',
+      suggestHeading: 'Siehst du deinen Song nicht? Schlage ihn vor...',
+      inputTitle: 'Songtitel *',
+      inputArtist: 'Künstler / Interpret *',
+      btnSubmit: 'Vorschlag senden',
+      leaderboard: 'Rangliste',
+      noSuggestions: 'Noch keine Wünsche eingegangen. Sei der Erste!',
+      backBtn: 'Zurück',
+      voteRemoved: 'Stimme für "{song}" entfernt.',
+      voteAdded: 'Stimme für "{song}" hinzugefügt!',
+      fillFields: 'Bitte fülle alle Pflichtfelder aus!',
+      alreadyVoted: 'Gleicher Song gefunden! Du hast für "{title}" bereits abgestimmt.',
+      similarVoted: 'Ähnlicher Song gefunden! Stimme wurde hinzugefügt für: {title}.',
+      suggestSuccess: 'Erfolgreich vorgeschlagen: "{song}"',
+      suggestError: 'Fehler beim Speichern deiner Anfrage.',
+      placeholderTitle: 'z.B. In The End',
+      placeholderArtist: 'z.B. Linkin Park',
+      requestsLabel: 'Anfragen',
+      loading: 'Wünsche werden geladen...'
+    },
+    fr: {
+      title: 'Demandes de la Communauté',
+      subtitle: 'Votez pour vos chansons préférées ou suggérez-en de nouvelles. Les arrangements sont créés selon la demande.',
+      suggestHeading: 'Vous ne voyez pas votre chanson ? Suggérez-la...',
+      inputTitle: 'Titre de la chanson *',
+      inputArtist: 'Artiste / Groupe *',
+      btnSubmit: 'Envoyer la demande',
+      leaderboard: 'Classement',
+      noSuggestions: 'Aucune demande pour le moment. Soyez le premier !',
+      backBtn: 'Retour',
+      voteRemoved: 'Vote pour "{song}" supprimé.',
+      voteAdded: 'Vote pour "{song}" ajouté !',
+      fillFields: 'Veuillez remplir tous les champs obligatoires !',
+      alreadyVoted: 'Match trouvé ! Vous avez déjà voté pour "{title}".',
+      similarVoted: 'Match proche trouvé ! Votre vote a été ajouté à la demande existante : {title}.',
+      suggestSuccess: 'Suggéré avec succès : "{song}"',
+      suggestError: 'Erreur lors de l\'enregistrement de votre demande.',
+      placeholderTitle: 'par ex. In The End',
+      placeholderArtist: 'par ex. Linkin Park',
+      requestsLabel: 'demandes',
+      loading: 'Chargement des demandes...'
+    },
+    es: {
+      title: 'Lista de Peticiones',
+      subtitle: 'Vota por tus canciones favoritas o sugiere otras nuevas. Las canciones más votadas se arreglarán primero.',
+      suggestHeading: '¿No ves tu canción? Sugiérela aquí...',
+      inputTitle: 'Título de la canción *',
+      inputArtist: 'Artista / Grupo *',
+      btnSubmit: 'Enviar sugerencia',
+      leaderboard: 'Clasificación',
+      noSuggestions: 'Aún no hay sugerencias. ¡Sé el primero!',
+      backBtn: 'Atrás',
+      voteRemoved: 'Voto para "{song}" eliminado.',
+      voteAdded: '¡Voto para "{song}" añadido!',
+      fillFields: '¡Por favor, complete todos los campos requeridos!',
+      alreadyVoted: '¡Petición encontrada! Ya has votado por "{title}".',
+      similarVoted: '¡Petición similar encontrada! Tu voto ha sido añadido a la petición existente: {title}.',
+      suggestSuccess: 'Sugerido con éxito: "{song}"',
+      suggestError: 'Error al guardar su solicitud.',
+      placeholderTitle: 'p. ej. In The End',
+      placeholderArtist: 'p. ej. Linkin Park',
+      requestsLabel: 'peticiones',
+      loading: 'Cargando peticiones...'
+    },
+    it: {
+      title: 'Richieste della Community',
+      subtitle: 'Vota le tue canzoni preferite o suggeriscine di nuove. Le canzoni più votate saranno arrangiate per prime.',
+      suggestHeading: 'Non vedi la tua canzone? Suggeriscila qui...',
+      inputTitle: 'Titolo della canzone *',
+      inputArtist: 'Artista / Gruppo *',
+      btnSubmit: 'Invia suggerimento',
+      leaderboard: 'Classifica',
+      noSuggestions: 'Nessun suggerimento ancora. Sii il primo!',
+      backBtn: 'Indietro',
+      voteRemoved: 'Voto per "{song}" rimosso.',
+      voteAdded: 'Voto per "{song}" aggiunto!',
+      fillFields: 'Si prega di compilare tutti i campi obbligatori!',
+      alreadyVoted: 'Richiesta duplicata rilevata! "{title}" è già nell\'elenco.',
+      similarVoted: 'Esiste già una richiesta simile: Aggiunto il tuo voto alla richiesta esistente: {title}.',
+      suggestSuccess: 'Suggerito con successo: "{song}"',
+      suggestError: 'Errore durante il salvataggio della richiesta.',
+      placeholderTitle: 'es. In The End',
+      placeholderArtist: 'es. Linkin Park',
+      requestsLabel: 'richieste',
+      loading: 'Caricamento dei suggerimenti...'
+    }
+    }
   };
+
+  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
+  const t = translations[activeLang as keyof typeof translations];
 
   const loadData = async () => {
     setLoading(true);
@@ -114,7 +216,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
       try {
         await decrementVote(id, currentVotes);
-        showToast(isDe ? `Stimme für "${songTitle}" entfernt.` : `Removed vote for "${songTitle}".`);
+        showToast(t.voteRemoved.replace('{song}', songTitle));
       } catch (err) {
         console.error(err);
       }
@@ -126,7 +228,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
       try {
         await incrementVote(id, currentVotes);
-        showToast(isDe ? `Stimme für "${songTitle}" hinzugefügt!` : `Added vote for "${songTitle}"!`);
+        showToast(t.voteAdded.replace('{song}', songTitle));
       } catch (err) {
         console.error(err);
       }
@@ -136,7 +238,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !artist.trim()) {
-      showToast(isDe ? 'Bitte fülle alle Pflichtfelder aus!' : 'Please fill in all required fields!');
+      showToast(t.fillFields);
       return;
     }
 
@@ -176,19 +278,13 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       setSubmitting(false);
 
       if (votedIds[existingId]) {
-        showToast(isDe 
-          ? `Gleicher Song gefunden! Du hast für "${matchedTitle}" bereits abgestimmt.` 
-          : `Match found! You have already voted for "${matchedTitle}".`
-        );
+        showToast(t.alreadyVoted.replace('{title}', matchedTitle));
         return;
       }
 
       // Perform upvote on existing
       await handleUpvote(existingId, currentVotes, matchedTitle);
-      showToast(isDe 
-        ? `Ähnlicher Song gefunden! Stimme wurde hinzugefügt für: ${matchedTitle}.` 
-        : `Close match found! Added your vote to the existing request: ${matchedTitle}.`
-      );
+      showToast(t.similarVoted.replace('{title}', matchedTitle));
       return;
     }
 
@@ -206,10 +302,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
       setTitle('');
       setArtist('');
-      showToast(isDe ? `Erfolgreich vorgeschlagen: "${newSug.title}"` : `Successfully suggested: "${newSug.title}"`);
+      showToast(t.suggestSuccess.replace('{song}', newSug.title));
     } catch (err) {
       console.error(err);
-      showToast(isDe ? 'Fehler beim Speichern deiner Anfrage.' : 'Error saving your request.');
+      showToast(t.suggestError);
     }
     setSubmitting(false);
   };
@@ -250,7 +346,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
                 type="text"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                placeholder="e.g. In The End"
+                placeholder={t.placeholderTitle}
                 className="w-full px-4 py-2.5 rounded-lg bg-white/50 dark:bg-dark-900/60 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:border-neon-cyan focus:shadow-neon-cyan-subtle transition-all duration-300"
               />
             </div>
@@ -261,7 +357,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
                 type="text"
                 value={artist}
                 onChange={e => setArtist(e.target.value)}
-                placeholder="e.g. Linkin Park"
+                placeholder={t.placeholderArtist}
                 className="w-full px-4 py-2.5 rounded-lg bg-white/50 dark:bg-dark-900/60 border border-gray-300 dark:border-dark-500/50 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:border-neon-cyan focus:shadow-neon-cyan-subtle transition-all duration-300"
               />
             </div>
@@ -283,11 +379,11 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
               <Music className="w-5 h-5 text-neon-pink" />
               <span>{t.leaderboard}</span>
             </h3>
-            <span className="text-xs text-gray-500 dark:text-gray-400">{suggestions.length} requests</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{suggestions.length} {t.requestsLabel}</span>
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading suggestions...</div>
+            <div className="text-center py-12 text-gray-500">{t.loading}</div>
           ) : suggestions.length === 0 ? (
             <div className="text-center py-12 text-gray-500">{t.noSuggestions}</div>
           ) : (

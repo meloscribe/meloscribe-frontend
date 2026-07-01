@@ -7,13 +7,71 @@ interface SuccessProps {
   showToast: (message: string) => void;
 }
 
+const translations = {
+  en: {
+    title: 'Payment Successful!',
+    subtitle: 'Thank you for your support! Your learning package containing sheet music (PDF), MIDIs, and practice videos is now ready.',
+    verifying: 'Verifying transaction & constructing secure link...',
+    timeout: 'Verification timed out. Please check your email for the link.',
+    packageReady: 'Your package is ready',
+    downloadZip: 'Download Sheet Package (.zip)',
+    emailSent: 'We also sent a backup copy of the link to your inbox.',
+    backHome: 'Back to Home',
+    secureDownload: 'Secure Cloudflare R2 Download'
+  },
+  de: {
+    title: 'Zahlung erfolgreich!',
+    subtitle: 'Vielen Dank für deine Unterstützung! Dein Lernpaket mit Noten (PDF), MIDIs und Videos ist jetzt bereit.',
+    verifying: 'Verifiziere Kauf & generiere sicheren Link...',
+    timeout: 'Verifizierung dauerte zu lange. Bitte prüfe deine E-Mails.',
+    packageReady: 'Dein Paket steht bereit',
+    downloadZip: 'Notenpaket herunterladen (.zip)',
+    emailSent: 'Der Link wurde dir zur Sicherheit auch per E-Mail zugeschickt.',
+    backHome: 'Zurück zur Startseite',
+    secureDownload: 'Sicherer Cloudflare R2 Download'
+  },
+  fr: {
+    title: 'Paiement Réussi !',
+    subtitle: 'Merci pour votre soutien ! Votre pack d\'apprentissage avec partitions (PDF), MIDIs et vidéos est prêt.',
+    verifying: 'Vérification de la transaction et construction du lien sécurisé...',
+    timeout: 'Délai d\'attente de vérification dépassé. Veuillez vérifier vos e-mails pour le lien.',
+    packageReady: 'Votre pack est prêt',
+    downloadZip: 'Télécharger le pack de partitions (.zip)',
+    emailSent: 'Nous avons également envoyé une copie de sauvegarde du lien dans votre boîte de réception.',
+    backHome: 'Retour à l\'accueil',
+    secureDownload: 'Téléchargement Sécurisé Cloudflare R2'
+  },
+  es: {
+    title: '¡Pago Exitoso!',
+    subtitle: '¡Gracias por tu apoyo! Tu paquete de aprendizaje que contiene partituras (PDF), MIDIs y videos de práctica ya está listo.',
+    verifying: 'Verificando transacción y construyendo enlace seguro...',
+    timeout: 'Tiempo de espera de verificación agotado. Por favor, revise su correo electrónico para ver el enlace.',
+    packageReady: 'Tu paquete está listo',
+    downloadZip: 'Descargar paquete de partituras (.zip)',
+    emailSent: 'También enviamos una copia de seguridad del enlace a tu bandeja de entrada.',
+    backHome: 'Volver al inicio',
+    secureDownload: 'Descarga Segura de Cloudflare R2'
+  },
+  it: {
+    title: 'Pagamento Completato!',
+    subtitle: 'Grazie per il tuo supporto! Il tuo pacchetto di abbandono contenente spartiti (PDF), file MIDI e video di pratica è ora pronto.',
+    verifying: 'Verifica della transazione e creazione del link sicuro...',
+    timeout: 'Tempo di verifica scaduto. Controlla la tua email per il link.',
+    packageReady: 'Il tuo pacchetto è pronto',
+    downloadZip: 'Scarica pacchetto spartiti (.zip)',
+    emailSent: 'Abbiamo anche inviato una copia di backup del link alla tua casella di posta.',
+    backHome: 'Torna alla home',
+    secureDownload: 'Download Sicuro Cloudflare R2'
+  }
+};
+
 export default function Success({ onBack, language, showToast }: SuccessProps) {
   const [loading, setLoading] = useState(true);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const isDe = language === 'de';
-  const isFr = language === 'fr';
+  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
+  const t = translations[activeLang as keyof typeof translations];
 
   // Get checkout_id from URL params
   const queryParams = new URLSearchParams(window.location.search);
@@ -48,7 +106,7 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
       attempts += 1;
       if (attempts >= maxAttempts) {
         clearInterval(intervalId);
-        setError(isDe ? 'Verifizierung dauerte zu lange. Bitte prüfe deine E-Mails.' : 'Verification timed out. Please check your email for the link.');
+        setError(t.timeout);
         setLoading(false);
       }
     };
@@ -65,7 +123,7 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
     checkHash();
 
     return () => clearInterval(intervalId);
-  }, [checkoutId, isDe]);
+  }, [checkoutId, t.timeout]);
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] flex items-center justify-center">
@@ -79,16 +137,12 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
         {/* Heading */}
         <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight mb-4">
           <span className="text-gradient neon-text-cyan">
-            {isDe ? 'Zahlung erfolgreich!' : isFr ? 'Paiement Réussi !' : 'Payment Successful!'}
+            {t.title}
           </span>
         </h1>
 
         <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto mb-10">
-          {isDe 
-            ? 'Vielen Dank für deine Unterstützung! Dein Lernpaket mit Noten (PDF), MIDIs und Videos ist jetzt bereit.' 
-            : isFr 
-            ? 'Merci pour votre soutien ! Votre pack d\'apprentissage avec partitions (PDF), MIDIs et vidéos est prêt.' 
-            : 'Thank you for your support! Your learning package containing sheet music (PDF), MIDIs, and practice videos is now ready.'}
+          {t.subtitle}
         </p>
 
         {/* Download Action Card */}
@@ -100,7 +154,7 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
             <div className="flex flex-col items-center gap-4 py-8">
               <Loader2 className="w-8 h-8 text-neon-cyan animate-spin" />
               <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">
-                {isDe ? 'Verifiziere Kauf & generiere sicheren Link...' : 'Verifying transaction & constructing secure link...'}
+                {t.verifying}
               </span>
             </div>
           ) : error ? (
@@ -110,9 +164,9 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
           ) : (
             <div className="space-y-6 relative z-10">
               <div>
-                <span className="text-[11px] font-semibold text-neon-cyan uppercase tracking-wider">Secure Cloudflare R2 Download</span>
+                <span className="text-[11px] font-semibold text-neon-cyan uppercase tracking-wider">{t.secureDownload}</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mt-1">
-                  {isDe ? 'Dein Paket steht bereit' : 'Your package is ready'}
+                  {t.packageReady}
                 </h3>
               </div>
 
@@ -124,16 +178,14 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
                   className="w-full relative group overflow-hidden px-6 py-4 rounded-xl font-bold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan focus:outline-none flex items-center justify-center gap-3 cursor-pointer"
                 >
                   <Download className="w-5 h-5 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
-                  <span>{isDe ? 'Notenpaket herunterladen (.zip)' : 'Download Sheet Package (.zip)'}</span>
+                  <span>{t.downloadZip}</span>
                 </a>
               )}
 
               <div className="flex items-center justify-center gap-2 text-xs text-gray-500 pt-2 border-t border-gray-200/50 dark:border-dark-600/50">
                 <Mail className="w-4 h-4 text-neon-pink" />
                 <span>
-                  {isDe 
-                    ? 'Der Link wurde dir zur Sicherheit auch per E-Mail zugeschickt.' 
-                    : 'We also sent a backup copy of the link to your inbox.'}
+                  {t.emailSent}
                 </span>
               </div>
             </div>
@@ -146,7 +198,7 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
           className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-neon-cyan mx-auto cursor-pointer transition-colors duration-300"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{isDe ? 'Zurück zur Startseite' : 'Back to Home'}</span>
+          <span>{t.backHome}</span>
         </button>
       </div>
     </section>

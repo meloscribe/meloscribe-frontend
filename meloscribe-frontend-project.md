@@ -48,7 +48,7 @@ npm run dev
 - [x] Global audio preview hover system on catalog page
 - [x] Diacritic-cleaning, space-insensitive, typo-tolerant search
 - [x] Secure 3-step Paddle payment flow with permanent `/order/:hash` success pages
-- [x] R2 presigned download links (15 min TTL, max 100 downloads per purchase)
+- [x] R2 presigned download links (15 min TTL, max 50 downloads per purchase)
 - [x] SQLite `purchases` table with `download_hash` + `download_count` + `downloaded_types`
 - [x] Mobile layout fixes: header, footer, logo, language toggle, Buy Me Coffee button
 - [x] `vercel.json` SPA fallback routing (all paths → `index.html`)
@@ -63,6 +63,9 @@ npm run dev
 - [x] Intercepted client checkout completion events to redirect parent window using transaction ID (`txn_`), resolving success page verification timeouts
 - [x] Completely hid desktop & mobile checkout iframe scrollbars
 - [x] Removed legacy ZIP package cards to optimize duplicate Cloudflare R2 storage usage
+- [x] Fully translated website pages (OrderDetails, Suggestions, Success, App) into English, German, French, Spanish, and Italian
+- [x] Resolved tag syntax/div mismatch issues in `OrderDetails.tsx` and validated production build (`npm run build` compiles cleanly)
+- [x] Updated all email/support references on the website from support@meloscribe.dev to info@meloscribe.dev
 
 ## Active Blockers / Next Steps
 

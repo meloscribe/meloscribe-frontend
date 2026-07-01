@@ -12,6 +12,7 @@ interface OrderInfo {
   song_name: string;
   email: string;
   download_count: number;
+  created_at?: string;
 }
 
 const translations = {
@@ -25,12 +26,39 @@ const translations = {
     downloadSuccess: 'Download started successfully!',
     loadingInfo: 'Loading order details...',
     downloadsUsed: 'Downloads used',
+    purchasedOn: 'Purchased on',
     maxDownloads: 'of 50 downloads max',
     downloadPdf: 'Download Piano PDF',
     downloadPdfDesc: 'Sheet music optimized for print and tablet readers.',
     secureSsl: 'Secure SSL Connection',
     merchantOfRecord: 'Payments processed by Paddle',
-    backHome: 'Back to Home'
+    backHome: 'Back to Home',
+    emailSubject: 'Reset Download Limit',
+    supportLinkText: 'Email support',
+    supportText: 'For security reasons, downloads are capped at 50 to prevent unauthorized link sharing.',
+    limitWarningText: 'Limit reached? No stress. Message me at info@meloscribe.dev and I will get you unlocked.',
+    emailBtnText: 'Email support',
+    downloadPdfLabel: 'Download Sheet PDF',
+    pdfTooltipText: 'The piano sheet music as a high-resolution PDF. Perfect for printing or tablet readers.',
+    pdfBtnText: 'Download PDF',
+    originalVideoLabel: 'Video Tutorial (Original Speed)',
+    originalVideoTooltip: 'The 2K HD Keysight visualization video at full speed for offline reference.',
+    originalVideoDesc: 'Tutorial video at full speed (2K HD MP4).',
+    videoBtnText: 'Download Video',
+    slowVideoLabel: 'Video Tutorial (Slow Practice Speed)',
+    slowVideoTooltip: 'The Keysight visualization video at slow speed (with metronome) for easy offline practice.',
+    slowVideoDesc: 'Tutorial video in slow tempo (2K HD MP4).',
+    originalMidiLabel: 'MIDI (Original Speed)',
+    originalMidiTooltip: 'The piano MIDI file at original speed. Load it into Synthesia, your DAW, or digital keyboard.',
+    originalMidiDesc: 'Piano MIDI file in full speed.',
+    midiBtnText: 'Download MIDI',
+    slowMidiLabel: 'MIDI (Slow Practice Speed)',
+    slowMidiTooltip: 'The piano MIDI file slowed down by 30% for easier practice of complex sections.',
+    slowMidiDesc: 'Piano MIDI file at reduced speed.',
+    errDownload: 'Error triggering download',
+    errFailed: 'Download failed',
+    errNetwork: 'Network error during download',
+    accessDenied: 'Access Denied'
   },
   de: {
     title: 'Dein Lernpaket',
@@ -42,12 +70,171 @@ const translations = {
     downloadSuccess: 'Download erfolgreich gestartet!',
     loadingInfo: 'Lade Bestell-Details...',
     downloadsUsed: 'Downloads verbraucht',
+    purchasedOn: 'Gekauft am',
     maxDownloads: 'von maximal 50 Downloads',
     downloadPdf: 'Klaviernoten PDF laden',
     downloadPdfDesc: 'Noten optimiert zum Ausdrucken und für Tablets.',
     secureSsl: 'Sichere SSL-Verbindung',
     merchantOfRecord: 'Zahlungsabwickler: Paddle',
-    backHome: 'Zurück zur Startseite'
+    backHome: 'Zurück zur Startseite',
+    emailSubject: 'Freischaltung Download-Limit',
+    supportLinkText: 'Support anschreiben',
+    supportText: 'Aus Sicherheitsgründen gibt es maximal 50 Downloads, damit Links nicht missbräuchlich geteilt werden.',
+    limitWarningText: 'Limit erreicht? Kein Stress. Schreib mir kurz an info@meloscribe.dev und ich schalte dich wieder frei.',
+    emailBtnText: 'Support mailen',
+    downloadPdfLabel: 'Noten (PDF) herunterladen',
+    pdfTooltipText: 'Die Klaviernoten als hochauflösendes PDF. Perfekt zum Ausdrucken oder für den Tablet-Reader.',
+    pdfBtnText: 'PDF laden',
+    originalVideoLabel: 'Video-Tutorial (Originalgeschwindigkeit)',
+    originalVideoTooltip: 'Das 2K HD Keysight Visualisierungsvideo in Originalgeschwindigkeit zum Mitspielen offline.',
+    originalVideoDesc: 'Lernvideo in Originalgeschwindigkeit (2K HD MP4).',
+    videoBtnText: 'Video laden',
+    slowVideoLabel: 'Video-Tutorial (Verlangsamt zum Üben)',
+    slowVideoTooltip: 'Das Keysight Visualisierungsvideo offline im langsamen Übungstempo (mit Metronom) zum einfachen Nachspielen.',
+    slowVideoDesc: 'Lernvideo im langsamen Tempo (2K HD MP4).',
+    originalMidiLabel: 'MIDI (Originalgeschwindigkeit)',
+    originalMidiTooltip: 'Die Klavier-MIDI-Datei im originalen Tempo. Lade sie in Synthesia, deine DAW oder dein Keyboard.',
+    originalMidiDesc: 'Klavier-MIDI-Datei im Originaltempo.',
+    midiBtnText: 'MIDI laden',
+    slowMidiLabel: 'MIDI (Verlangsamt zum Üben)',
+    slowMidiTooltip: 'Die Klavier-MIDI-Datei um 30% verlangsamt zum einfacheren Lernen schwieriger Stellen.',
+    slowMidiDesc: 'Klavier-MIDI-Datei im reduzierten Übungstempo.',
+    errDownload: 'Fehler beim Herunterladen',
+    errFailed: 'Download fehlgeschlagen',
+    errNetwork: 'Netzwerkfehler beim Download',
+    accessDenied: 'Fehler'
+  },
+  fr: {
+    title: 'Votre Pack Musical',
+    subtitle: 'Accédez à vos partitions et outils de pratique. Enregistrez cette page si vous souhaitez y accéder plus tard.',
+    invalidHash: 'Lien de commande invalide ou expiré.',
+    orderNotFound: 'Les détails de la commande n\'ont pas pu être trouvés. Veuillez contacter le support.',
+    downloadLimitReached: 'Vous avez atteint la limite maximale de 50 téléchargements pour ce pack. Contactez le support pour la réinitialiser.',
+    downloading: 'Préparation du téléchargement...',
+    downloadSuccess: 'Téléchargement démarré avec succès !',
+    loadingInfo: 'Chargement des détails de la commande...',
+    downloadsUsed: 'Téléchargements utilisés',
+    purchasedOn: 'Acheté le',
+    maxDownloads: 'sur 50 téléchargements max',
+    downloadPdf: 'Télécharger le PDF du Piano',
+    downloadPdfDesc: 'Partition optimisée pour l\'impression et les tablettes.',
+    secureSsl: 'Connexion SSL Sécurisée',
+    merchantOfRecord: 'Paiements traités par Paddle',
+    backHome: 'Retour à l\'accueil',
+    emailSubject: 'Réinitialiser la limite de téléchargement',
+    supportLinkText: 'Contacter le support',
+    supportText: 'Pour des raisons de sécurité, les téléchargements sont limités à 50 afin d\'empêcher le partage non autorisé.',
+    limitWarningText: 'Limite atteinte ? Pas de stress. Écrivez-moi à info@meloscribe.dev et je vous débloquerai.',
+    emailBtnText: 'Envoyer un e-mail',
+    downloadPdfLabel: 'Télécharger les partitions (PDF)',
+    pdfTooltipText: 'Les partitions de piano au format PDF haute résolution. Parfait pour l\'impression ou les tablettes.',
+    pdfBtnText: 'Télécharger le PDF',
+    originalVideoLabel: 'Tutoriel vidéo (Vitesse originale)',
+    originalVideoTooltip: 'La vidéo de visualisation Keysight en 2K HD à pleine vitesse pour référence hors ligne.',
+    originalVideoDesc: 'Vidéo tutoriel à pleine vitesse (2K HD MP4).',
+    videoBtnText: 'Télécharger la vidéo',
+    slowVideoLabel: 'Tutoriel vidéo (Vitesse lente)',
+    slowVideoTooltip: 'La vidéo de visualisation Keysight hors ligne à vitesse lente (avec métronome) pour une pratique facile.',
+    slowVideoDesc: 'Vidéo tutoriel à vitesse lente (2K HD MP4).',
+    originalMidiLabel: 'MIDI (Vitesse originale)',
+    originalMidiTooltip: 'Le fichier MIDI pour piano à vitesse originale. Chargez-le dans Synthesia, votre DAW ou votre clavier.',
+    originalMidiDesc: 'Fichier MIDI pour piano à pleine vitesse.',
+    midiBtnText: 'Télécharger le MIDI',
+    slowMidiLabel: 'MIDI (Vitesse lente)',
+    slowMidiTooltip: 'Le fichier MIDI pour piano ralenti de 30% pour une pratique plus facile des sections complexes.',
+    slowMidiDesc: 'Fichier MIDI pour piano à vitesse réduite.',
+    errDownload: 'Erreur lors du téléchargement',
+    errFailed: 'Téléchargement échoué',
+    errNetwork: 'Erreur réseau lors du téléchargement',
+    accessDenied: 'Accès refusé'
+  },
+  es: {
+    title: 'Tu Paquete de Música',
+    subtitle: 'Accede a tus partituras y herramientas de práctica. Guarda esta página si quieres acceder a ella más tarde.',
+    invalidHash: 'Enlace de pedido no válido o caducado.',
+    orderNotFound: 'No se pudieron encontrar los detalles del pedido. Por favor, póngase en contacto con el soporte.',
+    downloadLimitReached: 'Ha alcanzado el límite máximo de 50 descargas para este paquete. Póngase en contacto con el soporte para restablecerlo.',
+    downloading: 'Preparando descarga...',
+    downloadSuccess: '¡Descarga iniciada con éxito!',
+    loadingInfo: 'Cargando detalles del pedido...',
+    downloadsUsed: 'Descargas utilizadas',
+    purchasedOn: 'Comprado el',
+    maxDownloads: 'de 50 descargas máx.',
+    downloadPdf: 'Descargar PDF de Piano',
+    downloadPdfDesc: 'Partitura optimizada para impresión y tabletas.',
+    secureSsl: 'Conexión SSL Segura',
+    merchantOfRecord: 'Pagos procesados por Paddle',
+    backHome: 'Volver al inicio',
+    emailSubject: 'Restablecer límite de descarga',
+    supportLinkText: 'Contactar al soporte',
+    supportText: 'Por razones de seguridad, las descargas están limitadas a 50 para evitar el uso compartido no autorizado.',
+    limitWarningText: '¿Límite alcanzado? Sin estrés. Escríbeme a info@meloscribe.dev y te desbloquearé.',
+    emailBtnText: 'Enviar correo',
+    downloadPdfLabel: 'Descargar partitura (PDF)',
+    pdfTooltipText: 'La partitura de piano como PDF de alta resolución. Perfecto para imprimir o lectores de tabletas.',
+    pdfBtnText: 'Descargar PDF',
+    originalVideoLabel: 'Video tutorial (Velocidad original)',
+    originalVideoTooltip: 'El video de visualización de Keysight 2K HD a velocidad completa para referencia sin conexión.',
+    originalVideoDesc: 'Video tutorial a velocidad completa (2K HD MP4).',
+    videoBtnText: 'Descargar video',
+    slowVideoLabel: 'Video tutorial (Velocidad de práctica lenta)',
+    slowVideoTooltip: 'El video de visualización de Keysight sin conexión a velocidad lenta (con metrónomo) para practicar fácilmente.',
+    slowVideoDesc: 'Video tutorial en ritmo lento (2K HD MP4).',
+    originalMidiLabel: 'MIDI (Velocidad original)',
+    originalMidiTooltip: 'El archivo MIDI de piano a velocidad original. Cárgalo en Synthesia, tu DAW o teclado digital.',
+    originalMidiDesc: 'Archivo MIDI de piano a velocidad completa.',
+    midiBtnText: 'Descargar MIDI',
+    slowMidiLabel: 'MIDI (Velocidad de práctica lenta)',
+    slowMidiTooltip: 'El archivo MIDI de piano ralentizado en un 30% para practicar fácilmente secciones complejas.',
+    slowMidiDesc: 'Archivo MIDI de piano a velocidad reducida.',
+    errDownload: 'Error al iniciar la descarga',
+    errFailed: 'Descarga fallida',
+    errNetwork: 'Error de red durante la descarga',
+    accessDenied: 'Acceso denegado'
+  },
+  it: {
+    title: 'Il tuo Pacchetto Musicale',
+    subtitle: 'Accedi ai tuoi spartiti e strumenti di pratica. Salva questa pagina se desideri accedervi in seguito.',
+    invalidHash: 'Link d\'ordine non valido o scaduto.',
+    orderNotFound: 'Impossibile trovare i dettagli dell\'ordine. Si prega di contattare il supporto.',
+    downloadLimitReached: 'Hai raggiunto il limite massimo di 50 download per questo pacchetto. Contatta il supporto per il ripristino.',
+    downloading: 'Preparazione del download...',
+    downloadSuccess: 'Download avviato con successo!',
+    loadingInfo: 'Caricamento dei dettagli dell\'ordine...',
+    downloadsUsed: 'Download utilizzati',
+    purchasedOn: 'Acquistato il',
+    maxDownloads: 'su 50 download max',
+    downloadPdf: 'Scarica PDF Pianoforte',
+    downloadPdfDesc: 'Spartito ottimizzato per la stampa e i tablet.',
+    secureSsl: 'Connessione SSL Sicura',
+    merchantOfRecord: 'Pagamenti elaborati da Paddle',
+    backHome: 'Torna alla home',
+    emailSubject: 'Ripristina limite di download',
+    supportLinkText: 'Contatta il supporto',
+    supportText: 'Per motivi di sicurezza, i download sono limitati a 50 per impedire la condivisione non autorizzata.',
+    limitWarningText: 'Limite raggiunto? Niente stress. Scrivimi a info@meloscribe.dev e ti sbloccherò.',
+    emailBtnText: 'Invia email',
+    downloadPdfLabel: 'Scarica spartito (PDF)',
+    pdfTooltipText: 'Lo spartito per pianoforte in PDF ad alta risoluzione. Perfetto per la stampa o tablet.',
+    pdfBtnText: 'Scarica PDF',
+    originalVideoLabel: 'Video tutorial (Velocità originale)',
+    originalVideoTooltip: 'Il video di visualizzazione Keysight 2K HD a piena velocità per riferimento offline.',
+    originalVideoDesc: 'Video tutorial a piena velocità (2K HD MP4).',
+    videoBtnText: 'Scarica video',
+    slowVideoLabel: 'Video tutorial (Velocità rallentata)',
+    slowVideoTooltip: 'Il video di visualizzazione Keysight offline a velocità rallentata (con metronomo) per un facile studio.',
+    slowVideoDesc: 'Video tutorial a tempo rallentato (2K HD MP4).',
+    originalMidiLabel: 'MIDI (Velocità originale)',
+    originalMidiTooltip: 'Il file MIDI per pianoforte a velocità originale. Caricalo in Synthesia, nella tua DAW o tastiera.',
+    originalMidiDesc: 'File MIDI per pianoforte a piena velocità.',
+    midiBtnText: 'Scarica MIDI',
+    slowMidiLabel: 'MIDI (Velocità rallentata)',
+    slowMidiTooltip: 'Il file MIDI per pianoforte rallentato del 30% per studiare facilmente le sezioni complesse.',
+    slowMidiDesc: 'File MIDI per pianoforte a velocità ridotta.',
+    errDownload: 'Errore durante il download',
+    errFailed: 'Download fallito',
+    errNetwork: 'Errore di rete durante il download',
+    accessDenied: 'Accesso negato'
   }
 };
 
@@ -57,8 +244,31 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [error, setError] = useState<string | null>(null);
   const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
 
-  const isDe = language === 'de';
-  const t = translations[isDe ? 'de' : 'en'];
+  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
+  const t = translations[activeLang as keyof typeof translations];
+
+  const formatOrderDate = (dateStr?: string) => {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      let locale = 'en-US';
+      if (language === 'de') locale = 'de-DE';
+      else if (language === 'fr') locale = 'fr-FR';
+      else if (language === 'es') locale = 'es-ES';
+      else if (language === 'it') locale = 'it-IT';
+      
+      return d.toLocaleDateString(locale, {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }) + (locale === 'de-DE' ? ' Uhr' : '');
+    } catch (e) {
+      return dateStr;
+    }
+  };
 
   const API_BASE = import.meta.env.VITE_API_URL || 
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -117,11 +327,11 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             setOrderInfo(prev => prev ? { ...prev, download_count: prev.download_count + 1 } : null);
           }
         } else {
-          showToast(isDe ? 'Fehler beim Herunterladen' : 'Error triggering download');
+          showToast(t.errDownload);
         }
       } else {
         const errData = await res.json().catch(() => ({}));
-        const errMsg = errData.error || (isDe ? 'Download failed' : 'Download failed'); // wait, let's match exact lines
+        const errMsg = errData.error || t.errFailed;
         showToast(errMsg);
         if (res.status === 403) {
           // Sync UI count to 50 if limit hit
@@ -130,7 +340,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       }
     } catch (err) {
       console.error('Download request failed:', err);
-      showToast(isDe ? 'Netzwerkfehler beim Download' : 'Network error during download');
+      showToast(t.errNetwork);
     } finally {
       setDownloadingType(null);
     }
@@ -157,7 +367,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             <AlertCircle className="w-8 h-8 text-neon-pink" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {isDe ? 'Fehler' : 'Access Denied'}
+            {t.accessDenied}
           </h2>
           <p className="text-gray-550 dark:text-gray-400 text-sm mb-6">{error}</p>
           <button 
@@ -215,10 +425,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg">
                   {orderInfo?.song_name}
                 </h3>
-                <span className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                  <Mail className="w-3.5 h-3.5 text-neon-pink" />
-                  {orderInfo?.email}
-                </span>
+                <div className="flex flex-col gap-1 mt-1">
+                  <span className="flex items-center gap-1 text-xs text-gray-550 dark:text-gray-400">
+                    <Mail className="w-3.5 h-3.5 text-neon-pink" />
+                    {orderInfo?.email}
+                  </span>
+                  {orderInfo?.created_at && (
+                    <span className="text-[11px] text-gray-400 dark:text-gray-500">
+                      {t.purchasedOn} {formatOrderDate(orderInfo.created_at)}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -242,21 +459,19 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <div className="flex items-center justify-between mt-1.5">
                 <a 
-                  href={`mailto:support@meloscribe.dev?subject=${encodeURIComponent(isDe ? 'Freischaltung Download-Limit' : 'Reset Download Limit')} - Order #${hash}`}
+                  href={`mailto:info@meloscribe.dev?subject=${encodeURIComponent(t.emailSubject)} - Order #${hash}`}
                   className="text-[10px] text-neon-cyan hover:underline hover:text-neon-cyan/80 transition-colors font-medium cursor-pointer"
                 >
-                  {isDe ? 'Support anschreiben' : 'Email support'}
+                  {t.supportLinkText}
                 </a>
                 <div className="flex items-center gap-1">
                   <span className="text-[10px] text-gray-500 dark:text-gray-500">
                     {t.maxDownloads}
                   </span>
                   <span className="group relative inline-block cursor-help text-gray-400 hover:text-neon-cyan transition-colors">
-                    <Info className="w-3 h-3" />
+                    <Info className="w-3.5 h-3.5" />
                     <span className="absolute bottom-full right-0 mb-2 w-56 p-2 bg-dark-900/95 border border-dark-600 text-gray-300 text-[10px] rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                      {isDe 
-                        ? 'Aus Sicherheitsgründen gibt es maximal 50 Downloads, damit Links nicht missbräuchlich geteilt werden.' 
-                        : 'For security reasons, downloads are capped at 50 to prevent unauthorized link sharing.'}
+                      {t.supportText}
                     </span>
                   </span>
                 </div>
@@ -268,15 +483,13 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           {isLimitReached && (
             <div className="mt-2 mb-6 p-4 rounded-xl border border-neon-pink/20 bg-neon-pink/5 text-xs text-neon-pink flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-300">
               <span className="leading-relaxed">
-                {isDe 
-                  ? 'Limit erreicht? Kein Stress. Schreib mir kurz an support@meloscribe.dev und ich schalte dich wieder frei.' 
-                  : 'Limit reached? No stress. Message me at support@meloscribe.dev and I will get you unlocked.'}
+                {t.limitWarningText}
               </span>
               <a 
-                href={`mailto:support@meloscribe.dev?subject=${encodeURIComponent(isDe ? 'Freischaltung Download-Limit' : 'Reset Download Limit')} - Order #${hash}`}
+                href={`mailto:info@meloscribe.dev?subject=${encodeURIComponent(t.emailSubject)} - Order #${hash}`}
                 className="px-3.5 py-1.5 bg-neon-pink hover:bg-neon-pink/90 text-white font-bold rounded-lg text-xs transition-all shrink-0 cursor-pointer text-center w-full sm:w-auto"
               >
-                {isDe ? 'Support mailen' : 'Email support'}
+                {t.emailBtnText}
               </a>
             </div>
           )}
@@ -290,19 +503,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   <FileText className="w-5 h-5 text-neon-cyan" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'Noten (PDF) herunterladen' : 'Download Sheet PDF'}
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                    {t.downloadPdfLabel}
                     <span className="group relative inline-block cursor-help">
                       <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
                       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Die Klaviernoten als hochauflösendes PDF. Perfekt zum Ausdrucken oder für den Tablet-Reader.' 
-                          : 'The piano sheet music as a high-resolution PDF. Perfect for printing or tablet readers.'}
+                        {t.pdfTooltipText}
                         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
                       </span>
                     </span>
                   </h4>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">{t.downloadPdfDesc}</p>
+                  <p className="text-gray-550 dark:text-gray-500 text-xs mt-0.5">{t.downloadPdfDesc}</p>
                 </div>
               </div>
               <button
@@ -315,7 +526,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'PDF laden' : 'Download PDF'}</span>
+                <span>{t.pdfBtnText}</span>
               </button>
             </div>
 
@@ -327,19 +538,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'Video-Tutorial (Originalgeschwindigkeit)' : 'Video Tutorial (Original Speed)'}
+                    {t.originalVideoLabel}
                     <span className="group relative inline-block cursor-help">
                       <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
                       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Das 2K HD Keysight Visualisierungsvideo in Originalgeschwindigkeit zum Mitspielen offline.' 
-                          : 'The 2K HD Keysight visualization video at full speed for offline reference.'}
+                        {t.originalVideoTooltip}
                         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
                       </span>
                     </span>
                   </h4>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Lernvideo in Originalgeschwindigkeit (2K HD MP4).' : 'Tutorial video at full speed (2K HD MP4).'}
+                    {t.originalVideoDesc}
                   </p>
                 </div>
               </div>
@@ -353,7 +562,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+                <span>{t.videoBtnText}</span>
               </button>
             </div>
 
@@ -365,19 +574,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'Video-Tutorial (Verlangsamt zum Üben)' : 'Video Tutorial (Slow Practice Speed)'}
+                    {t.slowVideoLabel}
                     <span className="group relative inline-block cursor-help">
                       <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-cyan transition-colors" />
                       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Das Keysight Visualisierungsvideo offline im langsamen Übungstempo (mit Metronom) zum einfachen Nachspielen.' 
-                          : 'The Keysight visualization video at slow speed (with metronome) for easy offline practice.'}
+                        {t.slowVideoTooltip}
                         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
                       </span>
                     </span>
                   </h4>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Lernvideo im langsamen Tempo (2K HD MP4).' : 'Tutorial video in slow tempo (2K HD MP4).'}
+                    {t.slowVideoDesc}
                   </p>
                 </div>
               </div>
@@ -391,7 +598,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'Video laden' : 'Download Video'}</span>
+                <span>{t.videoBtnText}</span>
               </button>
             </div>
 
@@ -402,20 +609,18 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   <Music className="w-5 h-5 text-neon-pink" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'MIDI (Originalgeschwindigkeit)' : 'MIDI (Original Speed)'}
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                    {t.originalMidiLabel}
                     <span className="group relative inline-block cursor-help">
                       <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-pink transition-colors" />
                       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Die Klavier-MIDI-Datei im originalen Tempo. Lade sie in Synthesia, deine DAW oder dein Keyboard.' 
-                          : 'The piano MIDI file at original speed. Load it into Synthesia, your DAW, or digital keyboard.'}
+                        {t.originalMidiTooltip}
                         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
                       </span>
                     </span>
                   </h4>
                   <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Klavier-MIDI-Datei im Originaltempo.' : 'Piano MIDI file in full speed.'}
+                    {t.originalMidiDesc}
                   </p>
                 </div>
               </div>
@@ -429,7 +634,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 ) : (
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
+                <span>{t.midiBtnText}</span>
               </button>
             </div>
 
@@ -441,19 +646,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
-                    {isDe ? 'MIDI (Verlangsamt zum Üben)' : 'MIDI (Slow Practice Speed)'}
+                    {t.slowMidiLabel}
                     <span className="group relative inline-block cursor-help">
                       <Info className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-neon-pink transition-colors" />
                       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-dark-900/95 border border-dark-600 text-gray-300 text-xs rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 shadow-2xl z-50 text-center font-normal backdrop-blur-md">
-                        {isDe 
-                          ? 'Die Klavier-MIDI-Datei um 30% verlangsamt zum einfacheren Lernen schwieriger Stellen.' 
-                          : 'The piano MIDI file slowed down by 30% for easier practice of complex sections.'}
+                        {t.slowMidiTooltip}
                         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-dark-900" />
                       </span>
                     </span>
                   </h4>
-                  <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                    {isDe ? 'Klavier-MIDI-Datei im reduzierten Übungstempo.' : 'Piano MIDI file at reduced speed.'}
+                  <p className="text-gray-550 dark:text-gray-500 text-xs mt-0.5">
+                    {t.slowMidiDesc}
                   </p>
                 </div>
               </div>
@@ -467,7 +670,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 ) : (
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
                 )}
-                <span>{isDe ? 'MIDI laden' : 'Download MIDI'}</span>
+                <span>{t.midiBtnText}</span>
               </button>
             </div>
           </div>
