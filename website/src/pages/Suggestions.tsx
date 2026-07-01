@@ -175,7 +175,6 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'richieste',
       loading: 'Caricamento dei suggerimenti...'
     }
-    }
   };
 
   const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';

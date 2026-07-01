@@ -283,6 +283,8 @@ const translations = {
     muteAudio: 'Disattiva l\'anteprima audio',
     unmuteAudio: 'Attiva l\'anteprima audio',
   },
+};
+
 // Smart Search Helpers
 function normalizeString(str: string): string {
   return str
