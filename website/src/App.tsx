@@ -755,8 +755,8 @@ function App() {
 
       // Fetch dynamic, localized geotargeted prices for products
       const priceIds = allSongs
-        .filter(s => s.kofiId && s.kofiId.startsWith("pri_"))
-        .map(s => s.kofiId);
+        .filter(s => s.paddleId && s.paddleId.startsWith("pri_"))
+        .map(s => s.paddleId);
 
       if (priceIds.length > 0) {
         paddle.PricePreview({
@@ -1133,7 +1133,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.kofiId] || song.price)}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.paddleId] || song.price)}
                         </button>
                       </div>
                     </div>
@@ -1358,7 +1358,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.kofiId] || song.price)}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.paddleId] || song.price)}
                         </button>
                       </div>
                     </div>
@@ -1491,7 +1491,7 @@ function App() {
         <PaddleModal 
           isOpen={isKofiModalOpen}
           onClose={() => setIsKofiModalOpen(false)}
-          kofiId={selectedSong.kofiId}
+          paddleId={selectedSong.paddleId}
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
           language={language}

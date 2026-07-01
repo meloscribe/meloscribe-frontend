@@ -6,7 +6,7 @@ export interface Song {
   artist: string;
   difficulty: 'Easy' | 'Original';
   price: string;
-  kofiId: string;
+  paddleId: string;
   coverImage: string;
   gradient?: string;
   hidden?: boolean;

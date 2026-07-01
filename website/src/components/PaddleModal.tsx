@@ -4,7 +4,7 @@ import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles,
 interface PaddleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  kofiId: string;
+  paddleId: string;
   songTitle: string;
   songArtist: string;
   language: string;
@@ -101,7 +101,7 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, paddleId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -238,7 +238,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
     if (!isOpen) {
       setIsCheckoutLoaded(false);
     }
-  }, [isOpen, kofiId]);
+  }, [isOpen, paddleId]);
 
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
@@ -250,11 +250,11 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
   };
 
   useEffect(() => {
-    if (isOpen && kofiId && kofiId.startsWith("pri_")) {
+    if (isOpen && paddleId && paddleId.startsWith("pri_")) {
       const timer = setTimeout(() => {
         const paddle = (window as any).Paddle;
         if (typeof paddle !== 'undefined') {
-          console.log("[Paddle] Loading inline checkout for price:", kofiId);
+          console.log("[Paddle] Loading inline checkout for price:", paddleId);
           
           const isDark = document.body.classList.contains('dark') || 
                          document.documentElement.classList.contains('dark') ||
@@ -302,7 +302,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
             },
             items: [
               {
-                priceId: kofiId,
+                priceId: paddleId,
                 quantity: 1
               }
             ],
@@ -327,7 +327,7 @@ export default function PaddleModal({ isOpen, onClose, kofiId, songTitle, songAr
         }
       };
     }
-  }, [isOpen, kofiId, activeLang, songTitle, songArtist]);
+  }, [isOpen, paddleId, activeLang, songTitle, songArtist]);
 
   const isCondensed = format === 'viral_part';
 

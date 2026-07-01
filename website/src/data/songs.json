@@ -5,10 +5,10 @@
     "artist": "",
     "difficulty": "Original",
     "price": "",
-    "kofiId": "",
     "coverImage": "",
     "hidden": true,
-    "globalPaymentsDisabled": false
+    "globalPaymentsDisabled": false,
+    "paddleId": ""
   },
   {
     "id": "1",
@@ -16,10 +16,10 @@
     "artist": "Ghost",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap7nmbmfnwewwx2npgxd2m",
     "coverImage": "/covers/Mary On A Cross.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
-    "hidden": false
+    "hidden": false,
+    "paddleId": "pri_01kwap7nmbmfnwewwx2npgxd2m"
   },
   {
     "id": "2",
@@ -27,9 +27,9 @@
     "artist": "Rammstein",
     "difficulty": "Original",
     "price": "6 €",
-    "kofiId": "pri_01kwap7psqhq1kadfgm1zvt17n",
     "coverImage": "/covers/Sonne.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap7psqhq1kadfgm1zvt17n"
   },
   {
     "id": "3",
@@ -37,9 +37,9 @@
     "artist": "Patrick Watson",
     "difficulty": "Original",
     "price": "6 €",
-    "kofiId": "pri_01kwap7r150vgfbnxjjekmr06j",
     "coverImage": "/covers/Je te laisserai des mots.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap7r150vgfbnxjjekmr06j"
   },
   {
     "id": "4",
@@ -47,9 +47,9 @@
     "artist": "Ismail",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap7s76726nsbccp4eydq3d",
     "coverImage": "/covers/Closed Doors.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
+    "paddleId": "pri_01kwap7s76726nsbccp4eydq3d"
   },
   {
     "id": "5",
@@ -57,9 +57,9 @@
     "artist": "Abilene",
     "difficulty": "Original",
     "price": "6 €",
-    "kofiId": "pri_01kwap7tcvw6s23pq44pbv60aq",
     "coverImage": "/covers/Sweetest Rain.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap7tcvw6s23pq44pbv60aq"
   },
   {
     "id": "6",
@@ -67,9 +67,9 @@
     "artist": "Traditional",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap7vmg93500mvg8e0rj82a",
     "coverImage": "/covers/We wish you a merry Christmas.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap7vmg93500mvg8e0rj82a"
   },
   {
     "id": "9",
@@ -77,9 +77,9 @@
     "artist": "The Irrepressibles",
     "difficulty": "Original",
     "price": "6 €",
-    "kofiId": "pri_01kwap7wtwpnprpwpbtmrddzh3",
     "coverImage": "/covers/In This Shirt.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap7wtwpnprpwpbtmrddzh3"
   },
   {
     "id": "10",
@@ -87,9 +87,9 @@
     "artist": "C418",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap7y0k3qfssyqvca8tgqfk",
     "coverImage": "/covers/Wet Hands.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap7y0k3qfssyqvca8tgqfk"
   },
   {
     "id": "11",
@@ -97,9 +97,9 @@
     "artist": "Coldplay",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap7zb0qn5jy0xmygr2mf72",
     "coverImage": "/covers/The Scientist.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap7zb0qn5jy0xmygr2mf72"
   },
   {
     "id": "13",
@@ -107,9 +107,9 @@
     "artist": "Eminem",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap80gg2604xhkqvmnqfab6",
     "coverImage": "/covers/Mockingbird.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap80gg2604xhkqvmnqfab6"
   },
   {
     "id": "14",
@@ -117,9 +117,9 @@
     "artist": "Nicholas Britell",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap81spjgzydv97804x48fm",
     "coverImage": "/covers/Succession theme.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap81spjgzydv97804x48fm"
   },
   {
     "id": "15",
@@ -127,9 +127,9 @@
     "artist": "BØRNS",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap82yvjpa4xdvp2n65j081",
     "coverImage": "/covers/Past Lives.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap82yvjpa4xdvp2n65j081"
   },
   {
     "id": "16",
@@ -137,9 +137,9 @@
     "artist": "Radiohead",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap84e2t898qcpccpx32xbr",
     "coverImage": "/covers/No Surprises.jpg",
-    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20"
+    "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
+    "paddleId": "pri_01kwap84e2t898qcpccpx32xbr"
   },
   {
     "id": "17",
@@ -147,9 +147,9 @@
     "artist": "Traditional",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap85kbhf0zpdd77p0d1fwv",
     "coverImage": "/covers/Greensleeves.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap85kbhf0zpdd77p0d1fwv"
   },
   {
     "id": "18",
@@ -157,9 +157,9 @@
     "artist": "Traditional",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap86sgh9wg86me8sek8xxa",
     "coverImage": "/covers/God Rest Ye Merry, Gentlemen.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap86sgh9wg86me8sek8xxa"
   },
   {
     "id": "19",
@@ -167,9 +167,9 @@
     "artist": "Mykola Leontovych",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap87zrswysf4vqcaasvm89",
     "coverImage": "/covers/Carol of the Bells.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap87zrswysf4vqcaasvm89"
   },
   {
     "id": "21",
@@ -177,9 +177,9 @@
     "artist": "F. X. Gruber",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap894yy7rsz375k3h3sdp9",
     "coverImage": "/covers/Silent Night.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap894yy7rsz375k3h3sdp9"
   },
   {
     "id": "22",
@@ -187,9 +187,9 @@
     "artist": "Leonard Cohen",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap8afx26p78hem1c2hz3n9",
     "coverImage": "/covers/Hallelujah.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap8afx26p78hem1c2hz3n9"
   },
   {
     "id": "23",
@@ -197,9 +197,9 @@
     "artist": "Hans Zimmer",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap8bnmvvdjkx3g7zwkq1vz",
     "coverImage": "/covers/Cornfield Chase.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap8bnmvvdjkx3g7zwkq1vz"
   },
   {
     "id": "29",
@@ -207,9 +207,9 @@
     "artist": "Unknown",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap8czqz877v5q6fcnafk11",
     "coverImage": "/covers/My singing Monsters Plant Island.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
+    "paddleId": "pri_01kwap8czqz877v5q6fcnafk11"
   },
   {
     "id": "30",
@@ -217,9 +217,9 @@
     "artist": "Kesha",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap8e5vbzsrjxrtj8mjs2xm",
     "coverImage": "/covers/Your love is my drug.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20"
+    "gradient": "from-neon-pink/20 via-dark-700 to-neon-cyan/20",
+    "paddleId": "pri_01kwap8e5vbzsrjxrtj8mjs2xm"
   },
   {
     "id": "31",
@@ -227,9 +227,9 @@
     "artist": "Unknown",
     "difficulty": "Original",
     "price": "4 €",
-    "kofiId": "pri_01kwap8fk89mqmbxkdj71dktrd",
     "coverImage": "/covers/Golden Brown x Love Story.jpg",
-    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800"
+    "gradient": "from-neon-cyan/30 via-dark-600 to-dark-800",
+    "paddleId": "pri_01kwap8fk89mqmbxkdj71dktrd"
   },
   {
     "id": "32",
@@ -237,11 +237,11 @@
     "artist": "Yiruma",
     "difficulty": "Original",
     "price": "6 €",
-    "kofiId": "pri_01kwap8gs5btjdcesxb7k3acz4",
     "coverImage": "/covers/River Flows in You.jpg",
     "gradient": "from-dark-800 via-neon-pink/20 to-neon-cyan/20",
     "audioPreviewUrl": "/audio/river_flows_in_you.ogg",
     "paymentsDisabled": false,
-    "hidden": false
+    "hidden": false,
+    "paddleId": "pri_01kwap8gs5btjdcesxb7k3acz4"
   }
 ]
