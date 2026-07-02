@@ -19,7 +19,8 @@
     "coverImage": "/covers/Mary On A Cross.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-pink/20",
     "hidden": false,
-    "stripePriceId": "pri_01kwap7nmbmfnwewwx2npgxd2m"
+    "stripePriceId": "pri_01kwap7nmbmfnwewwx2npgxd2m",
+    "paymentsDisabled": true
   },
   {
     "id": "2",
