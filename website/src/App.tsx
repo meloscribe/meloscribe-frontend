@@ -1002,7 +1002,7 @@ function App() {
               </div>
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                 {allSongs.filter(song => !song.hidden).slice(0, 3).map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                   return (
@@ -1021,7 +1021,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-[133%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1044,34 +1044,26 @@ function App() {
                           <div className="visualizer-bar" />
                           <div className="visualizer-bar" />
                         </div>
+                      </div>
   
+                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col gap-2">
                         {/* Badges Container */}
-                        <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-1.5 mb-0.5">
                           {/* Difficulty Badge */}
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.difficulty === 'Easy'
-                              ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
-                              : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
-                          }`}>
+                          <span className="px-1.5 py-0.5 rounded bg-gray-100/80 dark:bg-dark-800/80 text-gray-500 dark:text-gray-400 text-[9px] sm:text-[10px] font-semibold border border-gray-250/60 dark:border-dark-700/80 flex-shrink-0">
                             {song.difficulty}
                           </span>
 
                           {/* Format Badge (Viral Part vs Full Arrangement) */}
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            getSongFormat(song) === 'viral_part'
-                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
-                          }`}>
+                          <span className="px-1.5 py-0.5 rounded bg-gray-100/80 dark:bg-dark-800/80 text-gray-500 dark:text-gray-400 text-[9px] sm:text-[10px] font-semibold border border-gray-250/60 dark:border-dark-700/80 flex-shrink-0">
                             {getSongFormat(song) === 'viral_part' ? t.formatViral : <><span className="inline md:hidden">{t.formatFullCondensed}</span><span className="hidden md:inline">{t.formatFull}</span></>}
                           </span>
                         </div>
-                      </div>
-  
-                      <div className="p-2 sm:p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
+
                         <button
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
                               : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
@@ -1228,7 +1220,7 @@ function App() {
             {/* Song Cards Grid */}
             {filteredSongs.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {filteredSongs.map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                   return (
@@ -1247,7 +1239,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-[133%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1269,34 +1261,26 @@ function App() {
                           <div className="visualizer-bar" />
                           <div className="visualizer-bar" />
                         </div>
+                      </div>
   
+                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col gap-2">
                         {/* Badges Container */}
-                        <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-1.5 mb-0.5">
                           {/* Difficulty Badge */}
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            song.difficulty === 'Easy'
-                              ? 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'
-                              : 'text-purple-400 border-purple-500/40 bg-purple-500/5'
-                          }`}>
+                          <span className="px-1.5 py-0.5 rounded bg-gray-100/80 dark:bg-dark-800/80 text-gray-500 dark:text-gray-400 text-[9px] sm:text-[10px] font-semibold border border-gray-250/60 dark:border-dark-700/80 flex-shrink-0">
                             {song.difficulty}
                           </span>
 
                           {/* Format Badge (Viral Part vs Full Arrangement) */}
-                          <span className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-[9px] sm:text-xs font-semibold border flex-shrink-0 ${
-                            getSongFormat(song) === 'viral_part'
-                              ? 'text-neon-pink border-neon-pink/40 bg-neon-pink/5'
-                              : 'text-amber-400 border-amber-500/40 bg-amber-500/5'
-                          }`}>
+                          <span className="px-1.5 py-0.5 rounded bg-gray-100/80 dark:bg-dark-800/80 text-gray-500 dark:text-gray-400 text-[9px] sm:text-[10px] font-semibold border border-gray-250/60 dark:border-dark-700/80 flex-shrink-0">
                             {getSongFormat(song) === 'viral_part' ? t.formatViral : <><span className="inline md:hidden">{t.formatFullCondensed}</span><span className="hidden md:inline">{t.formatFull}</span></>}
                           </span>
                         </div>
-                      </div>
-  
-                      <div className="p-2 sm:p-4 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50">
+
                         <button
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-4 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
                               : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
