@@ -4,7 +4,8 @@ import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles,
 interface PaddleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  paddleId: string;
+  songId: string;
+  stripePriceId: string;
   songTitle: string;
   songArtist: string;
   language: string;
@@ -101,12 +102,11 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, paddleId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
-  const [isCheckoutLoaded, setIsCheckoutLoaded] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -234,100 +234,48 @@ export default function PaddleModal({ isOpen, onClose, paddleId, songTitle, song
     }
   }, [isOpen, songTitle, videoPreviewUrl]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setIsCheckoutLoaded(false);
-    }
-  }, [isOpen, paddleId]);
-
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
 
-  const generateSecureHash = () => {
-    const array = new Uint8Array(16);
-    window.crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-  };
-
-  useEffect(() => {
-    if (isOpen && paddleId && paddleId.startsWith("pri_")) {
-      const timer = setTimeout(() => {
-        const paddle = (window as any).Paddle;
-        if (typeof paddle !== 'undefined') {
-          console.log("[Paddle] Loading inline checkout for price:", paddleId);
-          
-          const isDark = document.body.classList.contains('dark') || 
-                         document.documentElement.classList.contains('dark') ||
-                         document.body.classList.contains('dark-mode');
-          const currentTheme = isDark ? 'dark' : 'light';
-          
-          const downloadHash = generateSecureHash();
-
-          paddle.Update({
-            eventCallback: function(data: any) {
-              console.log("[Paddle Event]:", data.name, data);
-              if (data.name === 'checkout.loaded' || data.name === 'checkout.rendered') {
-                setIsCheckoutLoaded(true);
-                if (window.innerWidth < 768) {
-                  setTimeout(() => {
-                    const frame = document.getElementById('paddle-checkout-frame');
-                    if (frame) {
-                      frame.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 200);
-                }
-              }
-              if (data.name === 'checkout.completed') {
-                console.log("[Paddle Completed]:", data);
-                const transactionId = data.data?.transaction_id || data.data?.id || '';
-                if (transactionId) {
-                  window.location.href = `/success?checkout_id=${transactionId}`;
-                }
-              }
-              if (data.name === 'checkout.error' || data.name === 'checkout.warning') {
-                const errMsg = data.data?.error?.message || data.error?.message || JSON.stringify(data);
-                alert("[Paddle Error]: " + errMsg);
-              }
-            }
-          });
-          
-          paddle.Checkout.open({
-            settings: {
-              displayMode: 'inline',
-              frameTarget: 'paddle-checkout-frame',
-              frameInitialHeight: '480',
-              theme: currentTheme,
-              locale: activeLang,
-              successUrl: `${window.location.origin}/success?checkout_id={checkout_id}`
-            },
-            items: [
-              {
-                priceId: paddleId,
-                quantity: 1
-              }
-            ],
-            customData: {
-              song_title: songTitle,
-              song_artist: songArtist,
-              download_hash: downloadHash
-            }
-          });
-        }
-      }, 400);
-      return () => {
-        clearTimeout(timer);
-        const paddle = (window as any).Paddle;
-        if (typeof paddle !== 'undefined' && paddle.Checkout) {
-          try {
-            paddle.Checkout.close();
-            console.log("[Paddle] Cleaned up inline checkout");
-          } catch (e) {
-            console.warn("[Paddle] Error closing checkout:", e);
-          }
-        }
-      };
+  const handleStripeCheckout = async () => {
+    setIsRedirecting(true);
+    try {
+      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8787'
+        : 'https://api.meloscribe.dev';
+        
+      const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          songId: songId,
+          format: format,
+          difficulty: difficulty,
+          language: language
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error(await res.text() || 'Failed to create checkout session');
+      }
+      
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned from backend');
+      }
+    } catch (e: any) {
+      console.error("[Stripe Redirect Error]:", e);
+      alert(language === 'de' 
+        ? "Fehler beim Weiterleiten zu Stripe: " + e.message
+        : "Failed to redirect to Stripe: " + e.message
+      );
     }
-  }, [isOpen, paddleId, activeLang, songTitle, songArtist]);
+    setIsRedirecting(false);
+  };
 
   const isCondensed = format === 'viral_part';
 
@@ -532,22 +480,50 @@ export default function PaddleModal({ isOpen, onClose, paddleId, songTitle, song
           {/* Separator on mobile only */}
           <div className="border-t border-gray-200 dark:border-dark-600/50 my-2 md:hidden" />
 
-          {/* Right Column: Inline Paddle Checkout Frame */}
+          {/* Right Column: Secure Checkout Action */}
           <div className="md:col-span-7 border-t md:border-t-0 md:border-l border-gray-200 dark:border-dark-600/50 pt-6 md:pt-0 md:pl-8 flex flex-col justify-center min-h-[480px]">
-            <div className="relative min-h-[480px]">
-              {/* Loading Spinner - hidden once loaded */}
-              {!isCheckoutLoaded && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-dark-900/95 z-20 rounded-xl">
-                  <Loader2 className="w-8 h-8 animate-spin text-neon-cyan mb-2" />
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.buttonOpening}</span>
-                </div>
-              )}
-              
-              <div 
-                id="paddle-checkout-frame" 
-                className={`paddle-checkout-frame w-full min-h-[480px] bg-transparent transition-opacity duration-300 ${isCheckoutLoaded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}
+            <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-6 py-8">
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  {language === 'de' ? 'Sichere Bezahlung über Stripe' : 'Secure Payment via Stripe'}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {language === 'de' 
+                    ? 'Klicke auf den Button unten, um den verschlüsselten Bezahlvorgang über Stripe zu starten.' 
+                    : 'Click the button below to start your secure payment process on Stripe.'}
+                </p>
+              </div>
+
+              <button
+                onClick={handleStripeCheckout}
+                disabled={isRedirecting}
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer"
               >
-                {/* Paddle renders inline checkout frame here */}
+                {isRedirecting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>{language === 'de' ? 'Öffne sicheren Checkout...' : 'Redirecting to Stripe...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-5 h-5" />
+                    <span>{language === 'de' ? 'Jetzt sicher bezahlen mit Stripe' : 'Pay Securely with Stripe'}</span>
+                  </>
+                )}
+              </button>
+
+              <div className="text-center text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+                {language === 'de' ? (
+                  <>
+                    Unterstützte Methoden: Kreditkarte, PayPal, Giropay, iDEAL, EPS & Link.<br/>
+                    Keine Steuerausweisung gemäß § 19 UStG.
+                  </>
+                ) : (
+                  <>
+                    Supported methods: Card, PayPal, Giropay, iDEAL, EPS & Link.<br/>
+                    Tax-free delivery in accordance with § 19 UStG.
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -558,7 +534,9 @@ export default function PaddleModal({ isOpen, onClose, paddleId, songTitle, song
           <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500">
             <ShieldCheck className="w-4 h-4 text-neon-cyan" /> {t.secureSsl}
           </span>
-          <span className="text-gray-500 dark:text-gray-500">{t.merchantOfRecord}</span>
+          <span className="text-gray-500 dark:text-gray-500">
+            {language === 'de' ? 'Zahlungsabwicklung durch Stripe' : 'Payments secured by Stripe'}
+          </span>
         </div>
       </div>
 

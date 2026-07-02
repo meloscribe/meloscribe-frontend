@@ -725,62 +725,7 @@ function App() {
     };
   }, [allSongs]);
 
-  const [localizedPrices, setLocalizedPrices] = useState<Record<string, string>>({});
 
-  // Initialize Paddle SDK & Fetch Price Previews
-  useEffect(() => {
-    const paddle = (window as any).Paddle;
-    if (typeof paddle !== 'undefined') {
-      const clientToken = 'test_0cbda3bab94eea0f567ab457a98';
-      console.log("[Paddle] Initializing with Client Token:", clientToken);
-      
-      // Automatically detect environment based on token prefix
-      if (clientToken.startsWith('live_')) {
-        // Use production environment automatically
-      } else {
-        paddle.Environment.set('sandbox');
-      }
-
-      paddle.Initialize({
-        token: clientToken,
-        eventCallback: function(data: any) {
-          console.log("[Paddle Event]:", data.name, data);
-          if (data.name === 'checkout.error' || data.name === 'checkout.warning') {
-            console.error("[Paddle Error Detail]:", data);
-            const errMsg = data.data?.error?.message || data.error?.message || JSON.stringify(data);
-            alert("[Paddle Error]: " + errMsg);
-          }
-        }
-      });
-
-      // Fetch dynamic, localized geotargeted prices for products
-      const priceIds = allSongs
-        .filter(s => s.paddleId && s.paddleId.startsWith("pri_"))
-        .map(s => s.paddleId);
-
-      if (priceIds.length > 0) {
-        paddle.PricePreview({
-          items: priceIds.map(id => ({ priceId: id, quantity: 1 }))
-        })
-        .then((result: any) => {
-          const pricesMap: Record<string, string> = {};
-          if (result && result.data && result.data.details && result.data.details.lineItems) {
-            result.data.details.lineItems.forEach((item: any) => {
-              if (item.price && item.price.id && item.formattedTotals && item.formattedTotals.total) {
-                const rawTotal = item.formattedTotals.total;
-                const cleanedTotal = rawTotal.replace(/(\.00|,00)(?=\s*[a-zA-Z$€£]|$)/g, '');
-                pricesMap[item.price.id] = cleanedTotal;
-              }
-            });
-            setLocalizedPrices(pricesMap);
-          }
-        })
-        .catch((err: any) => {
-          console.warn("[Paddle Pricing] Price preview request failed:", err);
-        });
-      }
-    }
-  }, [allSongs]);
 
   // Dark/Light Theme state
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -1133,7 +1078,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.paddleId] || song.price)}
+                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
                         </button>
                       </div>
                     </div>
@@ -1358,7 +1303,7 @@ function App() {
                           }`}
                         >
                           <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : (localizedPrices[song.paddleId] || song.price)}
+                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
                         </button>
                       </div>
                     </div>
@@ -1486,12 +1431,13 @@ function App() {
         </div>
       </footer>
 
-      {/* Paddle Payment Overlay Modal */}
+      {/* Stripe Payment Overlay Modal */}
       {selectedSong && (
         <PaddleModal 
           isOpen={isKofiModalOpen}
           onClose={() => setIsKofiModalOpen(false)}
-          paddleId={selectedSong.paddleId}
+          songId={selectedSong.id}
+          stripePriceId={selectedSong.stripePriceId}
           songTitle={selectedSong.title}
           songArtist={selectedSong.artist}
           language={language}
