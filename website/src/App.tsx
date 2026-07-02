@@ -1015,13 +1015,13 @@ function App() {
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
-                        className={`relative w-full aspect-[3/4] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`relative w-full aspect-[4/5] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         {song.coverImage ? (
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-[133%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1035,16 +1035,16 @@ function App() {
                           </div>
                         )}
                         
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay */}
+                        {/* Clean Cover Text Overlay — bottom-anchored so author is always at same height */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center select-none pointer-events-none">
-                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] max-w-[90%] break-words">
+                          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-5 px-3 text-center select-none pointer-events-none">
+                            <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
                               {song.title}
                             </h3>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs tracking-wider mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
-                              - {song.artist} -
+                            <p className="text-gray-300 font-sans text-[9px] sm:text-[10px] tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap">
+                              — {song.artist} —
                             </p>
                           </div>
                         )}
@@ -1245,13 +1245,13 @@ function App() {
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
-                        className={`relative w-full aspect-[3/4] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`relative w-full aspect-[4/5] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         {song.coverImage ? (
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-[133%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1264,16 +1264,16 @@ function App() {
                           </div>
                         )}
                         
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay */}
+                        {/* Clean Cover Text Overlay — bottom-anchored so author is always at same height */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center select-none pointer-events-none">
-                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] max-w-[90%] break-words">
+                          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-5 px-3 text-center select-none pointer-events-none">
+                            <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
                               {song.title}
                             </h3>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs tracking-wider mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
-                              - {song.artist} -
+                            <p className="text-gray-300 font-sans text-[9px] sm:text-[10px] tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap">
+                              — {song.artist} —
                             </p>
                           </div>
                         )}
