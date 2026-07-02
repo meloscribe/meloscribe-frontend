@@ -1037,6 +1037,18 @@ function App() {
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                         
+                        {/* Clean Cover Text Overlay */}
+                        {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center select-none pointer-events-none">
+                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] max-w-[90%] break-words">
+                              {song.title}
+                            </h3>
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs tracking-wider mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
+                              - {song.artist} -
+                            </p>
+                          </div>
+                        )}
+                        
                         {/* Audio Visualizer Overlay */}
                         <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
                           <div className="visualizer-bar" />
@@ -1253,7 +1265,19 @@ function App() {
                         )}
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-  
+                        
+                        {/* Clean Cover Text Overlay */}
+                        {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center select-none pointer-events-none">
+                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] max-w-[90%] break-words">
+                              {song.title}
+                            </h3>
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs tracking-wider mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
+                              - {song.artist} -
+                            </p>
+                          </div>
+                        )}
+                        
                         {/* Audio Visualizer Overlay */}
                         <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
                           <div className="visualizer-bar" />
