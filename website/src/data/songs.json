@@ -257,7 +257,8 @@
     "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
     "audioPreviewUrl": "/audio-previews/God Rest Ye Merry.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold"
+    "theme": "cold",
+    "stripePriceId": "prod_dummy123"
   },
   {
     "id": "34",
@@ -269,7 +270,8 @@
     "coverImage": "/covers/Greensleeves_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Greensleeves.mp3",
     "gradient": "from-emerald-500/20 via-dark-700 to-teal-500/5",
-    "theme": "green"
+    "theme": "green",
+    "stripePriceId": "prod_dummy123"
   },
   {
     "id": "35",
@@ -281,7 +283,8 @@
     "coverImage": "/covers/Hallelujah_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Hallelujah.mp3",
     "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
-    "theme": "warm"
+    "theme": "warm",
+    "stripePriceId": "prod_dummy123"
   },
   {
     "id": "36",
@@ -293,7 +296,8 @@
     "coverImage": "/covers/In This Shirt_clean.jpg",
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold"
+    "theme": "cold",
+    "stripePriceId": "prod_dummy123"
   },
   {
     "id": "37",
@@ -305,6 +309,7 @@
     "coverImage": "/covers/Icarus_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Icarus.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold"
+    "theme": "cold",
+    "stripePriceId": "prod_dummy123"
   }
 ]

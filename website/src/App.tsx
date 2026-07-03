@@ -33,6 +33,22 @@ const getThemeIconColorClass = (theme: string | undefined): string => {
   return 'text-orange-500 dark:text-orange-400'; // warm or default
 };
 
+const resolveAudioUrl = (song: Song): string => {
+  const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8787'
+    : 'https://api.meloscribe.dev';
+
+  let url = song.audioPreviewUrl;
+  if (!url) {
+    const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
+  } else if (url.startsWith('/audio-previews/')) {
+    const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
+  }
+  return url;
+};
+
 // Translations
 const translations = {
   en: {
@@ -586,7 +602,7 @@ function App() {
       audioRef.current.pause();
     }
 
-    const audioUrl = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
+    const audioUrl = resolveAudioUrl(song);
     const isCondensed = getSongFormat(song) === 'viral_part';
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? (isCondensed ? 15 : 0);
 
@@ -703,7 +719,7 @@ function App() {
     // Preload audio files — store refs so they stay alive in memory (not GC'd)
     try {
       allSongs.forEach(song => {
-        const url = song.audioPreviewUrl || `/audio-previews/${song.title}.mp3`;
+        const url = resolveAudioUrl(song);
         if (url && !preloadCacheRef.current.has(url)) {
           const audio = new Audio();
           audio.preload = 'auto';
