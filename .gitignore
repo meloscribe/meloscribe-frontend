@@ -60,3 +60,6 @@ ShopVideos/
 **/ShopVideos/
 Keysight export/
 **/Keysight export/
+
+# Whitelist public audio previews for website
+!website/public/audio-previews/*.mp3
