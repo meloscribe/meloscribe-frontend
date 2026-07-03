@@ -12,6 +12,7 @@ interface PaddleModalProps {
   format?: 'viral_part' | 'full_arrangement';
   difficulty?: 'Easy' | 'Original';
   videoPreviewUrl?: string;
+  price?: string | number;
 }
 
 const translations = {
@@ -31,6 +32,7 @@ const translations = {
     encrypted: 'Payments are securely processed by Paddle. Instant download access after checkout.',
     secureSsl: 'Secure SSL Connection',
     merchantOfRecord: 'Merchant of Record: Paddle',
+    videoSegment: 'Preview Clip (Note: This is only a 60-second preview clip – the full purchase contains the complete arrangement)',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -48,6 +50,7 @@ const translations = {
     encrypted: 'Zahlungsabwicklung erfolgt verschlüsselt über Paddle. Sofortiger Download-Zugriff nach Kaufabschluss.',
     secureSsl: 'Sichere SSL-Verbindung',
     merchantOfRecord: 'Zahlungsabwickler: Paddle',
+    videoSegment: 'Ausschnitt-Vorschau (Hinweis: Dies ist nur ein 60-Sekunden-Ausschnitt – die Vollversion enthält das komplette Arrangement)',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -65,6 +68,7 @@ const translations = {
     encrypted: 'Les paiements sont traités de manière sécurisée par Paddle. Accès instantané au téléchargement après l\'achat.',
     secureSsl: 'Connexion SSL sécurisée',
     merchantOfRecord: 'Commerçant officiel : Paddle',
+    videoSegment: 'Aperçu (Note : Ceci est seulement un extrait de 60 secondes – l\'arrangement complet est inclus après l\'achat)',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -82,6 +86,7 @@ const translations = {
     encrypted: 'Los pagos se procesan de forma segura a través de Paddle. Acceso de descarga instantánea tras la compra.',
     secureSsl: 'Conexión SSL segura',
     merchantOfRecord: 'Comerciante registrado: Paddle',
+    videoSegment: 'Vista previa (Nota: Esto es solo un fragmento de 60 segundos – la compra incluye el arreglo completo)',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -99,14 +104,51 @@ const translations = {
     encrypted: 'I pagamenti sono elaborati in modo sicuro da Paddle. Accesso immediato al download dopo l\'acquisto.',
     secureSsl: 'Connessione SSL sicura',
     merchantOfRecord: 'Commerciante registrato: Paddle',
+    videoSegment: 'Anteprima (Nota: Questo è solo un estratto di 60 secondi – l\'acquisto include l\'arrangiamento completo)',
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl, price }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
+  const [downloadingType, setDownloadingType] = useState<string | null>(null);
+
+  const priceStr = String(price || '').trim().toLowerCase();
+  const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
+
+  const handleFreeDownload = async (type: string) => {
+    setDownloadingType(type);
+    try {
+      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8787'
+        : 'https://api.meloscribe.dev';
+      const targetUrl = `${apiBaseUrl}/api/public/download?song_id=${encodeURIComponent(songId)}&type=${encodeURIComponent(type)}`;
+      const res = await fetch(targetUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.download_url) {
+          const link = document.createElement('a');
+          link.href = data.download_url;
+          link.download = '';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          alert('Download link not received.');
+        }
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || 'Failed to request download link.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Network error requesting download link.');
+    } finally {
+      setDownloadingType(null);
+    }
+  };
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -483,48 +525,121 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           {/* Right Column: Secure Checkout Action */}
           <div className="md:col-span-7 border-t md:border-t-0 md:border-l border-gray-200 dark:border-dark-600/50 pt-6 md:pt-0 md:pl-8 flex flex-col justify-center min-h-[480px]">
             <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-6 py-8">
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                  {language === 'de' ? 'Sichere Bezahlung über Stripe' : 'Secure Payment via Stripe'}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {language === 'de' 
-                    ? 'Klicke auf den Button unten, um den verschlüsselten Bezahlvorgang über Stripe zu starten.' 
-                    : 'Click the button below to start your secure payment process on Stripe.'}
-                </p>
-              </div>
+              {isFree ? (
+                <>
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                      {language === 'de' ? 'Kostenloser Download' : 'Free Download'}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {language === 'de' 
+                        ? 'Wähle das gewünschte Format zum sofortigen, kostenlosen Herunterladen.' 
+                        : 'Choose the format you want to download immediately for free.'}
+                    </p>
+                  </div>
 
-              <button
-                onClick={handleStripeCheckout}
-                disabled={isRedirecting}
-                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer"
-              >
-                {isRedirecting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>{language === 'de' ? 'Öffne sicheren Checkout...' : 'Redirecting to Stripe...'}</span>
-                  </>
-                ) : (
-                  <>
-                    <ShieldCheck className="w-5 h-5" />
-                    <span>{language === 'de' ? 'Jetzt sicher bezahlen mit Stripe' : 'Pay Securely with Stripe'}</span>
-                  </>
-                )}
-              </button>
+                  <div className="w-full space-y-3">
+                    <button
+                      onClick={() => handleFreeDownload('pdf')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-neon-cyan" />
+                        {language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet PDF'}
+                      </span>
+                      {downloadingType === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                    </button>
 
-              <div className="text-center text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-                {language === 'de' ? (
-                  <>
-                    Unterstützte Methoden: Kreditkarte, PayPal, Giropay, iDEAL, EPS & Link.<br/>
-                    Keine Steuerausweisung gemäß § 19 UStG.
-                  </>
-                ) : (
-                  <>
-                    Supported methods: Card, PayPal, Giropay, iDEAL, EPS & Link.<br/>
-                    Tax-free delivery in accordance with § 19 UStG.
-                  </>
-                )}
-              </div>
+                    <button
+                      onClick={() => handleFreeDownload('midi')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Music className="w-4 h-4 text-neon-pink" />
+                        {language === 'de' ? 'MIDI (Originaltempo)' : 'MIDI (Original Speed)'}
+                      </span>
+                      {downloadingType === 'midi' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                    </button>
+
+                    <button
+                      onClick={() => handleFreeDownload('midi_slow')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Music className="w-4 h-4 text-neon-pink/80" />
+                        {language === 'de' ? 'MIDI (Langsam)' : 'MIDI (Slow Practice)'}
+                      </span>
+                      {downloadingType === 'midi_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                    </button>
+
+                    <button
+                      onClick={() => handleFreeDownload('zip')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-lg active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      {downloadingType === 'zip' ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin animate-pulse" />
+                          <span>{language === 'de' ? 'Lade ZIP-Paket...' : 'Loading ZIP...'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          <span>{language === 'de' ? 'Komplettes Paket (.zip)' : 'Download Full Package (.zip)'}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                      {language === 'de' ? 'Sichere Bezahlung über Stripe' : 'Secure Payment via Stripe'}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {language === 'de' 
+                        ? 'Klicke auf den Button unten, um den verschlüsselten Bezahlvorgang über Stripe zu starten.' 
+                        : 'Click the button below to start your secure payment process on Stripe.'}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleStripeCheckout}
+                    disabled={isRedirecting}
+                    className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                  >
+                    {isRedirecting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>{language === 'de' ? 'Öffne sicheren Checkout...' : 'Redirecting to Stripe...'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-5 h-5" />
+                        <span>{language === 'de' ? 'Jetzt sicher bezahlen mit Stripe' : 'Pay Securely with Stripe'}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-center text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+                    {language === 'de' ? (
+                      <>
+                        Unterstützte Methoden: Kreditkarte, PayPal, Giropay, iDEAL, EPS & Link.<br/>
+                        Keine Steuerausweisung gemäß § 19 UStG.
+                      </>
+                    ) : (
+                      <>
+                        Supported methods: Card, PayPal, Giropay, iDEAL, EPS & Link.<br/>
+                        Tax-free delivery in accordance with § 19 UStG.
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -587,6 +702,9 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             }`}>
               <span className="text-[9px] font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
               <h4 className="text-xs font-semibold text-white mt-0.5">{songTitle}</h4>
+              {format === 'full_arrangement' && (
+                <span className="text-[9px] text-white/60 mt-0.5">{t.videoSegment}</span>
+              )}
             </div>
 
             {/* Big Center Play/Pause button overlay */}

@@ -17,6 +17,9 @@ export interface Song {
   isCondensed?: boolean;
   condensed?: boolean;
   paymentsDisabled?: boolean;
+  format?: 'viral_part' | 'full_arrangement';
+  videoPreviewUrl?: string;
+  theme?: string;
 }
 
 export const songs = (songsData as Song[]).filter(s => s.id !== 'global_settings');

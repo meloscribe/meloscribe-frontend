@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
@@ -19,6 +19,12 @@ const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
   const p = song.price || '';
   if (p.includes('3') || p.includes('4')) return 'viral_part';
   return 'full_arrangement';
+};
+
+const isSongFree = (priceStr: string | number | undefined): boolean => {
+  if (!priceStr) return true;
+  const p = priceStr.toString().trim().toLowerCase();
+  return p === '0' || p === '0 €' || p === '0$' || p === '0.00' || p === 'free';
 };
 
 // Translations
@@ -459,7 +465,6 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 
 function App() {
   const { i18n } = useTranslation();
-  const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrollingActive, setIsScrollingActive] = useState(false);
   const [language, setLanguageState] = useState<Language>(() => {
@@ -794,18 +799,7 @@ function App() {
     return matchesSearch && matchesDifficulty && matchesFormat;
   });
 
-  useEffect(() => {
-    let lastValue = false;
-    const handleScroll = () => {
-      const newValue = window.scrollY > 50;
-      if (newValue !== lastValue) {
-        lastValue = newValue;
-        setScrolled(newValue);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
 
   // Sync state with back/forward history buttons
   useEffect(() => {
@@ -1021,7 +1015,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-[140%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1037,9 +1031,9 @@ function App() {
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay — bottom-anchored so author is always at same height */}
+                        {/* Clean Cover Text Overlay — Centered vertically */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-5 px-3 text-center select-none pointer-events-none">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center select-none pointer-events-none">
                             <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
                               {song.title}
                             </h3>
@@ -1081,8 +1075,12 @@ function App() {
                               : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
-                          <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
+                          {isSongFree(song.price) ? (
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan dark:text-neon-cyan/80'}`} />
+                          ) : (
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                          )}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
                       </div>
                     </div>
@@ -1251,7 +1249,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-[140%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1266,9 +1264,9 @@ function App() {
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay — bottom-anchored so author is always at same height */}
+                        {/* Clean Cover Text Overlay — Centered vertically */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-5 px-3 text-center select-none pointer-events-none">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center select-none pointer-events-none">
                             <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
                               {song.title}
                             </h3>
@@ -1310,8 +1308,12 @@ function App() {
                               : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
                           }`}
                         >
-                          <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
-                          {isPaymentsDisabled ? t.currentlyDisabled : song.price}
+                          {isSongFree(song.price) ? (
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan dark:text-neon-cyan/80'}`} />
+                          ) : (
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                          )}
+                          {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
                       </div>
                     </div>
@@ -1452,6 +1454,7 @@ function App() {
           format={getSongFormat(selectedSong)}
           difficulty={selectedSong.difficulty}
           videoPreviewUrl={selectedSong.videoPreviewUrl}
+          price={selectedSong.price}
         />
       )}
 
