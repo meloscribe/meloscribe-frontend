@@ -108,36 +108,61 @@
   .sheet-card::before {
     content: '';
     @apply absolute inset-0 opacity-0 pointer-events-none;
-    background: linear-gradient(135deg, rgba(0, 245, 255, 0.08) 0%, rgba(255, 45, 146, 0.08) 100%);
     transition: opacity 0.4s ease;
+  }
+
+  /* Theme-specific background overlays on hover */
+  .sheet-card-warm::before {
+    background: linear-gradient(135deg, rgba(255, 45, 146, 0.08) 0%, rgba(255, 45, 146, 0.02) 100%);
+  }
+  .sheet-card-cold::before {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.08) 0%, rgba(0, 245, 255, 0.02) 100%);
+  }
+  .sheet-card-green::before {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(20, 184, 166, 0.02) 100%);
   }
 
   .sheet-card:hover {
     transform: translateY(-4px);
-    @apply border-neon-cyan/50;
-    box-shadow: 0 0 30px rgba(0, 245, 255, 0.2),
-                0 10px 25px rgba(0, 0, 0, 0.08);
-  }
-
-  .dark .sheet-card:hover {
-    box-shadow: 0 0 30px rgba(0, 245, 255, 0.3),
-                0 0 60px rgba(0, 245, 255, 0.15),
-                0 10px 40px rgba(0, 0, 0, 0.5);
   }
 
   .sheet-card:hover::before {
     @apply opacity-100;
   }
 
-  .sheet-card-alt:hover {
+  /* WARM Theme Hover (Pink/Magenta) */
+  .sheet-card-warm:hover {
     @apply border-neon-pink/50;
     box-shadow: 0 0 30px rgba(255, 45, 146, 0.2),
                 0 10px 25px rgba(0, 0, 0, 0.08);
   }
-
-  .dark .sheet-card-alt:hover {
+  .dark .sheet-card-warm:hover {
     box-shadow: 0 0 30px rgba(255, 45, 146, 0.3),
                 0 0 60px rgba(255, 45, 146, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* COLD Theme Hover (Cyan) */
+  .sheet-card-cold:hover {
+    @apply border-neon-cyan/50;
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.2),
+                0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  .dark .sheet-card-cold:hover {
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.3),
+                0 0 60px rgba(0, 245, 255, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* GREEN Theme Hover (Emerald) */
+  .sheet-card-green:hover {
+    @apply border-emerald-500/50;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2),
+                0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  .dark .sheet-card-green:hover {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.3),
+                0 0 60px rgba(16, 185, 129, 0.15),
                 0 10px 40px rgba(0, 0, 0, 0.5);
   }
 

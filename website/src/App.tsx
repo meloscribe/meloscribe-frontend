@@ -1002,7 +1002,7 @@ function App() {
                   return (
                     <div
                       key={song.id}
-                      className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
+                      className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')}`}
                       onMouseEnter={() => handleCardMouseEnter(song)}
                       onMouseLeave={handleCardMouseLeave}
                     >
@@ -1031,13 +1031,13 @@ function App() {
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay — Centered vertically */}
+                        {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center select-none pointer-events-none">
-                            <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words mb-2">
                               {song.title}
                             </h3>
-                            <p className="text-gray-300 font-sans text-[9px] sm:text-[10px] tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1236,7 +1236,7 @@ function App() {
                   return (
                     <div
                       key={song.id}
-                      className={`sheet-card ${song.difficulty === 'Original' ? 'sheet-card-alt' : ''}`}
+                      className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')}`}
                       onMouseEnter={() => handleCardMouseEnter(song)}
                       onMouseLeave={handleCardMouseLeave}
                     >
@@ -1264,13 +1264,13 @@ function App() {
                         
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         
-                        {/* Clean Cover Text Overlay — Centered vertically */}
+                        {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center select-none pointer-events-none">
-                            <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-lg leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[92%] break-words mb-1.5">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words mb-2">
                               {song.title}
                             </h3>
-                            <p className="text-gray-300 font-sans text-[9px] sm:text-[10px] tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
