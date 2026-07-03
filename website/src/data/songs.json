@@ -41,9 +41,9 @@
     "difficulty": "Original",
     "price": "6 €",
     "coverImage": "/covers/Je te laisserai des mots_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7r150vgfbnxjjekmr06j",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "4",
@@ -52,9 +52,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Closed Doors_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7s76726nsbccp4eydq3d",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "5",
@@ -85,9 +85,9 @@
     "difficulty": "Original",
     "price": "6 €",
     "coverImage": "/covers/In This Shirt_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7wtwpnprpwpbtmrddzh3",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "10",
@@ -96,9 +96,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Wet Hands_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7y0k3qfssyqvca8tgqfk",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "11",
@@ -107,9 +107,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/The Scientist_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7zb0qn5jy0xmygr2mf72",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "13",
@@ -118,9 +118,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Mockingbird_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap80gg2604xhkqvmnqfab6",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "14",
@@ -129,9 +129,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Succession theme_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap81spjgzydv97804x48fm",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "15",
@@ -140,9 +140,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Past Lives_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap82yvjpa4xdvp2n65j081",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "16",
@@ -151,9 +151,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/No Surprises_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap84e2t898qcpccpx32xbr",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "17",
@@ -162,9 +162,9 @@
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Greensleeves_clean.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
+    "gradient": "from-emerald-500/20 via-dark-700 to-teal-500/5",
     "stripePriceId": "pri_01kwap85kbhf0zpdd77p0d1fwv",
-    "theme": "cold"
+    "theme": "green"
   },
   {
     "id": "18",
@@ -239,12 +239,12 @@
     "difficulty": "Original",
     "price": "6 €",
     "coverImage": "/covers/River Flows in You_clean.jpg",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "audioPreviewUrl": "/audio/river_flows_in_you.ogg",
     "paymentsDisabled": false,
     "hidden": false,
     "stripePriceId": "pri_01kwap8gs5btjdcesxb7k3acz4",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "33",
@@ -267,8 +267,8 @@
     "kofiId": "prod_dummy123",
     "coverImage": "/covers/Greensleeves_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Greensleeves.mp3",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold"
+    "gradient": "from-emerald-500/20 via-dark-700 to-teal-500/5",
+    "theme": "green"
   },
   {
     "id": "35",
@@ -291,7 +291,7 @@
     "kofiId": "prod_dummy123",
     "coverImage": "/covers/In This Shirt_clean.jpg",
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
-    "gradient": "from-neon-pink/20 via-dark-700 to-neon-pink/5",
-    "theme": "warm"
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
+    "theme": "cold"
   }
 ]
