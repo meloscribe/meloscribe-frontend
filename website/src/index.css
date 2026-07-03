@@ -113,7 +113,7 @@
 
   /* Theme-specific background overlays on hover */
   .sheet-card-warm::before {
-    background: linear-gradient(135deg, rgba(255, 45, 146, 0.08) 0%, rgba(255, 45, 146, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(249, 115, 22, 0.02) 100%);
   }
   .sheet-card-cold::before {
     background: linear-gradient(135deg, rgba(0, 245, 255, 0.08) 0%, rgba(0, 245, 255, 0.02) 100%);
@@ -130,15 +130,15 @@
     @apply opacity-100;
   }
 
-  /* WARM Theme Hover (Pink/Magenta) */
+  /* WARM Theme Hover (Orange) */
   .sheet-card-warm:hover {
-    @apply border-neon-pink/50;
-    box-shadow: 0 0 30px rgba(255, 45, 146, 0.2),
+    @apply border-orange-500/50;
+    box-shadow: 0 0 30px rgba(249, 115, 22, 0.2),
                 0 10px 25px rgba(0, 0, 0, 0.08);
   }
   .dark .sheet-card-warm:hover {
-    box-shadow: 0 0 30px rgba(255, 45, 146, 0.3),
-                0 0 60px rgba(255, 45, 146, 0.15),
+    box-shadow: 0 0 30px rgba(249, 115, 22, 0.3),
+                0 0 60px rgba(249, 115, 22, 0.15),
                 0 10px 40px rgba(0, 0, 0, 0.5);
   }
 

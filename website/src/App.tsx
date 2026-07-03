@@ -27,6 +27,12 @@ const isSongFree = (priceStr: string | number | undefined): boolean => {
   return p === '0' || p === '0 €' || p === '0$' || p === '0.00' || p === 'free';
 };
 
+const getThemeIconColorClass = (theme: string | undefined): string => {
+  if (theme === 'cold') return 'text-neon-cyan dark:text-neon-cyan/80';
+  if (theme === 'green') return 'text-emerald-500 dark:text-emerald-400';
+  return 'text-orange-500 dark:text-orange-400'; // warm or default
+};
+
 // Translations
 const translations = {
   en: {
@@ -1076,9 +1082,9 @@ function App() {
                           }`}
                         >
                           {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan dark:text-neon-cyan/80'}`} />
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           )}
                           {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
@@ -1309,9 +1315,9 @@ function App() {
                           }`}
                         >
                           {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan dark:text-neon-cyan/80'}`} />
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink dark:text-neon-pink/80'}`} />
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           )}
                           {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
