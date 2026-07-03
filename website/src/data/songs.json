@@ -83,11 +83,12 @@
     "title": "In This Shirt",
     "artist": "The Irrepressibles",
     "difficulty": "Original",
-    "price": "6 €",
+    "price": "4 €",
     "coverImage": "/covers/In This Shirt_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7wtwpnprpwpbtmrddzh3",
-    "theme": "cold"
+    "theme": "cold",
+    "format": "viral_part"
   },
   {
     "id": "10",
@@ -291,6 +292,18 @@
     "kofiId": "prod_dummy123",
     "coverImage": "/covers/In This Shirt_clean.jpg",
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
+    "theme": "cold"
+  },
+  {
+    "id": "37",
+    "title": "Icarus",
+    "artist": "Dave Kerr",
+    "difficulty": "Original",
+    "price": "6 €",
+    "kofiId": "prod_dummy123",
+    "coverImage": "/covers/Icarus_clean.jpg",
+    "audioPreviewUrl": "/audio-previews/Icarus.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "theme": "cold"
   }
