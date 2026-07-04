@@ -83,10 +83,10 @@
     "artist": "Traditional",
     "difficulty": "Original",
     "price": "Free",
-    "coverImage": "/covers/We wish you a merry Christmas_clean.jpg",
-    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "coverImage": "/covers/We Wish You a Merry Xmas_clean.jpg",
+    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7vmg93500mvg8e0rj82a",
-    "theme": "warm"
+    "theme": "cold"
   },
   {
     "id": "9",
@@ -147,7 +147,7 @@
     "artist": "Nicholas Britell",
     "difficulty": "Original",
     "price": "4.00 €",
-    "coverImage": "/covers/Succession theme_clean.jpg",
+    "coverImage": "/covers/Succession Theme_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap81spjgzydv97804x48fm",
     "theme": "cold",
@@ -199,7 +199,7 @@
     "artist": "Traditional",
     "difficulty": "Original",
     "price": "4.00 €",
-    "coverImage": "/covers/God Rest Ye Merry, Gentlemen_clean.jpg",
+    "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap86sgh9wg86me8sek8xxa",
     "theme": "cold",
