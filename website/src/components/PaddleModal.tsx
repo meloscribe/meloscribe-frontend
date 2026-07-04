@@ -434,8 +434,8 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                         ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
                         : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
                     : (language === 'de'
-                        ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende. (Hinweis: Das Vorschauvideo zeigt nur einen kurzen Ausschnitt des Arrangements.)'
-                        : 'This learning package contains the complete arrangement of the song from start to finish. (Note: The preview video shows only a short section of the arrangement.)')}
+                        ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
+                        : 'This learning package contains the complete arrangement of the song from start to finish.')}
                 </p>
               </div>
             </div>

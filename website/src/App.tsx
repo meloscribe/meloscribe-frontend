@@ -507,6 +507,7 @@ function App() {
   const debounceTimeoutRef = useRef<number | null>(null);
   const fadeIntervalRef = useRef<number | null>(null);
   const preloadCacheRef = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const hoveredSongIdRef = useRef<string | null>(null);
   const [transitioning, setTransitioning] = useState(false);
 
   const [allSongs, setAllSongs] = useState<Song[]>(songs);
@@ -628,6 +629,9 @@ function App() {
     };
 
     const doPlay = () => {
+      if (hoveredSongIdRef.current !== song.id) {
+        return;
+      }
       audio.play()
         .then(startFade)
         .catch((err) => {
@@ -652,6 +656,8 @@ function App() {
     const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
     if (isMobile) return;
 
+    hoveredSongIdRef.current = song.id;
+
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
@@ -661,6 +667,7 @@ function App() {
   };
 
   const handleCardMouseLeave = () => {
+    hoveredSongIdRef.current = null;
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
       debounceTimeoutRef.current = null;
