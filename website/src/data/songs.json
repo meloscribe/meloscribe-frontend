@@ -45,9 +45,9 @@
     "difficulty": "Original",
     "price": "6 €",
     "coverImage": "/covers/Je te laisserai des mots_clean.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "stripePriceId": "pri_01kwap7r150vgfbnxjjekmr06j",
-    "theme": "cold",
+    "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Je te laisserai des mots.mp3",
     "kofiId": "prod_dummy123"
   },
