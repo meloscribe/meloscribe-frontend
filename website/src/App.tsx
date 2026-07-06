@@ -33,11 +33,7 @@ const getThemeIconColorClass = (theme: string | undefined): string => {
   return 'text-orange-500 dark:text-orange-400'; // warm or default
 };
 
-const getThemeBorderClass = (theme: string | undefined): string => {
-  if (theme === 'cold') return 'border-neon-cyan/40 dark:border-neon-cyan/30';
-  if (theme === 'green') return 'border-emerald-500/40 dark:border-emerald-500/30';
-  return 'border-orange-500/45 dark:border-orange-500/35'; // warm or default
-};
+
 
 const resolveAudioUrl = (song: Song): string => {
   const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -1075,7 +1071,7 @@ function App() {
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-white/90 font-sans font-medium text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1110,7 +1106,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : getThemeBorderClass(song.theme)} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
+                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-250/20 dark:border-dark-700/30'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isSongFree(song.price) ? (
@@ -1310,7 +1306,7 @@ function App() {
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-white/90 font-sans font-medium text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1345,7 +1341,7 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : getThemeBorderClass(song.theme)} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
+                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-250/20 dark:border-dark-700/30'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isSongFree(song.price) ? (
