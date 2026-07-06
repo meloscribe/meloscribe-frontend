@@ -604,7 +604,7 @@ function App() {
     }
 
     const audioUrl = resolveAudioUrl(song);
-    const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 2.0;
+    const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
 
     // Reuse preloaded audio element from cache to avoid first-load race conditions
     const cached = preloadCacheRef.current.get(audioUrl);
@@ -688,26 +688,7 @@ function App() {
     }
   }, [isMuted]);
 
-  // Click-to-play interaction fallback (only trigger on non-button/non-link clicks)
-  useEffect(() => {
-    const handleDocumentClick = (e: MouseEvent) => {
-      if (isMuted) return;
-      const target = e.target as HTMLElement;
-      if (target.closest('button') || target.closest('a') || target.closest('.modal-content')) {
-        return;
-      }
-      if (hoveredSongIdRef.current && playingSongId !== hoveredSongIdRef.current) {
-        const activeSong = songs.find(s => s.id === hoveredSongIdRef.current);
-        if (activeSong) {
-          playAudio(activeSong);
-        }
-      }
-    };
-    document.addEventListener('click', handleDocumentClick);
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, [songs, playingSongId, isMuted]);
+
 
   // Wrapper function to change language in i18n and state
   const setLanguage = (lang: Language) => {
