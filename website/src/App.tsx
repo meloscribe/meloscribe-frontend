@@ -604,8 +604,7 @@ function App() {
     }
 
     const audioUrl = resolveAudioUrl(song);
-    const isCondensed = getSongFormat(song) === 'viral_part';
-    const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? (isCondensed ? 15 : 0);
+    const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 2.0;
 
     // Reuse preloaded audio element from cache to avoid first-load race conditions
     const cached = preloadCacheRef.current.get(audioUrl);
