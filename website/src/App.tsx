@@ -618,7 +618,7 @@ function App() {
       fadeIntervalRef.current = window.setInterval(() => {
         const elapsed = performance.now() - start;
         const progress = Math.min(elapsed / 300, 1);
-        audio.volume = progress * 0.35;
+        audio.volume = progress * 1.0;
         if (progress >= 1) {
           clearInterval(fadeIntervalRef.current!);
           fadeIntervalRef.current = null;
