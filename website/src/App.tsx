@@ -33,6 +33,12 @@ const getThemeIconColorClass = (theme: string | undefined): string => {
   return 'text-orange-500 dark:text-orange-400'; // warm or default
 };
 
+const getThemeBorderClass = (theme: string | undefined): string => {
+  if (theme === 'cold') return 'border-neon-cyan/40 dark:border-neon-cyan/30';
+  if (theme === 'green') return 'border-emerald-500/40 dark:border-emerald-500/30';
+  return 'border-orange-500/45 dark:border-orange-500/35'; // warm or default
+};
+
 const resolveAudioUrl = (song: Song): string => {
   const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8787'
@@ -1064,10 +1070,12 @@ function App() {
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
                           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words mb-2">
-                              {song.title}
-                            </h3>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
+                              <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
+                                {song.title}
+                              </h3>
+                            </div>
+                            <p className="text-white/90 font-sans font-medium text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1102,13 +1110,13 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
+                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : getThemeBorderClass(song.theme)} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isSongFree(song.price) ? (
                             <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
                           )}
                           {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
@@ -1297,10 +1305,12 @@ function App() {
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
                           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words mb-2">
-                              {song.title}
-                            </h3>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
+                              <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
+                                {song.title}
+                              </h3>
+                            </div>
+                            <p className="text-white/90 font-sans font-medium text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1335,13 +1345,13 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                              : 'bg-gray-100/60 dark:bg-dark-600/50 border border-transparent text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]'
+                              : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : getThemeBorderClass(song.theme)} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isSongFree(song.price) ? (
                             <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
+                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
                           )}
                           {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
