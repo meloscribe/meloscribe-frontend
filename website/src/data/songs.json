@@ -54,7 +54,7 @@
   {
     "id": "4",
     "title": "Closed Doors",
-    "artist": "Dave Kerr",
+    "artist": "Ismail",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -105,7 +105,7 @@
   {
     "id": "10",
     "title": "Wet Hands",
-    "artist": "Dave Kerr",
+    "artist": "C418",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -118,7 +118,7 @@
   {
     "id": "11",
     "title": "The Scientist",
-    "artist": "Dave Kerr",
+    "artist": "Coldplay",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -131,7 +131,7 @@
   {
     "id": "13",
     "title": "Mockingbird",
-    "artist": "Dave Kerr",
+    "artist": "Eminem",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -144,7 +144,7 @@
   {
     "id": "14",
     "title": "Succession Theme",
-    "artist": "Dave Kerr",
+    "artist": "Nicholas Britell",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -157,7 +157,7 @@
   {
     "id": "15",
     "title": "Past Lives",
-    "artist": "Dave Kerr",
+    "artist": "BØRNS",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -170,7 +170,7 @@
   {
     "id": "16",
     "title": "No Surprises",
-    "artist": "Dave Kerr",
+    "artist": "Radiohead",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -183,7 +183,7 @@
   {
     "id": "17",
     "title": "Greensleeves",
-    "artist": "Dave Kerr",
+    "artist": "Traditional",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -209,7 +209,7 @@
   {
     "id": "19",
     "title": "Carol of the Bells",
-    "artist": "Mykola Leontovych",
+    "artist": "Traditional",
     "difficulty": "Original",
     "price": "4 €",
     "coverImage": "/covers/Carol of the Bells_clean.jpg",
@@ -222,7 +222,7 @@
   {
     "id": "21",
     "title": "Silent Night",
-    "artist": "F. X. Gruber",
+    "artist": "Traditional",
     "difficulty": "Original",
     "price": "Free",
     "coverImage": "/covers/Silent Night_clean.jpg",
@@ -274,7 +274,7 @@
   {
     "id": "32",
     "title": "River Flows in You",
-    "artist": "Dave Kerr",
+    "artist": "Yiruma",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -289,7 +289,7 @@
   {
     "id": "37",
     "title": "Icarus",
-    "artist": "Dave Kerr",
+    "artist": "Tony Ann",
     "difficulty": "Original",
     "price": "6 €",
     "kofiId": "prod_dummy123",
@@ -302,7 +302,7 @@
   {
     "id": "41",
     "title": "My Singing Monsters",
-    "artist": "Dave Kerr",
+    "artist": "Big Blue Bubble",
     "difficulty": "Original",
     "price": "4 €",
     "kofiId": "prod_dummy123",
@@ -315,7 +315,7 @@
   {
     "id": "53",
     "title": "Believer",
-    "artist": "Dave Kerr",
+    "artist": "Imagine Dragons",
     "difficulty": "Original",
     "price": "6 €",
     "kofiId": "prod_dummy123",
