@@ -688,10 +688,14 @@ function App() {
     }
   }, [isMuted]);
 
-  // Click-to-play interaction fallback
+  // Click-to-play interaction fallback (only trigger on non-button/non-link clicks)
   useEffect(() => {
-    const handleDocumentClick = () => {
+    const handleDocumentClick = (e: MouseEvent) => {
       if (isMuted) return;
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a') || target.closest('.modal-content')) {
+        return;
+      }
       if (hoveredSongIdRef.current && playingSongId !== hoveredSongIdRef.current) {
         const activeSong = songs.find(s => s.id === hoveredSongIdRef.current);
         if (activeSong) {
