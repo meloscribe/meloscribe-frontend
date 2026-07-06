@@ -1041,13 +1041,13 @@ function App() {
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
-                        className={`relative w-full aspect-[4/5] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`relative w-full aspect-[4/3] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         {song.coverImage ? (
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-[140%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-bottom transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1277,13 +1277,13 @@ function App() {
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
-                        className={`relative w-full aspect-[4/5] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`relative w-full aspect-[4/3] overflow-hidden select-none ${isPaymentsDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         {song.coverImage ? (
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-[140%] object-cover object-top transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-bottom transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
