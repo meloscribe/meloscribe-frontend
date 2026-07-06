@@ -610,7 +610,6 @@ function App() {
     const cached = preloadCacheRef.current.get(audioUrl);
     const audio = cached ?? new Audio(audioUrl);
     audioRef.current = audio;
-    audio.currentTime = previewStart;
     audio.volume = 0;
 
     const startFade = () => {
@@ -631,6 +630,7 @@ function App() {
       if (hoveredSongIdRef.current !== song.id) {
         return;
       }
+      audio.currentTime = previewStart;
       audio.play()
         .then(startFade)
         .catch((err) => {
@@ -687,6 +687,23 @@ function App() {
       setPlayingSongId(null);
     }
   }, [isMuted]);
+
+  // Click-to-play interaction fallback
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      if (isMuted) return;
+      if (hoveredSongIdRef.current && playingSongId !== hoveredSongIdRef.current) {
+        const activeSong = songs.find(s => s.id === hoveredSongIdRef.current);
+        if (activeSong) {
+          playAudio(activeSong);
+        }
+      }
+    };
+    document.addEventListener('click', handleDocumentClick);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [songs, playingSongId, isMuted]);
 
   // Wrapper function to change language in i18n and state
   const setLanguage = (lang: Language) => {
