@@ -764,12 +764,8 @@ function App() {
 
 
 
-  // Dark/Light Theme state
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light' || saved === 'dark') return saved;
-    return 'dark'; // Default to dark mode
-  });
+  // Dark/Light Theme state (forced to dark mode for now)
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -934,7 +930,7 @@ function App() {
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 animate-pulse" />}
               </button>
 
-              {/* Theme Toggle Button */}
+              {/* Theme Toggle Button commented out for now
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="flex items-center justify-center p-1.5 sm:p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan dark:hover:text-neon-cyan hover:border-neon-cyan dark:hover:border-neon-cyan transition-all duration-300"
@@ -942,6 +938,7 @@ function App() {
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
+              */}
 
               {/* Language Dropdown */}
               <LanguageDropdown language={language} setLanguage={setLanguage} />
