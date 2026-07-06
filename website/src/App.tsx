@@ -1047,7 +1047,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover object-[center_75%] transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-[center_35%] transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
@@ -1283,7 +1283,7 @@ function App() {
                           <img 
                             src={song.coverImage} 
                             alt={song.title} 
-                            className="w-full h-full object-cover object-[center_75%] transform hover:scale-105 transition-transform duration-500" 
+                            className="w-full h-full object-cover object-[center_35%] transform hover:scale-105 transition-transform duration-500" 
                           />
                         ) : (
                           <div 
