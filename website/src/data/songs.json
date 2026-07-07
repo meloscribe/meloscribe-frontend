@@ -82,11 +82,12 @@
     "title": "We Wish You a Merry Xmas",
     "artist": "Traditional",
     "difficulty": "Original",
-    "price": "Free",
+    "price": "Free €",
     "coverImage": "/covers/We Wish You a Merry Xmas_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7vmg93500mvg8e0rj82a",
-    "theme": "cold"
+    "theme": "cold",
+    "format": "viral_part"
   },
   {
     "id": "9",
