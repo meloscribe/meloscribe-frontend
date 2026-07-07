@@ -571,7 +571,7 @@ function App() {
   };
 
   // Stop currently playing audio preview
-  const stopAudio = () => {
+  const stopAudio = (immediate = false) => {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
       debounceTimeoutRef.current = null;
@@ -583,23 +583,33 @@ function App() {
     if (audioRef.current) {
       const audio = audioRef.current;
       audio.oncanplay = null; // Clear any pending canplay callbacks
-      const start = performance.now();
-      const startVol = audio.volume;
-      fadeIntervalRef.current = window.setInterval(() => {
-        const elapsed = performance.now() - start;
-        const progress = Math.min(elapsed / 200, 1);
-        audio.volume = startVol * (1 - progress);
-        if (progress >= 1) {
-          clearInterval(fadeIntervalRef.current!);
-          fadeIntervalRef.current = null;
-          audio.pause();
-          audio.src = ''; // Explicitly release HTTP connection resources
-          try {
-            audio.load();
-          } catch (e) {}
-          setPlayingSongId(null);
-        }
-      }, 16);
+      
+      if (immediate) {
+        audio.pause();
+        audio.src = ''; // Explicitly release HTTP connection resources
+        try {
+          audio.load();
+        } catch (e) {}
+        setPlayingSongId(null);
+      } else {
+        const start = performance.now();
+        const startVol = audio.volume;
+        fadeIntervalRef.current = window.setInterval(() => {
+          const elapsed = performance.now() - start;
+          const progress = Math.min(elapsed / 200, 1);
+          audio.volume = startVol * (1 - progress);
+          if (progress >= 1) {
+            clearInterval(fadeIntervalRef.current!);
+            fadeIntervalRef.current = null;
+            audio.pause();
+            audio.src = '';
+            try {
+              audio.load();
+            } catch (e) {}
+            setPlayingSongId(null);
+          }
+        }, 16);
+      }
     } else {
       setPlayingSongId(null);
     }
@@ -614,21 +624,22 @@ function App() {
       fadeIntervalRef.current = null;
     }
 
-    // Stop currently playing audio first (sets up its fade out)
-    stopAudio();
-
     const audio = getAudioElement();
-    audio.oncanplay = null; // Clear previous listener
-    audio.pause();
-    audio.src = ''; // Force release previous stream connection immediately
-    try {
-      audio.load();
-    } catch (e) {}
+    audio.oncanplay = null;
 
     const audioUrl = resolveAudioUrl(song);
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
 
-    audio.src = audioUrl;
+    // Check if the URL matches (taking into account fully qualified paths that the browser sets)
+    const isUrlPreloaded = (audio.src === audioUrl || audio.src === window.location.origin + audioUrl);
+    if (!isUrlPreloaded) {
+      audio.pause();
+      audio.src = audioUrl;
+      try {
+        audio.load();
+      } catch (e) {}
+    }
+
     audio.volume = 0;
 
     const startFade = () => {
@@ -658,7 +669,13 @@ function App() {
       if (hoveredSongIdRef.current !== song.id) {
         return;
       }
-      audio.currentTime = previewStart;
+      
+      try {
+        if (Math.abs(audio.currentTime - previewStart) > 0.5) {
+          audio.currentTime = previewStart;
+        }
+      } catch (e) {}
+
       audio.play()
         .then(startFade)
         .catch((err) => {
@@ -691,6 +708,24 @@ function App() {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
+
+    // Eagerly pre-warm / preload this song's audio stream immediately on hover (during the 250ms debounce)
+    if (!isMuted) {
+      const audio = getAudioElement();
+      const audioUrl = resolveAudioUrl(song);
+      
+      const isUrlPreloaded = (audio.src === audioUrl || audio.src === window.location.origin + audioUrl);
+      if (!isUrlPreloaded) {
+        // If it was playing/fading something else, cancel it immediately (hart) to free up the socket
+        stopAudio(true);
+        audio.src = audioUrl;
+        audio.preload = 'auto';
+        try {
+          audio.load();
+        } catch (e) {}
+      }
+    }
+
     debounceTimeoutRef.current = window.setTimeout(() => {
       playAudio(song);
     }, 250);
