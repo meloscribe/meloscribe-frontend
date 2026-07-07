@@ -24,7 +24,7 @@ const getSongFormat = (song: Song): 'viral_part' | 'full_arrangement' => {
 const isSongFree = (priceStr: string | number | undefined): boolean => {
   if (!priceStr) return true;
   const p = priceStr.toString().trim().toLowerCase();
-  return p === '0' || p === '0 €' || p === '0$' || p === '0.00' || p === 'free';
+  return p === '0' || p === '0 €' || p === '0$' || p === '0.00' || p === 'free' || p.startsWith('free') || p.startsWith('0');
 };
 
 const getThemeIconColorClass = (theme: string | undefined): string => {
