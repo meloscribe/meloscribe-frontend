@@ -576,6 +576,30 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     </button>
 
                     <button
+                      onClick={() => handleFreeDownload('video')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Tv className="w-4 h-4 text-neon-cyan" />
+                        {language === 'de' ? 'Visualizer-Video (Originaltempo)' : 'Visualizer Video (Original Speed)'}
+                      </span>
+                      {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                    </button>
+
+                    <button
+                      onClick={() => handleFreeDownload('video_slow')}
+                      disabled={!!downloadingType}
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Tv className="w-4 h-4 text-neon-cyan/80" />
+                        {language === 'de' ? 'Visualizer-Video (Langsam)' : 'Visualizer Video (Slow Practice)'}
+                      </span>
+                      {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                    </button>
+
+                    <button
                       onClick={() => handleFreeDownload('zip')}
                       disabled={!!downloadingType}
                       className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-lg active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
