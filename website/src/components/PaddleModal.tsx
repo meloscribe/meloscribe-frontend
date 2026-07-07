@@ -582,7 +582,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Tv className="w-4 h-4 text-neon-cyan" />
-                        {language === 'de' ? 'Visualizer-Video (Originaltempo)' : 'Visualizer Video (Original Speed)'}
+                        {language === 'de' ? 'Video (Originaltempo)' : 'Video (Original Speed)'}
                       </span>
                       {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -594,7 +594,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Tv className="w-4 h-4 text-neon-cyan/80" />
-                        {language === 'de' ? 'Visualizer-Video (Langsam)' : 'Visualizer Video (Slow Practice)'}
+                        {language === 'de' ? 'Video (Langsam)' : 'Video (Slow Practice)'}
                       </span>
                       {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
