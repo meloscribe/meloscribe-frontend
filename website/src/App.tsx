@@ -563,6 +563,13 @@ function App() {
     }
   };
 
+  const getAudioElement = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+    return audioRef.current;
+  };
+
   // Stop currently playing audio preview
   const stopAudio = () => {
     if (debounceTimeoutRef.current) {
@@ -575,6 +582,7 @@ function App() {
     }
     if (audioRef.current) {
       const audio = audioRef.current;
+      audio.oncanplay = null; // Clear any pending canplay callbacks
       const start = performance.now();
       const startVol = audio.volume;
       fadeIntervalRef.current = window.setInterval(() => {
@@ -601,17 +609,17 @@ function App() {
       clearInterval(fadeIntervalRef.current);
       fadeIntervalRef.current = null;
     }
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
+
+    const audio = getAudioElement();
+    audio.oncanplay = null; // Clear previous listener
+    audio.pause();
 
     const audioUrl = resolveAudioUrl(song);
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
 
-    // Reuse preloaded audio element from cache to avoid first-load race conditions
-    const cached = preloadCacheRef.current.get(audioUrl);
-    const audio = cached ?? new Audio(audioUrl);
-    audioRef.current = audio;
+    if (audio.src !== audioUrl) {
+      audio.src = audioUrl;
+    }
     audio.volume = 0;
 
     const startFade = () => {
@@ -644,15 +652,14 @@ function App() {
     if (audio.readyState >= 3) { // HAVE_FUTURE_DATA or better
       doPlay();
     } else {
-      const onReady = () => {
-        audio.removeEventListener('canplay', onReady);
+      audio.oncanplay = () => {
+        audio.oncanplay = null;
         doPlay();
       };
-      audio.addEventListener('canplay', onReady);
     }
   };
 
-  // Card Mouse Hover handlers with 1s debounce
+  // Card Mouse Hover handlers with 250ms debounce
   const handleCardMouseEnter = (song: Song) => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
     if (isMobile) return;
@@ -676,6 +683,19 @@ function App() {
     stopAudio();
   };
 
+  // Stop audio immediately when window loses focus or user scrolls
+  useEffect(() => {
+    const handleCancelAudio = () => {
+      handleCardMouseLeave();
+    };
+    window.addEventListener('blur', handleCancelAudio);
+    window.addEventListener('scroll', handleCancelAudio, { passive: true });
+    return () => {
+      window.removeEventListener('blur', handleCancelAudio);
+      window.removeEventListener('scroll', handleCancelAudio);
+    };
+  }, []);
+
   // Mute effect
   useEffect(() => {
     if (isMuted) {
@@ -684,6 +704,7 @@ function App() {
         debounceTimeoutRef.current = null;
       }
       if (audioRef.current) {
+        audioRef.current.oncanplay = null;
         audioRef.current.pause();
       }
       setPlayingSongId(null);
