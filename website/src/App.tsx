@@ -563,11 +563,16 @@ function App() {
     }
   };
 
-  const getAudioElement = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
+  const getAudioElement = (song: Song) => {
+    const url = resolveAudioUrl(song);
+    let audio = preloadCacheRef.current.get(url);
+    if (!audio) {
+      audio = new Audio();
+      audio.preload = 'auto';
+      audio.src = url;
+      preloadCacheRef.current.set(url, audio);
     }
-    return audioRef.current;
+    return audio;
   };
 
   // Stop currently playing audio preview
@@ -610,19 +615,21 @@ function App() {
       fadeIntervalRef.current = null;
     }
 
-    const audio = getAudioElement();
-    audio.oncanplay = null; // Clear previous listener
-    audio.pause();
+    // Stop currently playing audio first (sets up its fade out)
+    stopAudio();
 
-    const audioUrl = resolveAudioUrl(song);
+    const audio = getAudioElement(song);
+    audioRef.current = audio; // Track active instance for stopAudio/mute
+
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
-
-    if (audio.src !== audioUrl) {
-      audio.src = audioUrl;
-    }
     audio.volume = 0;
 
     const startFade = () => {
+      // Guard: Don't start playing if user already left this card
+      if (hoveredSongIdRef.current !== song.id) {
+        audio.pause();
+        return;
+      }
       setPlayingSongId(song.id);
       const start = performance.now();
       fadeIntervalRef.current = window.setInterval(() => {
@@ -654,6 +661,10 @@ function App() {
     } else {
       audio.oncanplay = () => {
         audio.oncanplay = null;
+        // Guard: Don't play if user already left this card while waiting for audio to load
+        if (hoveredSongIdRef.current !== song.id) {
+          return;
+        }
         doPlay();
       };
     }

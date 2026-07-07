@@ -705,6 +705,12 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               onPause={() => setIsPlaying(false)}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+              onError={() => {
+                // Video not available - clear URL to hide player and close lightbox
+                console.warn(`[PaddleModal] Video preview not available for "${songTitle}"`);
+                setVideoUrl(null);
+                setShowLightbox(false);
+              }}
               onClick={togglePlay}
               className={`w-full h-full object-contain ${controlsVisible ? 'cursor-pointer' : 'cursor-none'}`}
             />
@@ -726,9 +732,6 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             }`}>
               <span className="text-[9px] font-semibold text-neon-cyan tracking-wider uppercase">Video Preview</span>
               <h4 className="text-xs font-semibold text-white mt-0.5">{songTitle}</h4>
-              {format === 'full_arrangement' && (
-                <span className="text-[9px] text-white/60 mt-0.5">{t.videoSegment}</span>
-              )}
             </div>
 
             {/* Big Center Play/Pause button overlay */}
