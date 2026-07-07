@@ -225,13 +225,14 @@
     "title": "Silent Night",
     "artist": "Traditional",
     "difficulty": "Original",
-    "price": "Free",
+    "price": "Free €",
     "coverImage": "/covers/Silent Night_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap894yy7rsz375k3h3sdp9",
     "theme": "cold",
     "audioPreviewUrl": "/audio-previews/Silent Night.mp3",
-    "kofiId": "prod_dummy123"
+    "kofiId": "prod_dummy123",
+    "format": "viral_part"
   },
   {
     "id": "22",
