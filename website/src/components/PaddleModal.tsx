@@ -705,15 +705,32 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               onPause={() => setIsPlaying(false)}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+              onLoadStart={() => setLoadingVideo(true)}
+              onWaiting={() => setLoadingVideo(true)}
+              onPlaying={() => setLoadingVideo(false)}
+              onCanPlay={() => setLoadingVideo(false)}
               onError={() => {
                 // Video not available - clear URL to hide player and close lightbox
                 console.warn(`[PaddleModal] Video preview not available for "${songTitle}"`);
                 setVideoUrl(null);
                 setShowLightbox(false);
+                setLoadingVideo(false);
               }}
               onClick={togglePlay}
-              className={`w-full h-full object-contain ${controlsVisible ? 'cursor-pointer' : 'cursor-none'}`}
+              className={`w-full h-full object-contain transition-opacity duration-100 ${controlsVisible ? 'cursor-pointer' : 'cursor-none'}`}
+              style={{
+                opacity: duration > 0 && (duration - currentTime) <= 1 
+                  ? Math.max(0, duration - currentTime) 
+                  : 1
+              }}
             />
+
+            {/* Premium Loader overlay for video buffering/loading */}
+            {loadingVideo && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px] z-20 pointer-events-none animate-fadeIn">
+                <Loader2 className="w-9 h-9 text-neon-cyan animate-spin" />
+              </div>
+            )}
 
             {/* Floating Top-Right Close Button */}
             <button 

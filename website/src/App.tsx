@@ -563,16 +563,11 @@ function App() {
     }
   };
 
-  const getAudioElement = (song: Song) => {
-    const url = resolveAudioUrl(song);
-    let audio = preloadCacheRef.current.get(url);
-    if (!audio) {
-      audio = new Audio();
-      audio.preload = 'auto';
-      audio.src = url;
-      preloadCacheRef.current.set(url, audio);
+  const getAudioElement = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
     }
-    return audio;
+    return audioRef.current;
   };
 
   // Stop currently playing audio preview
@@ -598,6 +593,10 @@ function App() {
           clearInterval(fadeIntervalRef.current!);
           fadeIntervalRef.current = null;
           audio.pause();
+          audio.src = ''; // Explicitly release HTTP connection resources
+          try {
+            audio.load();
+          } catch (e) {}
           setPlayingSongId(null);
         }
       }, 16);
@@ -618,16 +617,28 @@ function App() {
     // Stop currently playing audio first (sets up its fade out)
     stopAudio();
 
-    const audio = getAudioElement(song);
-    audioRef.current = audio; // Track active instance for stopAudio/mute
+    const audio = getAudioElement();
+    audio.oncanplay = null; // Clear previous listener
+    audio.pause();
+    audio.src = ''; // Force release previous stream connection immediately
+    try {
+      audio.load();
+    } catch (e) {}
 
+    const audioUrl = resolveAudioUrl(song);
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
+
+    audio.src = audioUrl;
     audio.volume = 0;
 
     const startFade = () => {
       // Guard: Don't start playing if user already left this card
       if (hoveredSongIdRef.current !== song.id) {
         audio.pause();
+        audio.src = '';
+        try {
+          audio.load();
+        } catch (e) {}
         return;
       }
       setPlayingSongId(song.id);
@@ -758,20 +769,7 @@ function App() {
     };
     fetchStats();
 
-    // Preload audio files — store refs so they stay alive in memory (not GC'd)
-    try {
-      allSongs.forEach(song => {
-        const url = resolveAudioUrl(song);
-        if (url && !preloadCacheRef.current.has(url)) {
-          const audio = new Audio();
-          audio.preload = 'auto';
-          audio.src = url;
-          preloadCacheRef.current.set(url, audio);
-        }
-      });
-    } catch (e) {
-      console.warn('Preloading audio failed:', e);
-    }
+    // Audio preloading loop removed to prevent browser connection pool exhaustion (limit of 6 connections/domain).
 
     // Premium Ghost Scrollbar: tracks scroll progress percentage and sets active state for fade animation
     let scrollTimeout: number;
