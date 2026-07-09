@@ -903,6 +903,30 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Auto-open product modal based on query parameter
+  useEffect(() => {
+    if (currentPath === '/sheets' && allSongs.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const songSlug = params.get('song');
+      if (songSlug) {
+        const toSlug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const versionParam = params.get('version');
+        const matchedSongs = allSongs.filter((s: Song) => toSlug(s.title) === toSlug(songSlug));
+        if (matchedSongs.length > 0) {
+          let selected = matchedSongs[0];
+          if (versionParam) {
+            const versionMatch = matchedSongs.find((s: Song) => s.difficulty?.toLowerCase() === versionParam.toLowerCase());
+            if (versionMatch) {
+              selected = versionMatch;
+            }
+          }
+          setSelectedSong(selected);
+          setIsKofiModalOpen(true);
+        }
+      }
+    }
+  }, [currentPath, allSongs]);
+
   const navigate = (path: string) => {
     setTransitioning(true);
     setTimeout(() => {
@@ -1091,12 +1115,12 @@ function App() {
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
-                {allSongs.filter(song => !song.hidden).slice(0, 3).map((song) => {
+                {allSongs.filter(song => !song.hidden).slice(0, 4).map((song, index) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                   return (
                     <div
                       key={song.id}
-                      className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')}`}
+                      className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} ${index === 3 ? 'md:hidden' : ''}`}
                       onMouseEnter={() => handleCardMouseEnter(song)}
                       onMouseLeave={handleCardMouseLeave}
                     >
@@ -1543,7 +1567,13 @@ function App() {
       {selectedSong && (
         <PaddleModal 
           isOpen={isKofiModalOpen}
-          onClose={() => setIsKofiModalOpen(false)}
+          onClose={() => {
+            setIsKofiModalOpen(false);
+            const url = new URL(window.location.href);
+            url.searchParams.delete('song');
+            url.searchParams.delete('version');
+            window.history.replaceState(null, '', url.pathname + url.search);
+          }}
           songId={selectedSong.id}
           stripePriceId={selectedSong.stripePriceId}
           songTitle={selectedSong.title}

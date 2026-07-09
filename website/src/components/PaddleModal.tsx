@@ -602,19 +602,13 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     <button
                       onClick={() => handleFreeDownload('zip')}
                       disabled={!!downloadingType}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-lg active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
                     >
-                      {downloadingType === 'zip' ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin animate-pulse" />
-                          <span>{language === 'de' ? 'Lade ZIP-Paket...' : 'Loading ZIP...'}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-4 h-4" />
-                          <span>{language === 'de' ? 'Komplettes Paket (.zip)' : 'Download Full Package (.zip)'}</span>
-                        </>
-                      )}
+                      <span className="flex items-center gap-2">
+                        <Download className="w-4 h-4 text-neon-pink" />
+                        {language === 'de' ? 'Komplettes Paket (.zip)' : 'Full Package (.zip)'}
+                      </span>
+                      {downloadingType === 'zip' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
                   </div>
                 </>
