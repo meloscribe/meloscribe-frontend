@@ -598,18 +598,6 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                       </span>
                       {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
-
-                    <button
-                      onClick={() => handleFreeDownload('zip')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Download className="w-4 h-4 text-neon-pink" />
-                        {language === 'de' ? 'Komplettes Paket (.zip)' : 'Full Package (.zip)'}
-                      </span>
-                      {downloadingType === 'zip' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
                   </div>
                 </>
               ) : (
@@ -628,7 +616,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   <button
                     onClick={handleStripeCheckout}
                     disabled={isRedirecting}
-                    className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
                   >
                     {isRedirecting ? (
                       <>

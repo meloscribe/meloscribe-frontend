@@ -519,7 +519,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <button
                 onClick={() => handleDownload('pdf')}
                 disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-40 relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {downloadingType === 'pdf' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
@@ -555,7 +555,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <button
                 onClick={() => handleDownload('video')}
                 disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-40 relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {downloadingType === 'video' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
@@ -591,7 +591,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <button
                 onClick={() => handleDownload('video_slow')}
                 disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-40 relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {downloadingType === 'video_slow' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
@@ -627,7 +627,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <button
                 onClick={() => handleDownload('midi')}
                 disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink bg-gradient-to-r from-neon-cyan/15 to-neon-pink/15 hover:from-neon-cyan/25 hover:to-neon-pink/25 hover:border-neon-pink hover:shadow-neon-pink-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-40 relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink bg-gradient-to-r from-neon-cyan/15 to-neon-pink/15 hover:from-neon-cyan/25 hover:to-neon-pink/25 hover:border-neon-pink hover:shadow-neon-pink-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {downloadingType === 'midi' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
@@ -663,7 +663,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <button
                 onClick={() => handleDownload('midi_slow')}
                 disabled={isLimitReached || downloadingType !== null}
-                className="w-full sm:w-auto relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-pink disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-40 relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-pink disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {downloadingType === 'midi_slow' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
