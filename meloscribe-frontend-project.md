@@ -1,6 +1,6 @@
 # meloscribe-frontend — Project Status & Roadmap
 
-Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`).
+Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). Last updated: 2026-07-10.
 
 **GitHub repo:** https://github.com/meloscribe/meloscribe-frontend (public)
 **Hosted on:** Vercel (auto-deploy on push to `main`)
