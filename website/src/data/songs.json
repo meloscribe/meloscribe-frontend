@@ -20,7 +20,7 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "hidden": false,
     "stripePriceId": "pri_01kwap7nmbmfnwewwx2npgxd2m",
-    "paymentsDisabled": false,
+    "paymentsDisabled": true,
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Mary On A Cross.mp3",
     "kofiId": "prod_dummy123"
