@@ -359,7 +359,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-xl md:max-w-4xl bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[90vh] md:max-h-[95vh]">
+      <div className="relative w-full max-w-xl md:max-w-4xl bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]">
         
         {/* Glow Orb in Modal */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
@@ -383,9 +383,9 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
         </div>
 
         {/* Modal Body / Grid Layout */}
-        <div className="p-6 overflow-y-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 flex-1">
-          {/* Left Column: Song Details & Included features */}
-          <div className="md:col-span-5 space-y-6 flex flex-col justify-start">
+        <div className="p-4 md:p-6 overflow-y-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 flex-1">
+          {/* Left Column: Song Details & Included features — shown SECOND on mobile */}
+          <div className="order-last md:order-none md:col-span-5 space-y-4 md:space-y-6 flex flex-col justify-start">
             {/* Song Overview Card */}
             <div className="flex items-center gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
               <div 
@@ -519,12 +519,12 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             </div>
           </div>
 
-          {/* Separator on mobile only */}
-          <div className="border-t border-gray-200 dark:border-dark-600/50 my-2 md:hidden" />
+          {/* Separator between columns — only on mobile */}
+          <div className="border-t border-gray-200 dark:border-dark-600/50 my-1 md:hidden order-2" />
 
-          {/* Right Column: Secure Checkout Action */}
-          <div className="md:col-span-7 border-t md:border-t-0 md:border-l border-gray-200 dark:border-dark-600/50 pt-6 md:pt-0 md:pl-8 flex flex-col justify-center min-h-[480px]">
-            <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-6 py-8">
+          {/* Right Column: Secure Checkout Action — shown FIRST on mobile */}
+          <div className="order-first md:order-none md:col-span-7 border-b md:border-b-0 md:border-l border-gray-200 dark:border-dark-600/50 pb-4 md:pb-0 md:pt-0 md:pl-8 flex flex-col md:justify-center">
+            <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-5 md:gap-6 py-4 md:py-8">
               {isFree ? (
                 <>
                   <div className="text-center">
@@ -683,6 +683,9 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               src={videoUrl}
               playsInline
               preload="auto"
+              controlsList="nodownload nofullscreen"
+              disablePictureInPicture
+              onContextMenu={(e) => e.preventDefault()}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}

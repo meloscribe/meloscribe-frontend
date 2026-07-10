@@ -1196,7 +1196,7 @@ function App() {
                           }`}
                         >
                           {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan'}`} />
                           ) : (
                             <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
                           )}
@@ -1431,7 +1431,7 @@ function App() {
                           }`}
                         >
                           {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : getThemeIconColorClass(song.theme)}`} />
+                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan'}`} />
                           ) : (
                             <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
                           )}
