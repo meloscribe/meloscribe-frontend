@@ -1,0 +1,12 @@
+# robots.txt for meloscribe.dev
+User-agent: *
+Allow: /
+Allow: /suggestions
+Allow: /?*
+
+# Prevent crawlers from indexing private checkout and verification routes
+Disallow: /order/
+Disallow: /success/
+Disallow: /api/
+
+Sitemap: https://meloscribe.dev/sitemap.xml
