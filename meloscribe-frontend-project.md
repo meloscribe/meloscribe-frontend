@@ -72,8 +72,16 @@ npm run dev
 - [x] Fully translated website pages (OrderDetails, Suggestions, Success, App) into English, German, French, Spanish, and Italian
 - [x] Resolved tag syntax/div mismatch issues in `OrderDetails.tsx` and validated production build (`npm run build` compiles cleanly)
 - [x] Updated all email/support references on the website from support@meloscribe.dev to info@meloscribe.dev
+- [x] Suchfilter (Format & Schwierigkeit) standardmäßig eingeklappt auf Mobile (mit Neon-Pink/Neon-Cyan Toggle-Button) und standardmäßig ausgeklappt auf Desktop (Toggle-Button ausgeblendet)
+- [x] Checkout-Gate-Modal (`PaddleModal.tsx`) UX optimiert:
+  - Scrollen auf dem Hauptdokument gesperrt und erzwungene Backdrop-Weichzeichnung (blur(16px)) auf allen Endgeräten bei geöffnetem Modal
+  - Steuer- und Support-Methoden-Hinweistexte unter dem Checkout-Button entfernt, Button in "Pay Securely" umbenannt und Stripe-Titel durch "Proceed to secure checkout to get instant access" ersetzt
+  - Mobilversion restrukturiert: Features-Checkliste ausgeblendet, kompakter Song-Header und eine Inhaltsangabe direkt über dem Checkout-Button
+  - "Secure SSL Connection" Footer auf Mobile ausgeblendet
+  - "Viral Part" psychologisch reframed (Vorteilsargumentation statt Warnungen/Einschränkungen) und visuell einheitlich in warmem Bernstein-Gelb/Orange gehalten auf Desktop und Mobile
 
 ## Active Blockers / Next Steps
 
 - Keine aktiven Blockaden. Das Payment-Gateway wurde am 2. Juli vollständig auf Stripe Checkout (redirects via FastAPI-Sessions) migriert. Die Domain-Verifizierung läuft fehlerfrei.
 - End-to-end sandbox checkout flows have been fully verified with client event redirection and direct transaction lookup fallback; live webhook sign verification is active.
+
