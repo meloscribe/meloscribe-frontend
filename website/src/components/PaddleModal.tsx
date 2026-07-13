@@ -418,7 +418,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             </div>
             <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
               isCondensed 
-                ? 'bg-neon-pink/10 text-neon-pink border border-neon-pink/20' 
+                ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
                 : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20'
             }`}>
               {isCondensed ? 'Viral Part' : 'Full Arrangement'}
@@ -457,7 +457,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             {/* Format Info Banner */}
             <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
               isCondensed 
-                ? 'bg-neon-pink/10 border-neon-pink/20 text-neon-pink dark:bg-neon-pink/5 dark:border-neon-pink/10' 
+                ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
                 : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
             }`}>
               <div className="mt-0.5 text-base flex-shrink-0">
@@ -640,18 +640,6 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 </>
               ) : (
                 <>
-                  {/* Desktop Only: Secure Checkout Header */}
-                  <div className="hidden md:block text-center">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                      {language === 'de' ? 'Sichere Bezahlung über Stripe' : 'Secure Payment via Stripe'}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {language === 'de' 
-                        ? 'Klicke auf den Button unten, um den verschlüsselten Bezahlvorgang über Stripe zu starten.' 
-                        : 'Click the button below to start your secure payment process on Stripe.'}
-                    </p>
-                  </div>
-
                   {/* Mobile Only: Compact Package Summary */}
                   <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-gray-200 dark:border-dark-600/50 p-3 rounded-xl text-sm leading-relaxed">
                     <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
@@ -664,7 +652,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     </p>
                     <div className={`p-2.5 rounded-xl text-xs font-semibold text-left ${
                       isCondensed 
-                        ? 'bg-neon-pink/10 text-neon-pink border border-neon-pink/15' 
+                        ? 'bg-amber-500/10 text-amber-500 border border-amber-500/15' 
                         : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15'
                     }`}>
                       <p className="font-bold mb-1">
@@ -686,6 +674,15 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     </div>
                   </div>
 
+                  {/* Action Subtext */}
+                  <div className="text-center w-full px-2 my-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {language === 'de' 
+                        ? 'Fahre mit dem sicheren Checkout fort, um sofortigen Zugriff zu erhalten.' 
+                        : 'Proceed to secure checkout to get instant access.'}
+                    </p>
+                  </div>
+
                   <button
                     onClick={handleStripeCheckout}
                     disabled={isRedirecting}
@@ -699,7 +696,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     ) : (
                       <>
                         <ShieldCheck className="w-5 h-5" />
-                        <span>{language === 'de' ? 'Jetzt sicher bezahlen mit Stripe' : 'Pay Securely with Stripe'}</span>
+                        <span>{language === 'de' ? 'Jetzt sicher bezahlen' : 'Pay Securely'}</span>
                       </>
                     )}
                   </button>
