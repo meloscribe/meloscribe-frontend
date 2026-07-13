@@ -30,6 +30,8 @@ const isSongFree = (priceStr: string | number | undefined): boolean => {
 const getThemeIconColorClass = (theme: string | undefined): string => {
   if (theme === 'cold') return 'text-neon-cyan dark:text-neon-cyan/80';
   if (theme === 'green') return 'text-emerald-500 dark:text-emerald-400';
+  if (theme === 'violet') return 'text-violet-500 dark:text-violet-400';
+  if (theme === 'platinum') return 'text-slate-400 dark:text-slate-350';
   return 'text-orange-500 dark:text-orange-400'; // warm or default
 };
 
@@ -859,6 +861,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
   const [formatFilter, setFormatFilter] = useState<'All' | 'Viral Part' | 'Full Arrangement'>('All');
+  const [showFilters, setShowFilters] = useState(false);
 
   // Toast notifications state
   const [toast, setToast] = useState<string | null>(null);
@@ -1289,62 +1292,82 @@ function App() {
 
             {/* Search & Filter Controls */}
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-12 bg-white/70 border border-gray-200 dark:bg-dark-800/40 dark:border-dark-600/40 p-4 rounded-xl backdrop-blur-md">
-              {/* Search Bar */}
-              <div className="relative w-full sm:max-w-md">
-                <input
-                  type="text"
-                  placeholder={t.searchPlaceholder}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2.5 pl-10 rounded-lg bg-white border border-gray-300 text-gray-800 placeholder-gray-400 dark:bg-dark-800 dark:border-dark-600 dark:text-gray-100 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan/40 focus:border-neon-cyan dark:focus:border-neon-cyan transition-[border-color,box-shadow] duration-300"
-                />
-                <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              {/* Search Bar & Filter Toggle */}
+              <div className="flex items-center gap-3 w-full sm:max-w-md">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder={t.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2.5 pl-10 rounded-lg bg-white border border-gray-300 text-gray-800 placeholder-gray-400 dark:bg-dark-800 dark:border-dark-600 dark:text-gray-100 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan/40 focus:border-neon-cyan dark:focus:border-neon-cyan transition-[border-color,box-shadow] duration-300"
+                  />
+                  <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                
+                {/* Filter Toggle Button */}
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`p-2.5 rounded-lg border transition-all duration-300 cursor-pointer flex items-center justify-center flex-shrink-0 ${
+                    showFilters 
+                      ? 'bg-neon-cyan/20 border-neon-cyan/45 text-neon-cyan shadow-[0_0_12px_rgba(0,245,255,0.2)]'
+                      : 'bg-white border-gray-300 text-gray-500 hover:text-gray-900 hover:border-gray-400 dark:bg-dark-850 dark:border-dark-600 dark:text-gray-450 dark:hover:text-white dark:hover:border-dark-500'
+                  }`}
+                  title="Toggle search filters"
+                  aria-label="Toggle search filters"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 8.293A1 1 0 013 7.586V4z" />
+                  </svg>
+                </button>
               </div>
 
               {/* Filters Container */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end">
-                {/* Difficulty Filter */}
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
-                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                    {['All', 'Original', 'Easy'].map((diff) => (
-                      <button
-                        key={diff}
-                        onClick={() => setDifficultyFilter(diff)}
-                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
-                          difficultyFilter === diff
-                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
-                        }`}
-                      >
-                        {diff}
-                      </button>
-                    ))}
+              {showFilters && (
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200">
+                  {/* Difficulty Filter */}
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
+                    <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                      {['All', 'Original', 'Easy'].map((diff) => (
+                        <button
+                          key={diff}
+                          onClick={() => setDifficultyFilter(diff)}
+                          className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
+                            difficultyFilter === diff
+                              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                          }`}
+                        >
+                          {diff}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Format Filter */}
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.formatLabel}</span>
-                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                    {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
-                      <button
-                        key={form}
-                        onClick={() => setFormatFilter(form as any)}
-                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                          formatFilter === form
-                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
-                        }`}
-                      >
-                        {form === 'All' ? t.formatAll : form === 'Viral Part' ? t.formatViral : t.formatFull}
-                      </button>
-                    ))}
+                  {/* Format Filter */}
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{t.formatLabel}</span>
+                    <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                      {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
+                        <button
+                          key={form}
+                          onClick={() => setFormatFilter(form as any)}
+                          className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                            formatFilter === form
+                              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                          }`}
+                        >
+                          {form === 'All' ? t.formatAll : form === 'Viral Part' ? t.formatViral : t.formatFull}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Song Cards Grid */}

@@ -10,7 +10,8 @@ Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). 
 
 ## Overview
 
-A premium React + TypeScript + Tailwind CSS single-page app offering sheet music arrangements for pianists. Integrates Paddle v2 for payments, Cloudflare R2 for secure downloads, and Vercel Analytics for audience insights.
+A premium React + TypeScript + Tailwind CSS single-page app offering sheet music arrangements for pianists. Integrates Stripe Checkout for payments, Cloudflare R2 for secure downloads, and Vercel Analytics for audience insights.
+
 
 **Local dev:**
 ```bash
@@ -26,13 +27,15 @@ npm run dev
 - **Styling:** Tailwind CSS + custom neon/glassmorphism aesthetics
 - **Routing:** Lightweight client-side routing via `window.location.pathname` state
 - **Song catalog:** `website/src/songs.json` — read by both React and the Python upload pipeline
-- **Payment:** Paddle v2 Billing (Paddle.js overlay checkout)
-- **Download security:** `/order/:hash` success page → `api.meloscribe.dev/order/:hash` → 15-min R2 presigned URLs
+- **Payment:** Stripe Checkout redirect flow (FastAPI session creation)
+- **Download security:** `/order/:hash` success page → `api.meloscribe.dev/order/:hash` → 15-min R2 presigned URLs (max 50 downloads)
+
 - **Audio previews:** HTML5 `Audio` with programmatic 300ms fade-in / 200ms fade-out (no Web Audio API to avoid CORS)
 - **Analytics:** Vercel Analytics (no cookie consent required)
 
 **Vercel environment variables** (set in Vercel dashboard — not in repo):
-- `VITE_PADDLE_CLIENT_TOKEN=live_5c6d7809f8cf8f527a1da05ae5b`
+- None (all payment integrations are managed securely via backend Stripe API)
+
 
 ---
 
@@ -40,16 +43,18 @@ npm run dev
 
 - [x] Data-driven song architecture (`songs.json`)
 - [x] Dynamic social media metrics (`siteConfig.ts`)
-- [x] Ko-fi overlay modal → replaced with Paddle v2 checkout
+- [x] Ko-fi overlay modal → replaced with Stripe Checkout
+
 - [x] Legal compliance pages: Imprint `/imprint`, Privacy `/privacy`, Terms `/terms`, Refunds `/refunds`
 - [x] Premium song cards: 3/4 aspect ratio, difficulty + price badges overlay
 - [x] Dark/light theme toggle with localStorage persistence (default: dark)
 - [x] Light mode: full readability pass (headings, badges, footer, header)
 - [x] Global audio preview hover system on catalog page
 - [x] Diacritic-cleaning, space-insensitive, typo-tolerant search
-- [x] Secure 3-step Paddle payment flow with permanent `/order/:hash` success pages
+- [x] Secure 3-step Stripe payment flow with permanent `/order/:hash` success pages
 - [x] R2 presigned download links (15 min TTL, max 50 downloads per purchase)
 - [x] SQLite `purchases` table with `download_hash` + `download_count` + `downloaded_types`
+
 - [x] Mobile layout fixes: header, footer, logo, language toggle, Buy Me Coffee button
 - [x] `vercel.json` SPA fallback routing (all paths → `index.html`)
 - [x] Vercel deployment linked to GitHub main branch
@@ -59,8 +64,9 @@ npm run dev
 - [x] Enabled dual-state upvote/unvote toggling on community suggestions page
 - [x] Configured seekable video stream proxy to bypass R2 CORS restrictions
 - [x] Disabled hover audio on mobile/touch screens
-- [x] Implemented dynamic client-side IP-based localized price previews via Paddle.PricePreview()
-- [x] Intercepted client checkout completion events to redirect parent window using transaction ID (`txn_`), resolving success page verification timeouts
+- [x] Implemented dynamic client-side IP-based localized currency and pricing previews
+- [x] Intercepted client checkout completion events to redirect parent window using transaction ID, resolving success page verification timeouts
+
 - [x] Completely hid desktop & mobile checkout iframe scrollbars
 - [x] Removed legacy ZIP package cards to optimize duplicate Cloudflare R2 storage usage
 - [x] Fully translated website pages (OrderDetails, Suggestions, Success, App) into English, German, French, Spanish, and Italian
@@ -69,5 +75,5 @@ npm run dev
 
 ## Active Blockers / Next Steps
 
-- **BLOCKED — Paddle Domain Verification abgelehnt**: Paddle Dashboard zeigt "Action required" — Domain-Review für meloscribe.dev wurde nicht bestanden. Support-Ticket an sellers@paddle.com verschickt zur Klärung der genauen Anforderungen und des undokumentierten 10%-Flat-Fee-Tarifs. Bis zur Freischaltung ist kein Live-Checkout möglich.
-- End-to-end sandbox checkout flows have been fully verified with client event redirection and direct transaction lookup fallback; live webhook sign verification will be tested once production domain verification is approved.
+- Keine aktiven Blockaden. Das Payment-Gateway wurde am 2. Juli vollständig auf Stripe Checkout (redirects via FastAPI-Sessions) migriert. Die Domain-Verifizierung läuft fehlerfrei.
+- End-to-end sandbox checkout flows have been fully verified with client event redirection and direct transaction lookup fallback; live webhook sign verification is active.

@@ -121,6 +121,12 @@
   .sheet-card-green::before {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(20, 184, 166, 0.02) 100%);
   }
+  .sheet-card-violet::before {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(138, 75, 247, 0.02) 100%);
+  }
+  .sheet-card-platinum::before {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.08) 0%, rgba(161, 161, 170, 0.02) 100%);
+  }
 
   .sheet-card:hover {
     transform: translateY(-4px);
@@ -162,6 +168,30 @@
   .dark .sheet-card-green:hover {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.3),
                 0 0 60px rgba(16, 185, 129, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* VIOLET Theme Hover */
+  .sheet-card-violet:hover {
+    @apply border-violet-500/50;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.2),
+                0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  .dark .sheet-card-violet:hover {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3),
+                0 0 60px rgba(139, 92, 246, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* PLATINUM Theme Hover */
+  .sheet-card-platinum:hover {
+    @apply border-slate-400/50;
+    box-shadow: 0 0 30px rgba(148, 163, 184, 0.2),
+                0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  .dark .sheet-card-platinum:hover {
+    box-shadow: 0 0 30px rgba(148, 163, 184, 0.3),
+                0 0 60px rgba(148, 163, 184, 0.15),
                 0 10px 40px rgba(0, 0, 0, 0.5);
   }
 
