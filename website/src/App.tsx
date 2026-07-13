@@ -861,7 +861,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
   const [formatFilter, setFormatFilter] = useState<'All' | 'Viral Part' | 'Full Arrangement'>('All');
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(window.innerWidth >= 768);
 
   // Toast notifications state
   const [toast, setToast] = useState<string | null>(null);
@@ -1325,49 +1325,47 @@ function App() {
               </div>
 
               {/* Filters Container */}
-              {showFilters && (
-                <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200">
-                  {/* Difficulty Filter */}
-                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
-                    <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                      {['All', 'Original', 'Easy'].map((diff) => (
-                        <button
-                          key={diff}
-                          onClick={() => setDifficultyFilter(diff)}
-                          className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
-                            difficultyFilter === diff
-                              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
-                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
-                          }`}
-                        >
-                          {diff}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Format Filter */}
-                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{t.formatLabel}</span>
-                    <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                      {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
-                        <button
-                          key={form}
-                          onClick={() => setFormatFilter(form as any)}
-                          className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                            formatFilter === form
-                              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
-                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
-                          }`}
-                        >
-                          {form === 'All' ? t.formatAll : form === 'Viral Part' ? t.formatViral : t.formatFull}
-                        </button>
-                      ))}
-                    </div>
+              <div className={`${showFilters ? 'flex' : 'hidden md:flex'} flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200`}>
+                {/* Difficulty Filter */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
+                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                    {['All', 'Original', 'Easy'].map((diff) => (
+                      <button
+                        key={diff}
+                        onClick={() => setDifficultyFilter(diff)}
+                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
+                          difficultyFilter === diff
+                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                        }`}
+                      >
+                        {diff}
+                      </button>
+                    ))}
                   </div>
                 </div>
-              )}
+
+                {/* Format Filter */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.formatLabel}</span>
+                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                    {['All', 'Viral Part', 'Full Arrangement'].map((form) => (
+                      <button
+                        key={form}
+                        onClick={() => setFormatFilter(form as any)}
+                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                          formatFilter === form
+                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                        }`}
+                      >
+                        {form === 'All' ? t.formatAll : form === 'Viral Part' ? t.formatViral : t.formatFull}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Song Cards Grid */}

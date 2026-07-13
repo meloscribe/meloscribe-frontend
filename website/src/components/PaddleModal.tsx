@@ -418,7 +418,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             </div>
             <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
               isCondensed 
-                ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
+                ? 'bg-neon-pink/10 text-neon-pink border border-neon-pink/20' 
                 : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20'
             }`}>
               {isCondensed ? 'Viral Part' : 'Full Arrangement'}
@@ -457,11 +457,11 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             {/* Format Info Banner */}
             <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
               isCondensed 
-                ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
+                ? 'bg-neon-pink/10 border-neon-pink/20 text-neon-pink dark:bg-neon-pink/5 dark:border-neon-pink/10' 
                 : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
             }`}>
               <div className="mt-0.5 text-base flex-shrink-0">
-                {isCondensed ? '🎬' : '✨'}
+                ✨
               </div>
               <div>
                 <p className="font-semibold text-gray-900 dark:text-white">
@@ -472,8 +472,8 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
                   {isCondensed
                     ? (language === 'de' 
-                        ? 'Dieses Lernpaket beinhaltet NUR den viralen Teil des Songs wie im Video gezeigt. Es enthält NICHT den kompletten Song.' 
-                        : 'This learning package contains ONLY the viral section of the song as shown in the video. It does NOT contain the full song.')
+                        ? 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.' 
+                        : 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.')
                     : (language === 'de'
                         ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
                         : 'This learning package contains the complete arrangement of the song from start to finish.')}
@@ -662,20 +662,27 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                         ? 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD Video-Tutorials' 
                         : 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials'}
                     </p>
-                    <div className={`py-1.5 px-2 rounded-lg text-xs font-semibold ${
+                    <div className={`p-2.5 rounded-xl text-xs font-semibold text-left ${
                       isCondensed 
-                        ? 'bg-amber-500/10 text-amber-500 border border-amber-500/15' 
+                        ? 'bg-neon-pink/10 text-neon-pink border border-neon-pink/15' 
                         : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15'
                     }`}>
-                      {isCondensed ? (
-                        language === 'de' 
-                          ? '⚠️ Nur viraler Teil (kein voller Song!)' 
-                          : '⚠️ Viral section only (not the full song!)'
-                      ) : (
-                        language === 'de' 
-                          ? '✨ Vollständiges Arrangement' 
-                          : '✨ Complete arrangement'
-                      )}
+                      <p className="font-bold mb-1">
+                        {isCondensed 
+                          ? (language === 'de' ? '✨ Viral Part' : '✨ Viral Part')
+                          : (language === 'de' ? '✨ Vollständiges Arrangement' : '✨ Full Arrangement')}
+                      </p>
+                      <p className="text-[11px] font-normal leading-relaxed opacity-95">
+                        {isCondensed ? (
+                          language === 'de'
+                            ? 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.'
+                            : 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.'
+                        ) : (
+                          language === 'de'
+                            ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
+                            : 'This learning package contains the complete arrangement of the song from start to finish.'
+                        )}
+                      </p>
                     </div>
                   </div>
 
@@ -703,7 +710,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
         </div>
 
         {/* Footer Info Banner */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-dark-600/50 bg-gray-50 dark:bg-dark-900/85 backdrop-blur-md flex items-center justify-between text-xs text-gray-500 dark:text-gray-500 relative z-10">
+        <div className="hidden md:flex px-6 py-4 border-t border-gray-200 dark:border-dark-600/50 bg-gray-50 dark:bg-dark-900/85 backdrop-blur-md items-center justify-between text-xs text-gray-500 dark:text-gray-500 relative z-10">
           <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500">
             <ShieldCheck className="w-4 h-4 text-neon-cyan" /> {t.secureSsl}
           </span>
