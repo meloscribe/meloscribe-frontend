@@ -33,6 +33,34 @@ const translations = {
     secureSsl: 'Secure SSL Connection',
     merchantOfRecord: 'Merchant of Record: Paddle',
     videoSegment: 'Preview Clip (Note: This is only a 60-second preview clip – the full purchase contains the complete arrangement)',
+    
+    // New translations
+    viralPartTitle: 'Viral Part',
+    fullArrangementTitle: 'Full Arrangement',
+    viralPartDesc: 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.',
+    fullArrangementDesc: 'This learning package contains the complete arrangement of the song from start to finish.',
+    packageIncludes: 'Package Includes:',
+    packageIncludesDesc: 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials',
+    freeDownloadTitle: 'Free Download',
+    freeDownloadDesc: 'Choose the format you want to download immediately for free.',
+    paySecurely: 'Pay Securely',
+    redirectingStripe: 'Opening secure checkout...',
+    checkoutSubtext: 'All files will be available for instant download immediately after payment.',
+    easyTitle: 'Simplified Version (Easy)',
+    easyDesc: 'Specially arranged for beginners – easy to learn, yet sounds excellent.',
+    pdfCondensedTitle: 'Sheet music (PDF)',
+    pdfCondensedDesc: 'Precise piano sheets of the song section as shown in the video.',
+    midiCondensedTitle: 'MIDI Files (Normal + Slow)',
+    midiCondensedDesc: 'Practice MIDIs of the song section for Synthesia or your DAW.',
+    videoCondensedTitle: '2K HD Video Tutorials',
+    videoCondensedDesc: 'The tutorial video offline in normal & slow speed.',
+    
+    // Free download button labels
+    pdfFreeLabel: 'Sheet PDF',
+    videoOriginalLabel: 'Video (Original Speed)',
+    videoSlowLabel: 'Video (Slow Practice)',
+    midiOriginalLabel: 'MIDI (Original Speed)',
+    midiSlowLabel: 'MIDI (Slow Practice)',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -51,6 +79,34 @@ const translations = {
     secureSsl: 'Sichere SSL-Verbindung',
     merchantOfRecord: 'Zahlungsabwickler: Paddle',
     videoSegment: 'Ausschnitt-Vorschau (Hinweis: Dies ist nur ein 60-Sekunden-Ausschnitt – die Vollversion enthält das komplette Arrangement)',
+    
+    // New translations
+    viralPartTitle: 'Viral Part',
+    fullArrangementTitle: 'Vollständiges Arrangement',
+    viralPartDesc: 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.',
+    fullArrangementDesc: 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.',
+    packageIncludes: 'Inbegriffen im Paket:',
+    packageIncludesDesc: 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD-Video-Tutorials',
+    freeDownloadTitle: 'Kostenloser Download',
+    freeDownloadDesc: 'Wähle das gewünschte Format zum sofortigen, kostenlosen Herunterladen.',
+    paySecurely: 'Jetzt sicher bezahlen',
+    redirectingStripe: 'Öffne sicheren Checkout...',
+    checkoutSubtext: 'Alle Dateien stehen direkt nach der Zahlung zum sofortigen Download bereit.',
+    easyTitle: 'Vereinfachte Version (Easy)',
+    easyDesc: 'Speziell für Anfänger arrangiert – leicht zu lernen, klingt trotzdem hervorragend.',
+    pdfCondensedTitle: 'Klaviernoten (PDF)',
+    pdfCondensedDesc: 'Präzise Klaviernoten des Song-Ausschnitts wie im Video.',
+    midiCondensedTitle: 'MIDI-Dateien (Normal + Langsam)',
+    midiCondensedDesc: 'Lern-MIDIs des Song-Teils für Synthesia oder deine DAW.',
+    videoCondensedTitle: '2K HD Video-Tutorials',
+    videoCondensedDesc: 'Das Tutorial-Video offline in normalem & langsamem Tempo.',
+    
+    // Free download button labels
+    pdfFreeLabel: 'Klaviernoten (PDF)',
+    videoOriginalLabel: 'Video (Originaltempo)',
+    videoSlowLabel: 'Video (Langsam)',
+    midiOriginalLabel: 'MIDI (Originaltempo)',
+    midiSlowLabel: 'MIDI (Langsam)',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -69,6 +125,34 @@ const translations = {
     secureSsl: 'Connexion SSL sécurisée',
     merchantOfRecord: 'Commerçant officiel : Paddle',
     videoSegment: 'Aperçu (Note : Ceci est seulement un extrait de 60 secondes – l\'arrangement complet est inclus après l\'achat)',
+    
+    // New translations
+    viralPartTitle: 'Partie Virale',
+    fullArrangementTitle: 'Arrangement Complet',
+    viralPartDesc: 'Entièrement concentré sur le hook et le refrain principaux. Maîtrisez instantanément la section la plus populaire sans longue introduction ni conclusion.',
+    fullArrangementDesc: 'Ce pack d\'apprentissage contient l\'arrangement complet de la chanson du début à la fin.',
+    packageIncludes: 'Inclus dans le pack :',
+    packageIncludesDesc: 'Partitions de piano (PDF) + Fichiers MIDI (Normal/Lent) + Tutoriels vidéo HD',
+    freeDownloadTitle: 'Téléchargement Gratuit',
+    freeDownloadDesc: 'Choisissez le format que vous souhaitez télécharger immédiatement et gratuitement.',
+    paySecurely: 'Payer en toute sécurité',
+    redirectingStripe: 'Redirection vers le paiement sécurisé...',
+    checkoutSubtext: 'Tous les fichiers seront disponibles en téléchargement instantané immédiatement après le paiement.',
+    easyTitle: 'Version Simplifiée (Easy)',
+    easyDesc: 'Spécialement arrangé pour les débutants – facile à apprendre, tout en restant excellent.',
+    pdfCondensedTitle: 'Partitions de piano (PDF)',
+    pdfCondensedDesc: 'Partitions de piano précises de la section de la chanson comme indiqué dans la vidéo.',
+    midiCondensedTitle: 'Fichiers MIDI (Normal + Lent)',
+    midiCondensedDesc: 'Fichiers MIDI d\'entraînement pour Synthesia ou votre DAW.',
+    videoCondensedTitle: 'Tutoriels Vidéo 2K HD',
+    videoCondensedDesc: 'La vidéo du tutoriel hors ligne en vitesse normale et lente.',
+    
+    // Free download button labels
+    pdfFreeLabel: 'Partition PDF',
+    videoOriginalLabel: 'Vidéo (Vitesse Normale)',
+    videoSlowLabel: 'Vidéo (Lente)',
+    midiOriginalLabel: 'MIDI (Vitesse Normale)',
+    midiSlowLabel: 'MIDI (Lent)',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -87,6 +171,34 @@ const translations = {
     secureSsl: 'Conexión SSL segura',
     merchantOfRecord: 'Comerciante registrado: Paddle',
     videoSegment: 'Vista previa (Nota: Esto es solo un fragmento de 60 segundos – la compra incluye el arreglo completo)',
+    
+    // New translations
+    viralPartTitle: 'Parte Viral',
+    fullArrangementTitle: 'Arreglo Completo',
+    viralPartDesc: 'Centrado completamente en el hook y estribillo principal. Domina la sección más popular al instante sin largas introducciones ni finales.',
+    fullArrangementDesc: 'Este paquete de aprendizaje contiene el arreglo completo de la canción de principio a fin.',
+    packageIncludes: 'Incluido en el paquete:',
+    packageIncludesDesc: 'Partituras de piano (PDF) + Archivos MIDI (Normal/Lento) + Tutoriales en video HD',
+    freeDownloadTitle: 'Descarga Gratuita',
+    freeDownloadDesc: 'Elige el formato que deseas descargar inmediatamente de forma gratuita.',
+    paySecurely: 'Pagar de forma segura',
+    redirectingStripe: 'Redirigiendo al pago seguro...',
+    checkoutSubtext: 'Todos los archivos estarán disponibles para descarga instantánea inmediatamente después del pago.',
+    easyTitle: 'Versión Simplificada (Easy)',
+    easyDesc: 'Especialmente organizado para principiantes: fácil de aprender, pero suena excelente.',
+    pdfCondensedTitle: 'Partituras de piano (PDF)',
+    pdfCondensedDesc: 'Partituras de piano precisas de la sección de la canción como se muestra en el video.',
+    midiCondensedTitle: 'Archivos MIDI (Normal + Lento)',
+    midiCondensedDesc: 'MIDIs de práctica de la sección de la canción para Synthesia o tu DAW.',
+    videoCondensedTitle: 'Tutoriales en Video 2K HD',
+    videoCondensedDesc: 'El video tutorial sin conexión en velocidad normal y lenta.',
+    
+    // Free download button labels
+    pdfFreeLabel: 'Partitura PDF',
+    videoOriginalLabel: 'Video (Velocidad Normal)',
+    videoSlowLabel: 'Video (Lento)',
+    midiOriginalLabel: 'MIDI (Velocidad Normal)',
+    midiSlowLabel: 'MIDI (Lento)',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -105,6 +217,34 @@ const translations = {
     secureSsl: 'Connessione SSL sicura',
     merchantOfRecord: 'Commerciante registrato: Paddle',
     videoSegment: 'Anteprima (Nota: Questo è solo un estratto di 60 secondi – l\'acquisto include l\'arrangiamento completo)',
+    
+    // New translations
+    viralPartTitle: 'Parte Virale',
+    fullArrangementTitle: 'Arrangiamento Completo',
+    viralPartDesc: 'Incentrato interamente sul gancio e sul ritornello principale. Impara subito la sezione più popolare senza lunghe introduzioni o finali.',
+    fullArrangementDesc: 'Questo pacchetto di apprendimento contiene l\'arrangiamento completo della canzone dall\'inizio alla fine.',
+    packageIncludes: 'Incluso nel pacchetto:',
+    packageIncludesDesc: 'Spartiti per pianoforte (PDF) + File MIDI (Normale/Lento) + Video tutorial HD',
+    freeDownloadTitle: 'Download Gratuito',
+    freeDownloadDesc: 'Scegli il formato che desideri scaricare immediatamente gratuitamente.',
+    paySecurely: 'Paga in sicurezza',
+    redirectingStripe: 'Reindirizzamento al pagamento sicuro...',
+    checkoutSubtext: 'Tutti i file saranno disponibili per il download istantaneo subito dopo il pagamento.',
+    easyTitle: 'Versione Semplificata (Easy)',
+    easyDesc: 'Ideato appositamente per i principianti: facile da imparare, ma con un suono eccellente.',
+    pdfCondensedTitle: 'Spartiti per pianoforte (PDF)',
+    pdfCondensedDesc: 'Spartiti accurati della sezione della canzone come mostrato nel video.',
+    midiCondensedTitle: 'File MIDI (Normale + Lento)',
+    midiCondensedDesc: 'MIDI per esercitarsi con la sezione del brano per Synthesia o DAW.',
+    videoCondensedTitle: 'Video Tutorial 2K HD',
+    videoCondensedDesc: 'Il video tutorial offline a velocità normale e rallentata.',
+    
+    // Free download button labels
+    pdfFreeLabel: 'Spartito PDF',
+    videoOriginalLabel: 'Video (Velocità Normale)',
+    videoSlowLabel: 'Video (Lento)',
+    midiOriginalLabel: 'MIDI (Velocità Normale)',
+    midiSlowLabel: 'MIDI (Lento)',
   }
 };
 
@@ -421,7 +561,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
                 : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20'
             }`}>
-              {isCondensed ? 'Viral Part' : 'Full Arrangement'}
+              {isCondensed ? t.viralPartTitle : t.fullArrangementTitle}
             </span>
           </div>
 
@@ -465,18 +605,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               </div>
               <div>
                 <p className="font-semibold text-gray-900 dark:text-white">
-                  {isCondensed 
-                    ? (language === 'de' ? 'Viral Part' : 'Viral Part')
-                    : (language === 'de' ? 'Vollständiges Arrangement' : 'Full Arrangement')}
+                  {isCondensed ? t.viralPartTitle : t.fullArrangementTitle}
                 </p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                  {isCondensed
-                    ? (language === 'de' 
-                        ? 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.' 
-                        : 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.')
-                    : (language === 'de'
-                        ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
-                        : 'This learning package contains the complete arrangement of the song from start to finish.')}
+                  {isCondensed ? t.viralPartDesc : t.fullArrangementDesc}
                 </p>
               </div>
             </div>
@@ -492,12 +624,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     </div>
                     <div>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {language === 'de' ? 'Vereinfachte Version (Easy)' : 'Simplified Version (Easy)'}
+                        {t.easyTitle}
                       </span>
                       <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                        {language === 'de' 
-                          ? 'Speziell für Anfänger arrangiert – leicht zu lernen, klingt trotzdem hervorragend.' 
-                          : 'Specially arranged for beginners – easy to learn, yet sounds excellent.'}
+                        {t.easyDesc}
                       </p>
                     </div>
                   </div>
@@ -509,14 +639,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet music (PDF)') 
-                        : t.pdfTitle}
+                      {isCondensed ? t.pdfCondensedTitle : t.pdfTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Präzise Klaviernoten des Song-Ausschnitts wie im Video.' : 'Precise piano sheets of the song section as shown in the video.') 
-                        : t.pdfDesc}
+                      {isCondensed ? t.pdfCondensedDesc : t.pdfDesc}
                     </p>
                   </div>
                 </div>
@@ -527,14 +653,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? 'MIDI-Dateien (Normal + Langsam)' : 'MIDI Files (Normal + Slow)') 
-                        : t.midiTitle}
+                      {isCondensed ? t.midiCondensedTitle : t.midiTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Lern-MIDIs des Song-Teils für Synthesia oder deine DAW.' : 'Practice MIDIs of the song section for Synthesia or your DAW.') 
-                        : t.midiDesc}
+                      {isCondensed ? t.midiCondensedDesc : t.midiDesc}
                     </p>
                   </div>
                 </div>
@@ -545,14 +667,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed 
-                        ? (language === 'de' ? '2K HD Video-Tutorials' : '2K HD Video Tutorials') 
-                        : t.videoTitle}
+                      {isCondensed ? t.videoCondensedTitle : t.videoTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed 
-                        ? (language === 'de' ? 'Das Tutorial-Video offline in normalem & langsamem Tempo.' : 'The tutorial video offline in normal & slow speed.') 
-                        : t.videoDesc}
+                      {isCondensed ? t.videoCondensedDesc : t.videoDesc}
                     </p>
                   </div>
                 </div>
@@ -567,12 +685,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 <>
                   <div className="text-center">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                      {language === 'de' ? 'Kostenloser Download' : 'Free Download'}
+                      {t.freeDownloadTitle}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {language === 'de' 
-                        ? 'Wähle das gewünschte Format zum sofortigen, kostenlosen Herunterladen.' 
-                        : 'Choose the format you want to download immediately for free.'}
+                      {t.freeDownloadDesc}
                     </p>
                   </div>
 
@@ -584,7 +700,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-neon-cyan" />
-                        {language === 'de' ? 'Klaviernoten (PDF)' : 'Sheet PDF'}
+                        {t.pdfFreeLabel}
                       </span>
                       {downloadingType === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -596,7 +712,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Tv className="w-4 h-4 text-neon-cyan" />
-                        {language === 'de' ? 'Video (Originaltempo)' : 'Video (Original Speed)'}
+                        {t.videoOriginalLabel}
                       </span>
                       {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -608,7 +724,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Tv className="w-4 h-4 text-neon-cyan/80" />
-                        {language === 'de' ? 'Video (Langsam)' : 'Video (Slow Practice)'}
+                        {t.videoSlowLabel}
                       </span>
                       {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -620,7 +736,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Music className="w-4 h-4 text-neon-pink" />
-                        {language === 'de' ? 'MIDI (Originaltempo)' : 'MIDI (Original Speed)'}
+                        {t.midiOriginalLabel}
                       </span>
                       {downloadingType === 'midi' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -632,7 +748,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     >
                       <span className="flex items-center gap-2">
                         <Music className="w-4 h-4 text-neon-pink/80" />
-                        {language === 'de' ? 'MIDI (Langsam)' : 'MIDI (Slow Practice)'}
+                        {t.midiSlowLabel}
                       </span>
                       {downloadingType === 'midi_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
                     </button>
@@ -643,12 +759,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   {/* Mobile Only: Compact Package Summary */}
                   <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-gray-200 dark:border-dark-600/50 p-3 rounded-xl text-sm leading-relaxed">
                     <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
-                      {language === 'de' ? 'Inbegriffen im Paket:' : 'Package Includes:'}
+                      {t.packageIncludes}
                     </p>
                     <p className="text-[11px] text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
-                      {language === 'de' 
-                        ? 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD Video-Tutorials' 
-                        : 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials'}
+                      {t.packageIncludesDesc}
                     </p>
                     <div className={`p-2.5 rounded-xl text-xs font-semibold text-left ${
                       isCondensed 
@@ -656,20 +770,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                         : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15'
                     }`}>
                       <p className="font-bold mb-1">
-                        {isCondensed 
-                          ? (language === 'de' ? '✨ Viral Part' : '✨ Viral Part')
-                          : (language === 'de' ? '✨ Vollständiges Arrangement' : '✨ Full Arrangement')}
+                        {isCondensed ? `✨ ${t.viralPartTitle}` : `✨ ${t.fullArrangementTitle}`}
                       </p>
                       <p className="text-[11px] font-normal leading-relaxed opacity-95">
-                        {isCondensed ? (
-                          language === 'de'
-                            ? 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.'
-                            : 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.'
-                        ) : (
-                          language === 'de'
-                            ? 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.'
-                            : 'This learning package contains the complete arrangement of the song from start to finish.'
-                        )}
+                        {isCondensed ? t.viralPartDesc : t.fullArrangementDesc}
                       </p>
                     </div>
                   </div>
@@ -677,9 +781,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   {/* Action Subtext */}
                   <div className="text-center w-full px-2 my-1">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {language === 'de' 
-                        ? 'Fahre mit dem sicheren Checkout fort, um sofortigen Zugriff zu erhalten.' 
-                        : 'Proceed to secure checkout to get instant access.'}
+                      {t.checkoutSubtext}
                     </p>
                   </div>
 
@@ -691,12 +793,12 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     {isRedirecting ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>{language === 'de' ? 'Öffne sicheren Checkout...' : 'Redirecting to Stripe...'}</span>
+                        <span>{t.redirectingStripe}</span>
                       </>
                     ) : (
                       <>
                         <ShieldCheck className="w-5 h-5" />
-                        <span>{language === 'de' ? 'Jetzt sicher bezahlen' : 'Pay Securely'}</span>
+                        <span>{t.paySecurely}</span>
                       </>
                     )}
                   </button>
