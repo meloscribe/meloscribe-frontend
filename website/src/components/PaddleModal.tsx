@@ -640,7 +640,8 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 </>
               ) : (
                 <>
-                  <div className="text-center">
+                  {/* Desktop Only: Secure Checkout Header */}
+                  <div className="hidden md:block text-center">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                       {language === 'de' ? 'Sichere Bezahlung über Stripe' : 'Secure Payment via Stripe'}
                     </h3>
@@ -649,6 +650,33 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                         ? 'Klicke auf den Button unten, um den verschlüsselten Bezahlvorgang über Stripe zu starten.' 
                         : 'Click the button below to start your secure payment process on Stripe.'}
                     </p>
+                  </div>
+
+                  {/* Mobile Only: Compact Package Summary */}
+                  <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-gray-200 dark:border-dark-600/50 p-3 rounded-xl text-sm leading-relaxed">
+                    <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
+                      {language === 'de' ? 'Inbegriffen im Paket:' : 'Package Includes:'}
+                    </p>
+                    <p className="text-[11px] text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
+                      {language === 'de' 
+                        ? 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD Video-Tutorials' 
+                        : 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials'}
+                    </p>
+                    <div className={`py-1.5 px-2 rounded-lg text-xs font-semibold ${
+                      isCondensed 
+                        ? 'bg-amber-500/10 text-amber-500 border border-amber-500/15' 
+                        : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15'
+                    }`}>
+                      {isCondensed ? (
+                        language === 'de' 
+                          ? '⚠️ Nur viraler Teil (kein voller Song!)' 
+                          : '⚠️ Viral section only (not the full song!)'
+                      ) : (
+                        language === 'de' 
+                          ? '✨ Vollständiges Arrangement' 
+                          : '✨ Complete arrangement'
+                      )}
+                    </div>
                   </div>
 
                   <button

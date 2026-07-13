@@ -1313,7 +1313,7 @@ function App() {
                   className={`p-2.5 rounded-lg border transition-all duration-300 cursor-pointer flex items-center justify-center flex-shrink-0 ${
                     showFilters 
                       ? 'bg-neon-cyan/20 border-neon-cyan/45 text-neon-cyan shadow-[0_0_12px_rgba(0,245,255,0.2)]'
-                      : 'bg-white border-gray-300 text-gray-500 hover:text-gray-900 hover:border-gray-400 dark:bg-dark-850 dark:border-dark-600 dark:text-gray-450 dark:hover:text-white dark:hover:border-dark-500'
+                      : 'bg-neon-pink/10 border-neon-pink/25 text-neon-pink shadow-[0_0_10px_rgba(255,45,146,0.15)] hover:bg-neon-pink/20 hover:border-neon-pink/40'
                   }`}
                   title="Toggle search filters"
                   aria-label="Toggle search filters"
