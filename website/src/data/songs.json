@@ -199,13 +199,13 @@
     "title": "God Rest Ye Merry",
     "artist": "Traditional",
     "difficulty": "Original",
-    "price": "Free",
-    "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
-    "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
+    "price": "4 €",
+    "kofiId": "price_1TsjrTL8a9dEAmWsFbLFdMSh",
     "stripePriceId": "pri_01kwap86sgh9wg86me8sek8xxa",
-    "theme": "cold",
+    "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
     "audioPreviewUrl": "/audio-previews/God Rest Ye Merry.mp3",
-    "kofiId": "prod_dummy123"
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "theme": "warm"
   },
   {
     "id": "19",
