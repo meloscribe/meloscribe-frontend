@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ChevronUp, Music, Sparkles } from 'lucide-react';
 import { fetchSuggestions, insertSuggestion, incrementVote, decrementVote, Suggestion } from '../lib/supabaseClient';
+import songsData from '../data/songs.json';
 
 interface SuggestionsProps {
   onBack: () => void;
@@ -85,7 +86,8 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       placeholderTitle: 'e.g. In The End',
       placeholderArtist: 'e.g. Linkin Park',
       requestsLabel: 'requests',
-      loading: 'Loading suggestions...'
+      loading: 'Loading suggestions...',
+      alreadyPublished: 'This song is already available on Meloscribe!',
     },
     de: {
       title: 'Community Wunschliste',
@@ -107,7 +109,8 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       placeholderTitle: 'z.B. In The End',
       placeholderArtist: 'z.B. Linkin Park',
       requestsLabel: 'Anfragen',
-      loading: 'Wünsche werden geladen...'
+      loading: 'Wünsche werden geladen...',
+      alreadyPublished: 'Dieser Song ist bereits auf Meloscribe verfügbar!',
     },
     fr: {
       title: 'Demandes de la Communauté',
@@ -129,7 +132,8 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       placeholderTitle: 'par ex. In The End',
       placeholderArtist: 'par ex. Linkin Park',
       requestsLabel: 'demandes',
-      loading: 'Chargement des demandes...'
+      loading: 'Chargement des demandes...',
+      alreadyPublished: 'Cette chanson est déjà disponible sur Meloscribe !',
     },
     es: {
       title: 'Lista de Peticiones',
@@ -151,7 +155,8 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       placeholderTitle: 'p. ej. In The End',
       placeholderArtist: 'p. ej. Linkin Park',
       requestsLabel: 'peticiones',
-      loading: 'Cargando peticiones...'
+      loading: 'Cargando peticiones...',
+      alreadyPublished: '¡Esta canción ya está disponible en Meloscribe!',
     },
     it: {
       title: 'Richieste della Community',
@@ -173,7 +178,8 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       placeholderTitle: 'es. In The End',
       placeholderArtist: 'es. Linkin Park',
       requestsLabel: 'richieste',
-      loading: 'Caricamento dei suggerimenti...'
+      loading: 'Caricamento dei suggerimenti...',
+      alreadyPublished: 'Questa canzone è già disponibile su Meloscribe!',
     }
   };
 
@@ -183,7 +189,28 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
   const loadData = async () => {
     setLoading(true);
     const data = await fetchSuggestions();
-    setSuggestions(data);
+    
+    // Normalize and clean all published song titles and artists from songsData
+    const publishedList = songsData.map(song => ({
+      title: normalizeString(song.title),
+      artist: normalizeString(song.artist)
+    }));
+    
+    // Filter suggestions list: keep only suggestions that are NOT in publishedList
+    const filtered = data.filter(sug => {
+      const sugTitle = normalizeString(sug.title);
+      const sugArtist = normalizeString(sug.artist);
+      
+      const alreadyPublished = publishedList.some(pub => {
+        const titleMatch = pub.title === sugTitle || pub.title.includes(sugTitle) || sugTitle.includes(pub.title);
+        const artistMatch = pub.artist === sugArtist || pub.artist.includes(sugArtist) || sugArtist.includes(pub.artist);
+        return titleMatch && artistMatch;
+      });
+      
+      return !alreadyPublished;
+    });
+
+    setSuggestions(filtered);
     setLoading(false);
   };
 
@@ -245,6 +272,21 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
     const normInputTitle = normalizeString(title);
     const normInputArtist = normalizeString(artist);
+
+    // 0. Check if already published on website
+    const isAlreadyPublished = songsData.some(song => {
+      const pubTitle = normalizeString(song.title);
+      const pubArtist = normalizeString(song.artist);
+      return pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
+    });
+
+    if (isAlreadyPublished) {
+      showToast(t.alreadyPublished);
+      setTitle('');
+      setArtist('');
+      setSubmitting(false);
+      return;
+    }
 
     // 1. Check for duplicates in current list using fuzzy scoring
     let matchFound: Suggestion | null = null;
