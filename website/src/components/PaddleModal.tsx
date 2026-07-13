@@ -81,7 +81,7 @@ const translations = {
     videoSegment: 'Ausschnitt-Vorschau (Hinweis: Dies ist nur ein 60-Sekunden-Ausschnitt – die Vollversion enthält das komplette Arrangement)',
     
     // New translations
-    viralPartTitle: 'Viral Part',
+    viralPartTitle: 'Viraler Part',
     fullArrangementTitle: 'Vollständiges Arrangement',
     viralPartDesc: 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.',
     fullArrangementDesc: 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.',

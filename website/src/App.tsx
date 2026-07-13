@@ -149,7 +149,7 @@ const translations = {
     switchDark: 'In den dunklen Modus wechseln',
     formatLabel: 'Format:',
     formatAll: 'Alle',
-    formatViral: 'Viral Part',
+    formatViral: 'Viraler Part',
     formatFull: 'Komplettes Arrangement',
     formatFullCondensed: 'Komplett',
     suggestions: 'Vorschläge',
