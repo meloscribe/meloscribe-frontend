@@ -206,7 +206,8 @@
     "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
     "audioPreviewUrl": "/audio-previews/God Rest Ye Merry.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold"
+    "theme": "cold",
+    "pinned": true
   },
   {
     "id": "19",
