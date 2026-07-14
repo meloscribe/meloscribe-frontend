@@ -1120,8 +1120,8 @@ function App() {
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                 {(() => {
-                  const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned);
-                  const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned);
+                  const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned).sort((a, b) => Number(b.id) - Number(a.id));
+                  const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned).sort((a, b) => Number(b.id) - Number(a.id));
                   const featuredSongs = [...pinnedSongs, ...backfillSongs].slice(0, 3);
                   return featuredSongs.map((song) => {
                     const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
