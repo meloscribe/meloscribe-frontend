@@ -417,15 +417,16 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
         setLoadingVideo(false);
       } else {
         const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+        const suffix = difficulty === "Easy" ? " Easy" : "";
         const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
           ? 'http://localhost:8787'
           : 'https://api.meloscribe.dev';
            
-        setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle)}`);
+        setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`);
         setLoadingVideo(false);
       }
     }
-  }, [isOpen, songTitle, videoPreviewUrl]);
+  }, [isOpen, songTitle, videoPreviewUrl, difficulty]);
 
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
@@ -506,6 +507,23 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           backdrop-filter: blur(16px) !important;
           -webkit-backdrop-filter: blur(16px) !important;
         }
+        @keyframes screamPlayPulse {
+          0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.7), 0 0 15px rgba(0, 245, 255, 0.4);
+          }
+          70% {
+            transform: scale(1.08);
+            box-shadow: 0 0 0 12px rgba(0, 245, 255, 0), 0 0 25px rgba(0, 245, 255, 0.8);
+          }
+          100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(0, 245, 255, 0), 0 0 15px rgba(0, 245, 255, 0.4);
+          }
+        }
+        .screaming-play-btn {
+          animation: screamPlayPulse 1.6s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
       ` }} />
       {/* Backdrop */}
       <div 
@@ -568,27 +586,29 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           {/* Left Column: Song Details & Included features — hidden on mobile */}
           <div className="hidden md:flex md:col-span-5 space-y-4 md:space-y-6 flex-col justify-start">
             {/* Song Overview Card */}
-            <div className="flex items-center gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
+            <div className="flex flex-col gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
               <div 
                 onClick={() => videoUrl && setShowLightbox(true)}
-                className={`w-16 h-16 rounded-lg bg-gray-100 dark:bg-dark-950 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
+                className={`w-full aspect-video rounded-xl bg-gradient-to-br from-dark-950 via-dark-900 to-purple-950/40 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
               >
                 <img 
                   src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
                   alt={songTitle}
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
                 {videoUrl && (
-                  <div className="absolute inset-0 bg-black/35 flex items-center justify-center transition-all duration-300 hover:bg-black/55">
-                    <Play className="w-7 h-7 text-neon-cyan fill-neon-cyan/20 animate-pulse" />
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all duration-300 hover:bg-black/50">
+                    <div className="w-14 h-14 rounded-full bg-neon-cyan flex items-center justify-center text-dark-950 screaming-play-btn transition-transform duration-300 group-hover/thumb:scale-110 shadow-[0_0_20px_rgba(0,245,255,0.4)] z-10">
+                      <Play className="w-6 h-6 fill-current ml-1 text-dark-950" />
+                    </div>
                   </div>
                 )}
               </div>
               
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0">
                 <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
                 <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
               </div>

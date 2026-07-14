@@ -340,8 +340,8 @@
     "stripePriceId": "price_1Tt8KpL8a9dEAmWsSp1oRmkZ",
     "coverImage": "/covers/I don't know_clean.jpg",
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
-    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
+    "theme": "violet"
   },
   {
     "id": "55",
@@ -353,7 +353,7 @@
     "stripePriceId": "price_1Tt8L4L8a9dEAmWsA6Iakte8",
     "coverImage": "/covers/I don't know_clean.jpg",
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
-    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
+    "theme": "violet"
   }
 ]

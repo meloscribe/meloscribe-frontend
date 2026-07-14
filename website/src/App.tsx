@@ -43,12 +43,13 @@ const resolveAudioUrl = (song: Song): string => {
     : 'https://api.meloscribe.dev';
 
   let url = song.audioPreviewUrl;
+  const suffix = song.difficulty === 'Easy' ? ' Easy' : '';
   if (!url) {
     const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
+    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`;
   } else if (url.startsWith('/audio-previews/')) {
     const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
+    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`;
   }
   return url;
 };
