@@ -65,8 +65,8 @@ const translations = {
     browseSheets: 'Browse Sheets',
     followUs: 'Follow Us',
     scrollToExplore: 'Scroll',
-    popularArrangements: 'Recent Arrangements',
-    popularDesc: 'Discover our latest piano sheets and arrangements',
+    popularArrangements: 'Favorite Arrangements',
+    popularDesc: 'Discover our handpicked favorite piano sheets and arrangements',
     downloadSheets: 'Buy Sheets',
     currentlyDisabled: 'Currently Disabled',
     viewAll: 'View All Arrangements',
@@ -117,8 +117,8 @@ const translations = {
     browseSheets: 'Noten durchsuchen',
     followUs: 'Folgen',
     scrollToExplore: 'Scrollen',
-    popularArrangements: 'Neueste Arrangements',
-    popularDesc: 'Entdecke unsere neuesten Klaviernoten und Arrangements',
+    popularArrangements: 'Lieblings-Arrangements',
+    popularDesc: 'Entdecke unsere handverlesenen Lieblings-Klaviernoten und Arrangements',
     downloadSheets: 'Noten kaufen',
     currentlyDisabled: 'Derzeit deaktiviert',
     viewAll: 'Alle Arrangements ansehen',
@@ -169,8 +169,8 @@ const translations = {
     browseSheets: 'Parcourir les partitions',
     followUs: 'Suivez-nous',
     scrollToExplore: 'Défiler',
-    popularArrangements: 'Arrangements récents',
-    popularDesc: 'Découvrez nos dernières partitions et arrangements',
+    popularArrangements: 'Arrangements favoris',
+    popularDesc: 'Découvrez nos partitions de piano et arrangements favoris',
     downloadSheets: 'Acheter',
     currentlyDisabled: 'Actuellement désactivé',
     viewAll: 'Voir tous les arrangements',
@@ -221,8 +221,8 @@ const translations = {
     browseSheets: 'Explorar partituras',
     followUs: 'Síguenos',
     scrollToExplore: 'Desplazarse',
-    popularArrangements: 'Arreglos recientes',
-    popularDesc: 'Descubre nuestras últimas partituras y arreglos',
+    popularArrangements: 'Arreglos favoritos',
+    popularDesc: 'Descubre nuestros arreglos y partituras favoritos',
     downloadSheets: 'Comprar',
     currentlyDisabled: 'Actualmente desactivado',
     viewAll: 'Ver todos los arreglos',
@@ -273,8 +273,8 @@ const translations = {
     browseSheets: 'Sfoglia gli spartiti',
     followUs: 'Seguici',
     scrollToExplore: 'Scorri',
-    popularArrangements: 'Arrangamenti recenti',
-    popularDesc: 'Scopri i nostri ultimi spartiti e arrangiamenti',
+    popularArrangements: 'Arrangamenti preferiti',
+    popularDesc: 'Scopri i nostri spartiti e arrangiamenti preferiti',
     downloadSheets: 'Acquista',
     currentlyDisabled: 'Attualmente disabilitato',
     viewAll: 'Visualizza tutti gli arrangiamenti',
@@ -1118,15 +1118,19 @@ function App() {
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
-                {allSongs.filter(song => !song.hidden).slice(0, 4).map((song, index) => {
-                  const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
-                  return (
-                    <div
-                      key={song.id}
-                      className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} ${index === 3 ? 'md:hidden' : ''}`}
-                      onMouseEnter={() => handleCardMouseEnter(song)}
-                      onMouseLeave={handleCardMouseLeave}
-                    >
+                {(() => {
+                  const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned);
+                  const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned);
+                  const featuredSongs = [...pinnedSongs, ...backfillSongs].slice(0, 3);
+                  return featuredSongs.map((song) => {
+                    const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                    return (
+                      <div
+                        key={song.id}
+                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')}`}
+                        onMouseEnter={() => handleCardMouseEnter(song)}
+                        onMouseLeave={handleCardMouseLeave}
+                      >
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
@@ -1207,8 +1211,9 @@ function App() {
                         </button>
                       </div>
                     </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
               </div>
 
               <div className="text-center mt-12">
