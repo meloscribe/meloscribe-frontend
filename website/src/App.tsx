@@ -893,7 +893,7 @@ function App() {
       (formatFilter === 'Full Arrangement' && !isSongCondensed);
       
     return matchesSearch && matchesDifficulty && matchesFormat;
-  });
+  }).sort((a, b) => Number(b.id) - Number(a.id));
 
 
 
