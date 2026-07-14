@@ -75,7 +75,8 @@
     "stripePriceId": "pri_01kwap7tcvw6s23pq44pbv60aq",
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Sweetest Rain.mp3",
-    "kofiId": "prod_dummy123"
+    "kofiId": "prod_dummy123",
+    "pinned": true
   },
   {
     "id": "6",
