@@ -341,7 +341,8 @@
     "coverImage": "/covers/I don't know_clean.jpg",
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
     "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
-    "theme": "violet"
+    "theme": "violet",
+    "format": "viral_part"
   },
   {
     "id": "55",
@@ -354,6 +355,7 @@
     "coverImage": "/covers/I don't know Easy_clean.jpg",
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
     "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
-    "theme": "violet"
+    "theme": "violet",
+    "format": "viral_part"
   }
 ]
