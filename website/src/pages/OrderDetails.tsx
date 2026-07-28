@@ -310,8 +310,11 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       if (res.ok) {
         const data = await res.json();
         if (data && data.download_url) {
-          // Trigger file download (mobile-friendly for iOS Safari and Android Chrome)
-          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          // Trigger file download (TikTok, iOS Safari, Android Chrome optimized)
+          const isSocialInApp = /TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent);
+          if (isSocialInApp) {
+            window.open(data.download_url, '_blank');
+          } else if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             window.location.href = data.download_url;
           } else {
             const link = document.createElement('a');
@@ -410,6 +413,23 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
         <div className="glass-card p-6 sm:p-8 rounded-2xl border border-gray-200/80 bg-white/70 backdrop-blur-md dark:border-dark-500/50 dark:bg-dark-800/80 mb-6 relative overflow-hidden">
           <div className="absolute -top-12 -left-12 w-24 h-24 bg-neon-cyan/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -right-12 w-24 h-24 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none" />
+
+          {/* TikTok / Instagram In-App Browser Warning Banner */}
+          {/TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent) && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs sm:text-sm flex items-start gap-3">
+              <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
+              <div>
+                <span className="font-bold block mb-1">
+                  {language === 'de' ? '💡 Hinweis für TikTok Browser' : '💡 TikTok Browser Notice'}
+                </span>
+                <span>
+                  {language === 'de'
+                    ? 'Falls Downloads im TikTok-Browser nicht starten: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).'
+                    : 'If downloads do not start in TikTok: Tap "..." in the top right and select "Open in Browser" (Safari / Chrome).'}
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Details Row */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200/50 dark:border-dark-600/50 mb-6">
