@@ -1331,7 +1331,7 @@ function App() {
               </div>
 
               {/* Filters Container */}
-              <div className={`${showFilters ? 'flex' : 'hidden md:flex'} flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200`}>
+              <div className={`${showFilters ? 'flex' : 'hidden'} flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200`}>
                 {/* Difficulty Filter */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                   <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
