@@ -310,13 +310,17 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       if (res.ok) {
         const data = await res.json();
         if (data && data.download_url) {
-          // Trigger file download
-          const link = document.createElement('a');
-          link.href = data.download_url;
-          link.setAttribute('download', '');
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          // Trigger file download (mobile-friendly for iOS Safari and Android Chrome)
+          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            window.location.href = data.download_url;
+          } else {
+            const link = document.createElement('a');
+            link.href = data.download_url;
+            link.setAttribute('download', '');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
           
           showToast(t.downloadSuccess);
           
