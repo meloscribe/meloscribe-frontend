@@ -10,7 +10,8 @@
     "coverImage": "/covers/Sweetest Rain_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Sweetest Rain.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "theme": "warm",
+    "pinned": true
   },
   {
     "id": "global_settings",
