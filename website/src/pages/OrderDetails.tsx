@@ -253,6 +253,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
+  const [showTiktokModal, setShowTiktokModal] = useState(false);
 
   const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
   const t = translations[activeLang as keyof typeof translations];
@@ -260,22 +261,13 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const formatOrderDate = (dateStr?: string) => {
     if (!dateStr) return '';
     try {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return dateStr;
-      let locale = 'en-US';
-      if (language === 'de') locale = 'de-DE';
-      else if (language === 'fr') locale = 'fr-FR';
-      else if (language === 'es') locale = 'es-ES';
-      else if (language === 'it') locale = 'it-IT';
-      
-      return d.toLocaleDateString(locale, {
-        day: '2-digit',
-        month: '2-digit',
+      const date = new Date(dateStr);
+      return date.toLocaleDateString(activeLang === 'de' ? 'de-DE' : 'en-US', {
         year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }) + (locale === 'de-DE' ? ' Uhr' : '');
-    } catch (e) {
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch {
       return dateStr;
     }
   };
@@ -320,10 +312,18 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       if (res.ok) {
         const data = await res.json();
         if (data && data.download_url) {
-          // Trigger file download (TikTok, iOS Safari, Android Chrome optimized)
           const isSocialInApp = /TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent);
+          
           if (isSocialInApp) {
-            window.open(data.download_url, '_blank');
+            if (type === 'pdf') {
+              window.location.href = data.download_url;
+            } else if (/Android/i.test(navigator.userAgent)) {
+              const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
+              window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+            } else {
+              window.open(data.download_url, '_blank');
+              setShowTiktokModal(true);
+            }
           } else if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             window.location.href = data.download_url;
           } else {
@@ -337,7 +337,6 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           
           showToast(t.downloadSuccess);
           
-          // Update download count from response or increment fallback
           if (data.download_count !== undefined) {
             setOrderInfo(prev => prev ? { ...prev, download_count: data.download_count } : null);
           } else {
@@ -724,6 +723,37 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <ArrowLeft className="w-4 h-4" />
           <span>{t.backHome}</span>
         </button>
+
+        {/* TikTok Helper Modal for iOS/TikTok in-app browser */}
+        {showTiktokModal && (
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+            {/* Pointer Arrow pointing to top right */}
+            <div className="absolute top-4 right-8 flex flex-col items-end text-amber-400 animate-bounce">
+              <span className="text-4xl font-bold">↗</span>
+              <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/40">
+                {activeLang === 'de' ? 'Hier tippen (...)' : 'Tap here (...)'}
+              </span>
+            </div>
+
+            <div className="max-w-sm w-full bg-dark-800 border border-amber-500/40 rounded-2xl p-6 text-center shadow-2xl relative">
+              <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-4">
+                <Info className="w-6 h-6 text-amber-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">
+                {t.tiktokNoticeTitle}
+              </h3>
+              <p className="text-xs text-gray-300 mb-6 leading-relaxed">
+                {t.tiktokNoticeDesc}
+              </p>
+              <button
+                onClick={() => setShowTiktokModal(false)}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan text-white font-bold text-sm hover:from-neon-cyan/30 hover:to-neon-pink/30 transition-all cursor-pointer"
+              >
+                {activeLang === 'de' ? 'Alles klar!' : 'Got it!'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
