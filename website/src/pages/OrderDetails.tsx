@@ -315,9 +315,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           const isSocialInApp = /TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent);
           
           if (isSocialInApp) {
-            if (type === 'pdf') {
-              window.location.href = data.download_url;
-            } else if (/Android/i.test(navigator.userAgent)) {
+            if (/Android/i.test(navigator.userAgent)) {
               const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
               window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
             } else {
