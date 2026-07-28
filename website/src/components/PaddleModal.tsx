@@ -589,21 +589,20 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             <div className="flex flex-col gap-4 bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-4 rounded-xl">
               <div 
                 onClick={() => videoUrl && setShowLightbox(true)}
-                className={`w-full aspect-video rounded-xl bg-gradient-to-br from-dark-950 via-dark-900 to-purple-950/40 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
+                className={`w-full aspect-video rounded-xl bg-gradient-to-br from-dark-950 via-dark-900 to-purple-950/60 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex flex-col items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
               >
-                <img 
-                  src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
-                  alt={songTitle}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
+                {/* Ambient Radial Glow & Grid pattern */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.15)_0%,transparent_70%)] pointer-events-none" />
+                <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_24px] pointer-events-none" />
+
                 {videoUrl && (
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all duration-300 hover:bg-black/50">
-                    <div className="w-14 h-14 rounded-full bg-neon-cyan flex items-center justify-center text-dark-950 screaming-play-btn transition-transform duration-300 group-hover/thumb:scale-110 shadow-[0_0_20px_rgba(0,245,255,0.4)] z-10">
+                  <div className="relative z-10 flex flex-col items-center justify-center gap-2.5">
+                    <div className="w-14 h-14 rounded-full bg-neon-cyan flex items-center justify-center text-dark-950 screaming-play-btn transition-transform duration-300 group-hover/thumb:scale-110 shadow-[0_0_25px_rgba(0,245,255,0.5)]">
                       <Play className="w-6 h-6 fill-current ml-1 text-dark-950" />
                     </div>
+                    <span className="px-2.5 py-0.5 rounded-full bg-black/60 border border-neon-cyan/30 text-neon-cyan text-[10px] font-semibold tracking-wider uppercase backdrop-blur-md">
+                      Watch Video Preview
+                    </span>
                   </div>
                 )}
               </div>
