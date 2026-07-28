@@ -58,7 +58,9 @@ const translations = {
     errDownload: 'Error triggering download',
     errFailed: 'Download failed',
     errNetwork: 'Network error during download',
-    accessDenied: 'Access Denied'
+    accessDenied: 'Access Denied',
+    tiktokNoticeTitle: '💡 TikTok / Instagram Browser Notice',
+    tiktokNoticeDesc: 'If downloads do not start in TikTok: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).'
   },
   de: {
     title: 'Dein Lernpaket',
@@ -102,7 +104,9 @@ const translations = {
     errDownload: 'Fehler beim Herunterladen',
     errFailed: 'Download fehlgeschlagen',
     errNetwork: 'Netzwerkfehler beim Download',
-    accessDenied: 'Fehler'
+    accessDenied: 'Fehler',
+    tiktokNoticeTitle: '💡 Hinweis für TikTok / Instagram Browser',
+    tiktokNoticeDesc: 'Falls Downloads im TikTok-Browser nicht starten: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).'
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -146,7 +150,9 @@ const translations = {
     errDownload: 'Erreur lors du téléchargement',
     errFailed: 'Téléchargement échoué',
     errNetwork: 'Erreur réseau lors du téléchargement',
-    accessDenied: 'Accès refusé'
+    accessDenied: 'Accès refusé',
+    tiktokNoticeTitle: '💡 Remarque pour le navigateur TikTok / Instagram',
+    tiktokNoticeDesc: 'Si les téléchargements ne démarrent pas dans TikTok : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).'
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -190,7 +196,9 @@ const translations = {
     errDownload: 'Error al iniciar la descarga',
     errFailed: 'Descarga fallida',
     errNetwork: 'Error de red durante la descarga',
-    accessDenied: 'Acceso denegado'
+    accessDenied: 'Acceso denegado',
+    tiktokNoticeTitle: '💡 Aviso para el navegador de TikTok / Instagram',
+    tiktokNoticeDesc: 'Si las descargas no se inician en TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).'
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -234,7 +242,9 @@ const translations = {
     errDownload: 'Errore durante il download',
     errFailed: 'Download fallito',
     errNetwork: 'Errore di rete durante il download',
-    accessDenied: 'Accesso negato'
+    accessDenied: 'Accesso negato',
+    tiktokNoticeTitle: '💡 Avviso per il browser TikTok / Instagram',
+    tiktokNoticeDesc: 'Se i download non si avviano in TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).'
   }
 };
 
@@ -420,12 +430,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
               <div>
                 <span className="font-bold block mb-1">
-                  {language === 'de' ? '💡 Hinweis für TikTok Browser' : '💡 TikTok Browser Notice'}
+                  {t.tiktokNoticeTitle}
                 </span>
                 <span>
-                  {language === 'de'
-                    ? 'Falls Downloads im TikTok-Browser nicht starten: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).'
-                    : 'If downloads do not start in TikTok: Tap "..." in the top right and select "Open in Browser" (Safari / Chrome).'}
+                  {t.tiktokNoticeDesc}
                 </span>
               </div>
             </div>
