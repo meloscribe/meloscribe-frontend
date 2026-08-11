@@ -1,5 +1,18 @@
 [
   {
+    "id": "57",
+    "title": "Golden Brown",
+    "artist": "The Stranglers",
+    "difficulty": "Easy",
+    "price": "6 €",
+    "kofiId": "price_1U3LSpQ4cuBqoYoXkGdCg5cT",
+    "stripePriceId": "price_1U3LSpQ4cuBqoYoXkGdCg5cT",
+    "coverImage": "/covers/Golden Brown_clean.jpg",
+    "audioPreviewUrl": "/audio-previews/Golden Brown.mp3",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "theme": "warm"
+  },
+  {
     "id": "56",
     "title": "Golden Brown",
     "artist": "The Stranglers",
