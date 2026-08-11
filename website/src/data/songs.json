@@ -1,5 +1,18 @@
 [
   {
+    "id": "56",
+    "title": "Golden Brown",
+    "artist": "The Stranglers",
+    "difficulty": "Original",
+    "price": "6 €",
+    "kofiId": "price_1U3LRrQ4cuBqoYoXxvdfc9K1",
+    "stripePriceId": "price_1U3LRrQ4cuBqoYoXxvdfc9K1",
+    "coverImage": "/covers/Golden Brown_clean.jpg",
+    "audioPreviewUrl": "/audio-previews/Golden Brown.mp3",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "theme": "warm"
+  },
+  {
     "id": "5",
     "title": "Sweetest Rain",
     "artist": "Abilene",
