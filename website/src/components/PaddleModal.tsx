@@ -257,8 +257,15 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
   const [downloadingType, setDownloadingType] = useState<string | null>(null);
 
   const cleanBaseTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "").trim();
+  const isEasy = difficulty === 'Easy' || songTitle.toLowerCase().includes('easy');
   const rawCoverSrc = coverImage || `/covers/${cleanBaseTitle}_clean.jpg`;
   const coverSrc = rawCoverSrc.startsWith('http') ? rawCoverSrc : encodeURI(rawCoverSrc);
+
+  // Dedicated 16:9 widescreen cover with full song title & keyboard for video preview
+  const primaryWideCover = isEasy 
+    ? `/covers/${cleanBaseTitle} easy_wide.jpg` 
+    : `/covers/${cleanBaseTitle}_wide.jpg`;
+  const wideCoverSrc = encodeURI(primaryWideCover);
 
   const priceStr = String(price || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
@@ -606,28 +613,34 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 onClick={() => videoUrl && setShowLightbox(true)}
                 className={`w-full aspect-video rounded-xl bg-gradient-to-br from-dark-950 via-dark-900 to-purple-950/60 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex flex-col items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
               >
-                {/* Background Cover Thumbnail */}
-                {coverSrc && (
-                  <img
-                    src={coverSrc}
-                    alt={songTitle}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
-                    onError={(e) => {
-                      if (!e.currentTarget.dataset.fallbackTried) {
-                        e.currentTarget.dataset.fallbackTried = 'true';
-                        e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}.jpg`);
-                      } else {
-                        e.currentTarget.style.display = 'none';
-                      }
-                    }}
-                  />
-                )}
+                {/* 16:9 Widescreen Cover Thumbnail with Song Title */}
+                <img
+                  key={`${songTitle}-${difficulty}`}
+                  src={wideCoverSrc}
+                  alt={songTitle}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
+                  onError={(e) => {
+                    const step = parseInt(e.currentTarget.dataset.step || '0', 10);
+                    if (step === 0 && isEasy) {
+                      e.currentTarget.dataset.step = '1';
+                      e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}_wide.jpg`);
+                    } else if (step <= 1) {
+                      e.currentTarget.dataset.step = '2';
+                      e.currentTarget.src = encodeURI(isEasy ? `/covers/${cleanBaseTitle} easy.jpg` : `/covers/${cleanBaseTitle}.jpg`);
+                    } else if (step <= 2) {
+                      e.currentTarget.dataset.step = '3';
+                      e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}.jpg`);
+                    } else if (step <= 3) {
+                      e.currentTarget.dataset.step = '4';
+                      e.currentTarget.src = coverSrc;
+                    } else {
+                      e.currentTarget.style.display = 'none';
+                    }
+                  }}
+                />
 
-                {/* Contrast overlay so play button and label pop */}
-                <div className={`absolute inset-0 ${coverSrc ? 'bg-black/45 group-hover/thumb:bg-black/35 backdrop-blur-[0.5px]' : 'bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.15)_0%,transparent_70%)]'} pointer-events-none transition-colors duration-300`} />
-                {!coverSrc && (
-                  <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_24px] pointer-events-none" />
-                )}
+                {/* Subtle dark tint so neon cyan play button & badge pop, while title remains 100% visible & sharp */}
+                <div className="absolute inset-0 bg-black/25 group-hover/thumb:bg-black/15 transition-colors duration-300 pointer-events-none" />
 
                 {videoUrl && (
                   <div className="relative z-10 flex flex-col items-center justify-center gap-2.5">
@@ -892,6 +905,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             <video 
               ref={videoRef}
               src={videoUrl}
+              poster={wideCoverSrc}
               playsInline
               preload="auto"
               controlsList="nodownload nofullscreen"
