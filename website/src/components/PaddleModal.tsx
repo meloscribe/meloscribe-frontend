@@ -13,6 +13,7 @@ interface PaddleModalProps {
   difficulty?: 'Easy' | 'Original';
   videoPreviewUrl?: string;
   price?: string | number;
+  coverImage?: string;
 }
 
 const translations = {
@@ -248,12 +249,16 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl, price }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl, price, coverImage }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [downloadingType, setDownloadingType] = useState<string | null>(null);
+
+  const cleanBaseTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "").trim();
+  const rawCoverSrc = coverImage || `/covers/${cleanBaseTitle}_clean.jpg`;
+  const coverSrc = rawCoverSrc.startsWith('http') ? rawCoverSrc : encodeURI(rawCoverSrc);
 
   const priceStr = String(price || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
@@ -560,15 +565,25 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           
           {/* Mobile compact song header */}
           <div className="md:hidden flex items-center justify-between bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-3 rounded-xl w-full">
-            <div className="flex items-center gap-3">
-              <img 
-                src={`/covers/${songTitle.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
-                alt={songTitle}
-                className="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-dark-500/30"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+            <div 
+              onClick={() => videoUrl && setShowLightbox(true)}
+              className={`flex items-center gap-3 ${videoUrl ? 'cursor-pointer' : ''}`}
+            >
+              <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 dark:border-dark-500/30">
+                <img 
+                  src={coverSrc}
+                  alt={songTitle}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                {videoUrl && (
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <Play className="w-4 h-4 text-neon-cyan fill-current ml-0.5" />
+                  </div>
+                )}
+              </div>
               <div className="min-w-0">
                 <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
                 <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
@@ -591,16 +606,35 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 onClick={() => videoUrl && setShowLightbox(true)}
                 className={`w-full aspect-video rounded-xl bg-gradient-to-br from-dark-950 via-dark-900 to-purple-950/60 flex-shrink-0 relative overflow-hidden border border-gray-200 dark:border-dark-500/30 flex flex-col items-center justify-center ${videoUrl ? 'cursor-pointer group/thumb' : ''}`}
               >
-                {/* Ambient Radial Glow & Grid pattern */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.15)_0%,transparent_70%)] pointer-events-none" />
-                <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_24px] pointer-events-none" />
+                {/* Background Cover Thumbnail */}
+                {coverSrc && (
+                  <img
+                    src={coverSrc}
+                    alt={songTitle}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
+                    onError={(e) => {
+                      if (!e.currentTarget.dataset.fallbackTried) {
+                        e.currentTarget.dataset.fallbackTried = 'true';
+                        e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}.jpg`);
+                      } else {
+                        e.currentTarget.style.display = 'none';
+                      }
+                    }}
+                  />
+                )}
+
+                {/* Contrast overlay so play button and label pop */}
+                <div className={`absolute inset-0 ${coverSrc ? 'bg-black/45 group-hover/thumb:bg-black/35 backdrop-blur-[0.5px]' : 'bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.15)_0%,transparent_70%)]'} pointer-events-none transition-colors duration-300`} />
+                {!coverSrc && (
+                  <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_24px] pointer-events-none" />
+                )}
 
                 {videoUrl && (
                   <div className="relative z-10 flex flex-col items-center justify-center gap-2.5">
                     <div className="w-14 h-14 rounded-full bg-neon-cyan flex items-center justify-center text-dark-950 screaming-play-btn transition-transform duration-300 group-hover/thumb:scale-110 shadow-[0_0_25px_rgba(0,245,255,0.5)]">
                       <Play className="w-6 h-6 fill-current ml-1 text-dark-950" />
                     </div>
-                    <span className="px-2.5 py-0.5 rounded-full bg-black/60 border border-neon-cyan/30 text-neon-cyan text-[10px] font-semibold tracking-wider uppercase backdrop-blur-md">
+                    <span className="px-2.5 py-0.5 rounded-full bg-black/70 border border-neon-cyan/40 text-neon-cyan text-[10px] font-semibold tracking-wider uppercase backdrop-blur-md shadow-sm">
                       Watch Video Preview
                     </span>
                   </div>

@@ -909,17 +909,27 @@ function App() {
 
   // Auto-open product modal based on query parameter
   useEffect(() => {
-    if (currentPath === '/sheets' && allSongs.length > 0) {
+    if ((currentPath === '/sheets' || currentPath === '/') && allSongs.length > 0) {
       const params = new URLSearchParams(window.location.search);
-      const songSlug = params.get('song');
-      if (songSlug) {
+      const rawSongSlug = params.get('song');
+      if (rawSongSlug) {
         const toSlug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        const versionParam = params.get('version');
-        const matchedSongs = allSongs.filter((s: Song) => toSlug(s.title) === toSlug(songSlug));
+        let versionParam = params.get('version')?.toLowerCase() || null;
+        
+        let songSlug = rawSongSlug.toLowerCase();
+        if (songSlug.endsWith('-easy')) {
+          songSlug = songSlug.replace(/-easy$/, '');
+          if (!versionParam) versionParam = 'easy';
+        } else if (songSlug.endsWith('-original')) {
+          songSlug = songSlug.replace(/-original$/, '');
+          if (!versionParam) versionParam = 'original';
+        }
+
+        const matchedSongs = allSongs.filter((s: Song) => toSlug(s.title) === toSlug(songSlug) || toSlug(s.title) === toSlug(rawSongSlug));
         if (matchedSongs.length > 0) {
           let selected = matchedSongs[0];
           if (versionParam) {
-            const versionMatch = matchedSongs.find((s: Song) => s.difficulty?.toLowerCase() === versionParam.toLowerCase());
+            const versionMatch = matchedSongs.find((s: Song) => s.difficulty?.toLowerCase() === versionParam);
             if (versionMatch) {
               selected = versionMatch;
             }
@@ -1610,6 +1620,7 @@ function App() {
           difficulty={selectedSong.difficulty}
           videoPreviewUrl={selectedSong.videoPreviewUrl}
           price={selectedSong.price}
+          coverImage={selectedSong.coverImage}
         />
       )}
 
