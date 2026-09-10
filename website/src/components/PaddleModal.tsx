@@ -340,19 +340,15 @@ export default function PaddleModal({
   const cleanOriginalWide = coverImage 
     ? coverImage.replace('_clean.jpg', '_wide.jpg')
     : `/covers/${cleanBaseTitle}_wide.jpg`;
-  const cleanEasyWide = coverImage 
-    ? coverImage.replace('_clean.jpg', ' easy_wide.jpg')
-    : `/covers/${cleanBaseTitle} easy_wide.jpg`;
+  const standardCoverWithTitle = `/covers/${cleanBaseTitle}.jpg`;
   const cleanOriginalSquare = coverImage || `/covers/${cleanBaseTitle}_clean.jpg`;
 
-  const rawCoverSrc = isSelectedEasy ? cleanEasyWide : cleanOriginalSquare;
-  const coverSrc = rawCoverSrc.startsWith('http') ? rawCoverSrc : encodeURI(rawCoverSrc);
-
-  // Dedicated 16:9 widescreen cover with full song title & keyboard for video preview
-  const primaryWideCover = isSelectedEasy ? cleanEasyWide : cleanOriginalWide;
+  // Always use the same widescreen cover with full title & keyboard for both Original and Easy
+  const primaryWideCover = cleanOriginalWide;
   const wideCoverSrc = primaryWideCover.startsWith('http') ? primaryWideCover : encodeURI(primaryWideCover);
-  const fallbackWideCover = cleanOriginalWide.startsWith('http') ? cleanOriginalWide : encodeURI(cleanOriginalWide);
+  const fallbackWideCover = encodeURI(standardCoverWithTitle);
   const fallbackCleanCover = cleanOriginalSquare.startsWith('http') ? cleanOriginalSquare : encodeURI(cleanOriginalSquare);
+  const coverSrc = wideCoverSrc;
 
   const priceStr = String(currentPrice || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
@@ -668,7 +664,14 @@ export default function PaddleModal({
                   alt={displayTitle}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
+                    const step = parseInt(e.currentTarget.dataset.step || '0', 10);
+                    if (step === 0) {
+                      e.currentTarget.dataset.step = '1';
+                      e.currentTarget.src = fallbackWideCover;
+                    } else if (step === 1) {
+                      e.currentTarget.dataset.step = '2';
+                      e.currentTarget.src = fallbackCleanCover;
+                    }
                   }}
                 />
                 {videoUrl && (

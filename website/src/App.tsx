@@ -970,7 +970,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo and Nav links */}
-            <div className="flex items-center gap-2 sm:gap-8">
+            <div className="flex items-center gap-6 sm:gap-8">
               <a 
                 href="/" 
                 onClick={(e) => { e.preventDefault(); navigate('/'); }}
@@ -982,7 +982,7 @@ function App() {
                 </span>
               </a>
 
-              <nav className="flex items-center gap-2.5 sm:gap-6">
+              <nav className="flex items-center gap-3.5 sm:gap-6 ml-1 sm:ml-0">
                 <a 
                   href="/sheets" 
                   onClick={(e) => { e.preventDefault(); navigate('/sheets'); }}
