@@ -11,7 +11,9 @@
     "audioPreviewUrl": "/audio-previews/River Flows in You.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "previewStart": 110.3
+    "previewStart": 110.3,
+    "paymentsDisabled": false,
+    "isArrangeMe": false
   },
   {
     "id": "58",
