@@ -1182,7 +1182,7 @@ function App() {
                         <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
                           <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm ${
                             song.difficulty === 'Easy'
-                              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 dark:bg-amber-500/25 dark:border-amber-400/40 dark:text-amber-200'
+                              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 dark:bg-emerald-500/25 dark:border-emerald-400/40 dark:text-emerald-200'
                               : 'bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200'
                           }`}>
                             {song.difficulty}
@@ -1432,7 +1432,7 @@ function App() {
                         <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
                           <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm ${
                             song.difficulty === 'Easy'
-                              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 dark:bg-amber-500/25 dark:border-amber-400/40 dark:text-amber-200'
+                              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 dark:bg-emerald-500/25 dark:border-emerald-400/40 dark:text-emerald-200'
                               : 'bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200'
                           }`}>
                             {song.difficulty}

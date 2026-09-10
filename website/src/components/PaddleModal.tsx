@@ -674,8 +674,8 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               <div className="space-y-3">
                 {difficulty === 'Easy' && (
                   <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                    <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
                     </div>
                     <div>
                       <span className="font-semibold text-gray-900 dark:text-white">
