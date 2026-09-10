@@ -11,9 +11,7 @@
     "audioPreviewUrl": "/audio-previews/River Flows in You.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "previewStart": 110.3,
-    "paymentsDisabled": false,
-    "isArrangeMe": false
+    "previewStart": 110.3
   },
   {
     "id": "58",
@@ -120,7 +118,9 @@
     "stripePriceId": "pri_01kwap7psqhq1kadfgm1zvt17n",
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Sonne.mp3",
-    "kofiId": "prod_dummy123"
+    "kofiId": "prod_dummy123",
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "3",
@@ -134,10 +134,7 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Je te laisserai des mots.mp3",
     "kofiId": "prod_dummy123",
-    "pinned": false,
-    "arrangemeUrl": "https://www.sheetmusicdirect.com/de-DE/se/ID_No/2120828/Product.aspx",
-    "isArrangeMe": true,
-    "paymentsDisabled": false
+    "pinned": false
   },
   {
     "id": "4",
@@ -202,7 +199,9 @@
     "coverImage": "/covers/The Scientist_clean.jpg",
     "audioPreviewUrl": "/audio-previews/The Scientist.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "theme": "warm",
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "13",
@@ -215,7 +214,9 @@
     "coverImage": "/covers/Mockingbird_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Mockingbird.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "theme": "warm",
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "14",
@@ -321,7 +322,9 @@
     "stripePriceId": "pri_01kwap8afx26p78hem1c2hz3n9",
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Hallelujah.mp3",
-    "kofiId": "prod_dummy123"
+    "kofiId": "prod_dummy123",
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "23",
@@ -386,7 +389,9 @@
     "coverImage": "/covers/Believer_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Believer.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm"
+    "theme": "warm",
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "55",
