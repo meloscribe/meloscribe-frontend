@@ -1166,12 +1166,12 @@ function App() {
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
                           <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 sm:pt-0 px-2 sm:px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <div className="min-h-[38px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
-                              <h3 className="text-white font-display font-bold text-xs sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
+                            <div className="min-h-[40px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
+                              <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-gray-300 font-sans text-[9px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
+                            <p className="text-gray-300 font-sans text-[10.5px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
                               — {song.artist} —
                             </p>
                           </div>
@@ -1412,12 +1412,12 @@ function App() {
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
                           <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 sm:pt-0 px-2 sm:px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <div className="min-h-[38px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
-                              <h3 className="text-white font-display font-bold text-xs sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
+                            <div className="min-h-[40px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
+                              <h3 className="text-white font-display font-bold text-sm sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-gray-300 font-sans text-[9px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
+                            <p className="text-gray-300 font-sans text-[10.5px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
                               — {song.artist} —
                             </p>
                           </div>
