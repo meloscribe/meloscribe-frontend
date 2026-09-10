@@ -17,7 +17,7 @@ export interface Song {
   isCondensed?: boolean;
   condensed?: boolean;
   paymentsDisabled?: boolean;
-  format?: 'viral_part' | 'full_arrangement';
+  format?: 'full_arrangement';
   videoPreviewUrl?: string;
   theme?: string;
   pinned?: boolean;

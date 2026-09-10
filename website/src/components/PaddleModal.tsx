@@ -9,7 +9,6 @@ interface PaddleModalProps {
   songTitle: string;
   songArtist: string;
   language: string;
-  format?: 'viral_part' | 'full_arrangement';
   difficulty?: 'Easy' | 'Original';
   videoPreviewUrl?: string;
   price?: string | number;
@@ -249,7 +248,7 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, format = 'full_arrangement', difficulty = 'Original', videoPreviewUrl, price, coverImage }: PaddleModalProps) {
+export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, difficulty = 'Original', videoPreviewUrl, price, coverImage }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -483,8 +482,6 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
     setIsRedirecting(false);
   };
 
-  const isCondensed = format === 'viral_part';
-
   if (!isOpen) return null;
 
   return (
@@ -596,12 +593,8 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
               </div>
             </div>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-              isCondensed 
-                ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
-                : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20'
-            }`}>
-              {isCondensed ? t.viralPartTitle : t.fullArrangementTitle}
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20">
+              {t.fullArrangementTitle}
             </span>
           </div>
 
@@ -661,20 +654,16 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             </div>
 
             {/* Format Info Banner */}
-            <div className={`p-3.5 rounded-xl border text-sm flex items-start gap-2.5 ${
-              isCondensed 
-                ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 dark:bg-amber-500/5 dark:border-amber-500/10' 
-                : 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10'
-            }`}>
+            <div className="p-3.5 rounded-xl border text-sm flex items-start gap-2.5 bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10">
               <div className="mt-0.5 text-base flex-shrink-0">
                 ✨
               </div>
               <div>
                 <p className="font-semibold text-gray-900 dark:text-white">
-                  {isCondensed ? t.viralPartTitle : t.fullArrangementTitle}
+                  {t.fullArrangementTitle}
                 </p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                  {isCondensed ? t.viralPartDesc : t.fullArrangementDesc}
+                  {t.fullArrangementDesc}
                 </p>
               </div>
             </div>
@@ -705,10 +694,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed ? t.pdfCondensedTitle : t.pdfTitle}
+                      {t.pdfTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed ? t.pdfCondensedDesc : t.pdfDesc}
+                      {t.pdfDesc}
                     </p>
                   </div>
                 </div>
@@ -719,10 +708,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed ? t.midiCondensedTitle : t.midiTitle}
+                      {t.midiTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed ? t.midiCondensedDesc : t.midiDesc}
+                      {t.midiDesc}
                     </p>
                   </div>
                 </div>
@@ -733,10 +722,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {isCondensed ? t.videoCondensedTitle : t.videoTitle}
+                      {t.videoTitle}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {isCondensed ? t.videoCondensedDesc : t.videoDesc}
+                      {t.videoDesc}
                     </p>
                   </div>
                 </div>
@@ -830,16 +819,12 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     <p className="text-[11px] text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
                       {t.packageIncludesDesc}
                     </p>
-                    <div className={`p-2.5 rounded-xl text-xs font-semibold text-left ${
-                      isCondensed 
-                        ? 'bg-amber-500/10 text-amber-500 border border-amber-500/15' 
-                        : 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15'
-                    }`}>
+                    <div className="p-2.5 rounded-xl text-xs font-semibold text-left bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15">
                       <p className="font-bold mb-1">
-                        {isCondensed ? `✨ ${t.viralPartTitle}` : `✨ ${t.fullArrangementTitle}`}
+                        ✨ {t.fullArrangementTitle}
                       </p>
                       <p className="text-[11px] font-normal leading-relaxed opacity-95">
-                        {isCondensed ? t.viralPartDesc : t.fullArrangementDesc}
+                        {t.fullArrangementDesc}
                       </p>
                     </div>
                   </div>

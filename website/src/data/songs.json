@@ -79,7 +79,7 @@
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
     "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
     "theme": "violet",
-    "format": "viral_part"
+    "format": "full_arrangement"
   },
   {
     "id": "global_settings",
@@ -159,7 +159,7 @@
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "stripePriceId": "pri_01kwap7vmg93500mvg8e0rj82a",
     "theme": "cold",
-    "format": "viral_part"
+    "format": "full_arrangement"
   },
   {
     "id": "9",
@@ -171,7 +171,7 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "stripePriceId": "pri_01kwap7wtwpnprpwpbtmrddzh3",
     "theme": "warm",
-    "format": "viral_part",
+    "format": "full_arrangement",
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
     "kofiId": "prod_dummy123"
   },
@@ -309,7 +309,7 @@
     "theme": "cold",
     "audioPreviewUrl": "/audio-previews/Silent Night.mp3",
     "kofiId": "prod_dummy123",
-    "format": "viral_part"
+    "format": "full_arrangement"
   },
   {
     "id": "22",
@@ -405,6 +405,6 @@
     "audioPreviewUrl": "/audio-previews/I don't know.mp3",
     "gradient": "from-purple-500/20 via-dark-700 to-purple-500/5",
     "theme": "violet",
-    "format": "viral_part"
+    "format": "full_arrangement"
   }
 ]
