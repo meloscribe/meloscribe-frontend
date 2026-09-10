@@ -78,16 +78,24 @@ npm run dev
   - Steuer- und Support-Methoden-Hinweistexte unter dem Checkout-Button entfernt, Button in "Pay Securely" umbenannt und Stripe-Titel durch "Proceed to secure checkout to get instant access" ersetzt
   - Mobilversion restrukturiert: Features-Checkliste ausgeblendet, kompakter Song-Header und eine Inhaltsangabe direkt über dem Checkout-Button
   - "Secure SSL Connection" Footer auf Mobile ausgeblendet
-  - "Viral Part" psychologisch reframed (Vorteilsargumentation statt Warnungen/Einschränkungen) und visuell einheitlich in warmem Bernstein-Gelb/Orange gehalten auf Desktop und Mobile
-- [x] "Get on ArrangeMe ↗" Redirect & "Currently Unavailable" Status:
+  - Checkout-Modal vollständig auf Full Arrangements ausgerichtet: Sämtliche Viral-Part- und Condensed-Texte restlos entfernt.
+- [x] "Get on Sheet Music Direct ↗" Redirect & "Currently Unavailable" Status:
   - `Song` Interface um `arrangemeUrl` und `isArrangeMe` erweitert.
-  - Karten auf Startseite & Notenkatalog (`/sheets`) zeigen bei ArrangeMe-Produkten einen stylischen "Get on ArrangeMe ↗" Button mit `ArrowUpRight` Icon und feiner violetter Akzentuierung.
-  - Klick auf Karte oder Button öffnet direkt das ArrangeMe-Produkt (Sheet Music Plus / Direct) in einem neuen Tab.
+  - Karten auf Startseite & Notenkatalog (`/sheets`) zeigen bei ArrangeMe/Sheet Music Direct-Produkten einen stylischen "Get on Sheet Music Direct ↗" Button mit `ArrowUpRight` Icon und violetter Akzentuierung.
+  - Klick auf Karte oder Button öffnet direkt das Sheet Music Direct Produkt in einem neuen Tab.
   - "Currently Unavailable" / "Derzeit nicht verfügbar" als sauberer, deaktivierter Button-Zustand für deaktivierte Zahlungen (`paymentsDisabled: true`).
   - Vollständige Lokalisierung in allen 5 Sprachen (DE, EN, FR, ES, IT).
+- [x] Vollständige Bereinigung von Viral Part & Card-Neugestaltung:
+  - Sämtliche "Viral Part" und "Full Arrangement" Format-Tags von den Song-Karten und aus dem Suchfilter entfernt.
+  - Schwierigkeitsgrad-Badge (`Original` / `Easy`) als schwebendes Glass-Pill oben links über das Cover-Bild gelegt (`absolute top-2.5 left-2.5 z-10 pointer-events-none`).
+  - Untere Badge-Reihe unter dem Cover restlos entfernt für ein ruhiges, modernes Layout.
+  - "Currently Unavailable" Buttons technisch abgesichert mit `disabled`, `tabIndex={-1}` und `pointer-events-none cursor-not-allowed`.
+- [x] SEO-, Crawler- & OpenGraph-Reparatur für Social Media (Pinterest / Meta / Google):
+  - Fehlerhafte `hreflang`-Tags in `index.html`, die fälschlicherweise auf die fremde Domain `meloscribe.com` verwiesen, auf `https://www.meloscribe.dev` korrigiert.
+  - Vollständige OpenGraph- und Twitter-Metatags hinzugefügt (`og:image`, `og:url`, `og:site_name`, `og:title`, `og:description`).
+  - Valide `sitemap.xml` im `public/`-Ordner angelegt, um 404-Fehler von Crawlern (`robots.txt`) zu beheben.
 
 ## Active Blockers / Next Steps
 
-- Keine aktiven Blockaden. Das Payment-Gateway wurde am 2. Juli vollständig auf Stripe Checkout (redirects via FastAPI-Sessions) migriert. Die Domain-Verifizierung läuft fehlerfrei.
-- End-to-end sandbox checkout flows have been fully verified with client event redirection and direct transaction lookup fallback; live webhook sign verification is active.
-
+- Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout. Vercel-Deployment ist live.
+- Pinterest Domain-Unblock Appeal eingereicht nach Behebung der Crawler-Diskrepanzen.

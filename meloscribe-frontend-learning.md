@@ -86,6 +86,25 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 ---
 
 ### songs.json sync — Python pipeline writes, React reads
-- The desktop upload pipeline (`r2_uploader.py --website_sync`) writes directly to `website/src/songs.json` in this repo. React reads it at build time.
-- Ensure the pipeline path reference points to `C:\Dev\meloscribe-frontend\website\src\songs.json`.
-- Songs now use `paddle_product_id` (not `kofiId`) as the purchase identifier.
+- The desktop upload pipeline writes directly to `website/src/songs.json` in this repo and syncs to Oracle VM. React reads it at build time.
+- Ensure the pipeline path reference points to `C:\Dev\meloscribe-frontend\website\src\data\songs.json`.
+- Songs use `stripePriceId` as the primary purchase identifier.
+
+---
+
+### Social Crawler & Pinterest Spam Flag Prevention (hreflang & OpenGraph)
+- **hreflang domain consistency**: Hardcoded canonical or `hreflang` tags pointing to an unowned or parked domain (e.g. `.com` instead of `.dev`) trigger anti-cloaking/phishing flags in automated social crawlers (Pinterestbot, Meta Crawler). Ensure all alternate links match the active canonical domain.
+- **Client-Side SPA OpenGraph Hydration**: Because Pinterestbot does not run heavy client-side JavaScript, critical OpenGraph tags (`og:image`, `og:url`, `og:site_name`) must be pre-rendered in static `index.html`.
+- **Sitemap 404s**: When `robots.txt` specifies a sitemap, ensure `public/sitemap.xml` exists physically so crawler requests do not fail with 404 or fall back to client-side HTML.
+
+---
+
+### Action Button Disabled States in Modern CSS
+- Visually styling a button with `opacity-50` and `cursor-not-allowed` is insufficient for accessibility and touch devices.
+- Always apply `disabled={isPaymentsDisabled}`, `tabIndex={-1}`, and `pointer-events-none` to prevent empty modal triggers and accidental clicks.
+
+---
+
+### Floating Cover Badges for UI Cleanliness
+- Placing multiple badges (Difficulty, Format, Pricing) in a secondary metadata row below card covers clutters the vertical rhythm.
+- Moving the single difficulty indicator (`Original` / `Easy`) into a floating frosted glass badge (`absolute top-2.5 left-2.5 z-10 backdrop-blur-md`) directly on the cover artwork creates a much cleaner, app-like aesthetic and frees up space for the primary action button.
