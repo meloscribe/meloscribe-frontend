@@ -676,9 +676,6 @@ export default function PaddleModal({
                 <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20">
-              {t.fullArrangementTitle}
-            </span>
           </div>
 
           {/* Left Column: Song Details & Included features — hidden on mobile */}
@@ -733,21 +730,6 @@ export default function PaddleModal({
               <div className="min-w-0">
                 <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{displayTitle}</h4>
                 <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
-              </div>
-            </div>
-
-            {/* Format Info Banner */}
-            <div className="p-3.5 rounded-xl border text-sm flex items-start gap-2.5 bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan dark:bg-neon-cyan/5 dark:border-neon-cyan/10">
-              <div className="mt-0.5 text-base flex-shrink-0">
-                ✨
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  {t.fullArrangementTitle}
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                  {t.fullArrangementDesc}
-                </p>
               </div>
             </div>
 
@@ -935,17 +917,9 @@ export default function PaddleModal({
                     <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
                       {t.packageIncludes}
                     </p>
-                    <p className="text-[11px] text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
+                    <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">
                       {t.packageIncludesDesc}
                     </p>
-                    <div className="p-2.5 rounded-xl text-xs font-semibold text-left bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/15">
-                      <p className="font-bold mb-1">
-                        ✨ {t.fullArrangementTitle}
-                      </p>
-                      <p className="text-[11px] font-normal leading-relaxed opacity-95">
-                        {t.fullArrangementDesc}
-                      </p>
-                    </div>
                   </div>
 
                   {/* Action Subtext */}

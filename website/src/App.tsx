@@ -35,16 +35,8 @@ const resolveAudioUrl = (song: Song): string => {
     ? 'http://localhost:8787'
     : 'https://api.meloscribe.dev';
 
-  let url = song.audioPreviewUrl;
-  const suffix = song.difficulty === 'Easy' ? ' Easy' : '';
-  if (!url) {
-    const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`;
-  } else if (url.startsWith('/audio-previews/')) {
-    const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-    url = `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`;
-  }
-  return url;
+  const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
+  return `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
 };
 
 // Translations
@@ -1017,7 +1009,7 @@ function App() {
 
             {/* Right side - Theme + Language + Ko-fi support link */}
             <div className="flex items-center gap-1.5 sm:gap-3">
-              {/* Audio Preview Mute Toggle */}
+              {/* Audio Preview Mute Toggle - desktop PC only */}
               <button
                 onClick={() => {
                   const newMuted = !isMuted;
@@ -1025,7 +1017,7 @@ function App() {
                   localStorage.setItem('isMuted', String(newMuted));
                   playMuteSound(newMuted);
                 }}
-                className={`flex items-center justify-center p-1.5 sm:p-2 rounded-lg border transition-all duration-300 ${
+                className={`hidden md:flex items-center justify-center p-1.5 sm:p-2 rounded-lg border transition-all duration-300 ${
                   !isMuted 
                     ? 'bg-neon-cyan/10 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle' 
                     : 'bg-gray-100 border-gray-300 text-gray-600 dark:bg-dark-700/50 dark:border-dark-500/50 dark:text-gray-300 hover:text-neon-cyan hover:border-neon-cyan'
@@ -1130,7 +1122,7 @@ function App() {
               </div>
 
               {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-sm sm:max-w-md md:max-w-none mx-auto">
                 {(() => {
                   const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned);
                   const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned);
@@ -1172,7 +1164,7 @@ function App() {
                         
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-5 sm:pt-0 px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
                             <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
                               <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
                                 {song.title}
@@ -1185,8 +1177,8 @@ function App() {
                         )}
                         
                         {/* Floating Difficulty Badge */}
-                        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-                          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
+                        <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
+                          <span className="px-2 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
@@ -1418,7 +1410,7 @@ function App() {
                         
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-5 sm:pt-0 px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
                             <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
                               <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
                                 {song.title}
@@ -1431,8 +1423,8 @@ function App() {
                         )}
                         
                         {/* Floating Difficulty Badge */}
-                        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-                          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
+                        <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
+                          <span className="px-2 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
