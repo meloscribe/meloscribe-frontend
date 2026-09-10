@@ -647,10 +647,11 @@ function App() {
       }
       setPlayingSongId(song.id);
       const start = performance.now();
+      const targetVolume = 0.40;
       fadeIntervalRef.current = window.setInterval(() => {
         const elapsed = performance.now() - start;
         const progress = Math.min(elapsed / 300, 1);
-        audio.volume = progress * 1.0;
+        audio.volume = progress * targetVolume;
         if (progress >= 1) {
           clearInterval(fadeIntervalRef.current!);
           fadeIntervalRef.current = null;
@@ -1121,19 +1122,19 @@ function App() {
                 <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">{t.popularDesc}</p>
               </div>
 
-              {/* Dynamic Song Grid mapping first 3 items from songs.ts */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-sm sm:max-w-md md:max-w-none mx-auto">
+              {/* Dynamic Song Grid: 2 cards side-by-side on mobile, 3 cards on desktop */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                 {(() => {
                   const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned);
                   const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned);
                   const featuredSongs = [...pinnedSongs, ...backfillSongs].slice(0, 3);
-                  return featuredSongs.map((song) => {
+                  return featuredSongs.map((song, idx) => {
                     const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                     const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
                     return (
                       <div
                         key={song.id}
-                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')}`}
+                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} ${idx === 2 ? 'hidden md:flex' : 'flex'}`}
                         onMouseEnter={() => handleCardMouseEnter(song)}
                         onMouseLeave={handleCardMouseLeave}
                       >
