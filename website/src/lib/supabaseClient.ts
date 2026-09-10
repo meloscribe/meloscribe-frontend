@@ -4,6 +4,7 @@ export interface Suggestion {
   artist: string;
   votes: number;
   created_at: string;
+  status?: string;
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 

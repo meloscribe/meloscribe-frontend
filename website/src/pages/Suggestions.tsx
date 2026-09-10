@@ -56,6 +56,9 @@ function getSimilarityScore(a: string, b: string): number {
 
 export default function Suggestions({ onBack, language, showToast }: SuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [openSuggestions, setOpenSuggestions] = useState<Suggestion[]>([]);
+  const [completedSuggestions, setCompletedSuggestions] = useState<Suggestion[]>([]);
+  const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [votedIds, setVotedIds] = useState<Record<string, boolean>>({});
@@ -88,6 +91,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'requests',
       loading: 'Loading suggestions...',
       alreadyPublished: 'This song is already available on Meloscribe!',
+      requestsTab: 'Requests',
+      completedTab: 'Completed',
+      availableInCatalog: 'Available in Catalog',
+      noCompleted: 'No completed arrangements yet.',
     },
     de: {
       title: 'Community Wunschliste',
@@ -111,6 +118,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'Anfragen',
       loading: 'Wünsche werden geladen...',
       alreadyPublished: 'Dieser Song ist bereits auf Meloscribe verfügbar!',
+      requestsTab: 'Offene Wünsche',
+      completedTab: 'Bereits arrangiert',
+      availableInCatalog: 'Im Noten-Katalog',
+      noCompleted: 'Noch keine arrangierten Wünsche.',
     },
     fr: {
       title: 'Demandes de la Communauté',
@@ -134,6 +145,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'demandes',
       loading: 'Chargement des demandes...',
       alreadyPublished: 'Cette chanson est déjà disponible sur Meloscribe !',
+      requestsTab: 'Demandes',
+      completedTab: 'Terminées',
+      availableInCatalog: 'Dans le catalogue',
+      noCompleted: 'Aucune demande terminée pour le moment.',
     },
     es: {
       title: 'Lista de Peticiones',
@@ -157,6 +172,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'peticiones',
       loading: 'Cargando peticiones...',
       alreadyPublished: '¡Esta canción ya está disponible en Meloscribe!',
+      requestsTab: 'Peticiones',
+      completedTab: 'Completadas',
+      availableInCatalog: 'En el catálogo',
+      noCompleted: 'Aún no hay peticiones completadas.',
     },
     it: {
       title: 'Richieste della Community',
@@ -180,6 +199,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       requestsLabel: 'richieste',
       loading: 'Caricamento dei suggerimenti...',
       alreadyPublished: 'Questa canzone è già disponibile su Meloscribe!',
+      requestsTab: 'Richieste',
+      completedTab: 'Completate',
+      availableInCatalog: 'Nel catalogo',
+      noCompleted: 'Nessuna richiesta completata ancora.',
     }
   };
 
@@ -190,27 +213,42 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
     setLoading(true);
     const data = await fetchSuggestions();
     
-    // Normalize and clean all published song titles and artists from songsData
-    const publishedList = songsData.map(song => ({
-      title: normalizeString(song.title),
-      artist: normalizeString(song.artist)
-    }));
-    
-    // Filter suggestions list: keep only suggestions that are NOT in publishedList
-    const filtered = data.filter(sug => {
+    const openList: Suggestion[] = [];
+    const completedList: Suggestion[] = [];
+
+    data.forEach(sug => {
       const sugTitle = normalizeString(sug.title);
       const sugArtist = normalizeString(sug.artist);
-      
-      const alreadyPublished = publishedList.some(pub => {
-        const titleMatch = pub.title === sugTitle || pub.title.includes(sugTitle) || sugTitle.includes(pub.title);
-        const artistMatch = pub.artist === sugArtist || pub.artist.includes(sugArtist) || sugArtist.includes(pub.artist);
-        return titleMatch && artistMatch;
+      const isFull = /\b(full|ganzer|ganze)\b/i.test(sug.title);
+      const isEasy = /\b(easy|einfach|leichte)\b/i.test(sug.title);
+      const isRework = /\b(rework|re-work|v2)\b/i.test(sug.title);
+
+      const catalogMatch = (songsData as any[]).find(song => {
+        if (song.hidden) return false;
+        const pubTitle = normalizeString(song.title);
+        const pubArtist = normalizeString(song.artist);
+        const titleMatch = pubTitle === sugTitle || pubTitle.includes(sugTitle) || sugTitle.includes(pubTitle);
+        const artistMatch = !sugArtist || pubArtist === sugArtist || pubArtist.includes(sugArtist) || sugArtist.includes(pubArtist);
+        
+        if (titleMatch && artistMatch) {
+          if (isRework) return false;
+          if (isFull && song.format !== 'full_arrangement') return false;
+          if (isEasy && !song.hasEasy) return false;
+          return true;
+        }
+        return false;
       });
-      
-      return !alreadyPublished;
+
+      if (sug.status === 'completed' || catalogMatch) {
+        completedList.push({ ...sug, status: 'completed' });
+      } else {
+        openList.push(sug);
+      }
     });
 
-    setSuggestions(filtered);
+    setOpenSuggestions(openList);
+    setCompletedSuggestions(completedList);
+    setSuggestions(openList);
     setLoading(false);
   };
 
@@ -272,12 +310,25 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
     const normInputTitle = normalizeString(title);
     const normInputArtist = normalizeString(artist);
+    const isFullRequest = /\b(full|ganzer|ganze)\b/i.test(title);
+    const isEasyRequest = /\b(easy|einfach|leichte)\b/i.test(title);
+    const isReworkRequest = /\b(rework|re-work|v2)\b/i.test(title);
 
-    // 0. Check if already published on website
-    const isAlreadyPublished = songsData.some(song => {
+    // 0. Check if already published on website with requested format
+    const isAlreadyPublished = (songsData as any[]).some(song => {
+      if (song.hidden) return false;
       const pubTitle = normalizeString(song.title);
       const pubArtist = normalizeString(song.artist);
-      return pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
+      const titleMatches = pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
+      const artistMatches = !normInputArtist || pubArtist === normInputArtist || pubArtist.includes(normInputArtist) || normInputArtist.includes(pubArtist);
+      
+      if (titleMatches && artistMatches) {
+        if (isReworkRequest) return false;
+        if (isFullRequest && song.format !== 'full_arrangement') return false;
+        if (isEasyRequest && !song.hasEasy) return false;
+        return true;
+      }
+      return false;
     });
 
     if (isAlreadyPublished) {
@@ -415,21 +466,51 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
         {/* Leaderboard Table/List */}
         <div className="glass-card p-6 sm:p-8 rounded-2xl border border-gray-200/80 bg-white/70 backdrop-blur-md dark:border-dark-500/50 dark:bg-dark-800/80">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/50 dark:border-dark-600/50">
-            <h3 className="text-lg font-display font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <Music className="w-5 h-5 text-neon-pink" />
-              <span>{t.leaderboard}</span>
-            </h3>
-            <span className="text-xs text-gray-500 dark:text-gray-400">{suggestions.length} {t.requestsLabel}</span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200/50 dark:border-dark-600/50">
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-display font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Music className="w-5 h-5 text-neon-pink" />
+                <span>{t.leaderboard}</span>
+              </h3>
+              <div className="flex items-center rounded-lg bg-gray-100 dark:bg-dark-900/60 p-1 border border-gray-200/60 dark:border-dark-700/50 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('open')}
+                  className={`px-3 py-1 rounded-md transition-all font-medium cursor-pointer ${
+                    activeTab === 'open'
+                      ? 'bg-neon-cyan/20 text-neon-cyan font-semibold shadow-sm'
+                      : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                >
+                  {t.requestsTab} ({openSuggestions.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('completed')}
+                  className={`px-3 py-1 rounded-md transition-all font-medium cursor-pointer ${
+                    activeTab === 'completed'
+                      ? 'bg-emerald-500/20 text-emerald-400 font-semibold shadow-sm'
+                      : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                >
+                  {t.completedTab} ({completedSuggestions.length})
+                </button>
+              </div>
+            </div>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {activeTab === 'open' ? openSuggestions.length : completedSuggestions.length} {t.requestsLabel}
+            </span>
           </div>
 
           {loading ? (
             <div className="text-center py-12 text-gray-500">{t.loading}</div>
-          ) : suggestions.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">{t.noSuggestions}</div>
+          ) : (activeTab === 'open' ? openSuggestions : completedSuggestions).length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              {activeTab === 'open' ? t.noSuggestions : t.noCompleted}
+            </div>
           ) : (
             <div className="flex flex-col gap-4">
-              {suggestions.map((sug, idx) => {
+              {(activeTab === 'open' ? openSuggestions : completedSuggestions).map((sug, idx) => {
                 const hasVoted = votedIds[sug.id];
                 return (
                   <div
@@ -453,19 +534,29 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
                       </div>
                     </div>
 
-                    {/* Upvote Arrow Button */}
-                    <button
-                      onClick={() => handleUpvote(sug.id, sug.votes, sug.title)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 cursor-pointer ${
-                        hasVoted 
-                          ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle'
-                          : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle'
-                      }`}
-                      title={hasVoted ? 'Already voted' : 'Upvote song request'}
-                    >
-                      <ChevronUp className={`w-4 h-4 sm:w-5 h-5 ${!hasVoted ? 'animate-bounce' : ''}`} />
-                      <span>{sug.votes}</span>
-                    </button>
+                    {/* Action: Upvote Arrow Button or Completed Badge */}
+                    {activeTab === 'completed' ? (
+                      <button
+                        onClick={onBack}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all font-semibold text-xs cursor-pointer"
+                        title="Available in Catalog - View Sheet Music"
+                      >
+                        <span>✓ {t.availableInCatalog}</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleUpvote(sug.id, sug.votes, sug.title)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 cursor-pointer ${
+                          hasVoted 
+                            ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle'
+                            : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle'
+                        }`}
+                        title={hasVoted ? 'Already voted' : 'Upvote song request'}
+                      >
+                        <ChevronUp className={`w-4 h-4 sm:w-5 h-5 ${!hasVoted ? 'animate-bounce' : ''}`} />
+                        <span>{sug.votes}</span>
+                      </button>
+                    )}
                   </div>
                 );
               })}

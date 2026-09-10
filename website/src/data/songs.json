@@ -49,8 +49,7 @@
     "coverImage": "/covers/Sweetest Rain_clean.jpg",
     "audioPreviewUrl": "/audio-previews/Sweetest Rain.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "theme": "warm",
-    "pinned": true
+    "theme": "warm"
   },
   {
     "id": "54",
@@ -126,8 +125,7 @@
     "stripePriceId": "pri_01kwap7r150vgfbnxjjekmr06j",
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Je te laisserai des mots.mp3",
-    "kofiId": "prod_dummy123",
-    "pinned": false
+    "kofiId": "prod_dummy123"
   },
   {
     "id": "4",
@@ -274,8 +272,7 @@
     "coverImage": "/covers/God Rest Ye Merry_clean.jpg",
     "audioPreviewUrl": "/audio-previews/God Rest Ye Merry.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
-    "theme": "cold",
-    "pinned": true
+    "theme": "cold"
   },
   {
     "id": "19",

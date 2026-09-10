@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight } from 'lucide-react';
+import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
@@ -93,6 +93,7 @@ const translations = {
     navSuggestions: 'Suggestions',
     muteAudio: 'Mute Audio Preview',
     unmuteAudio: 'Unmute Audio Preview',
+    trending: 'Trending',
   },
   de: {
     brand: 'meloscribe',
@@ -146,6 +147,7 @@ const translations = {
     navSuggestions: 'Wunschliste',
     muteAudio: 'Audio-Vorschau stummschalten',
     unmuteAudio: 'Audio-Vorschau aktivieren',
+    trending: 'Beliebt',
   },
   fr: {
     brand: 'meloscribe',
@@ -199,6 +201,7 @@ const translations = {
     navSuggestions: 'Suggestions',
     muteAudio: 'Couper l\'aperçu audio',
     unmuteAudio: 'Activer l\'aperçu audio',
+    trending: 'Tendance',
   },
   es: {
     brand: 'meloscribe',
@@ -252,6 +255,7 @@ const translations = {
     navSuggestions: 'Sugerencias',
     muteAudio: 'Silenciar vista previa de audio',
     unmuteAudio: 'Activar vista previa de audio',
+    trending: 'Tendencia',
   },
   it: {
     brand: 'meloscribe',
@@ -305,6 +309,7 @@ const translations = {
     navSuggestions: 'Suggerimenti',
     muteAudio: 'Disattiva l\'anteprima audio',
     unmuteAudio: 'Attiva l\'anteprima audio',
+    trending: 'Popolare',
   },
 };
 
@@ -1125,9 +1130,8 @@ function App() {
               {/* Dynamic Song Grid: 2 cards side-by-side on mobile, 3 cards on desktop */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                 {(() => {
-                  const pinnedSongs = allSongs.filter(song => !song.hidden && song.pinned);
-                  const backfillSongs = allSongs.filter(song => !song.hidden && !song.pinned);
-                  const featuredSongs = [...pinnedSongs, ...backfillSongs].slice(0, 3);
+                  // Dynamic Top 3 (desktop) / Top 2 (mobile): automatically selected from top-performing catalog items
+                  const featuredSongs = allSongs.filter(song => !song.hidden).slice(0, 3);
                   return featuredSongs.map((song, idx) => {
                     const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                     const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
@@ -1171,8 +1175,8 @@ function App() {
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-gray-300 font-sans text-[10.5px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
-                              — {song.artist} —
+                            <p className="text-gray-200 text-[10.5px] sm:text-xs md:text-sm font-medium tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] max-w-[90%] truncate m-0">
+                              {song.artist}
                             </p>
                           </div>
                         )}
@@ -1184,6 +1188,14 @@ function App() {
                           </span>
                         </div>
                         
+                        {/* Floating Trending Badge on Featured Cards */}
+                        <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-10 pointer-events-none">
+                          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] sm:text-[9.5px] font-semibold bg-rose-500/20 border border-rose-500/40 text-rose-300 backdrop-blur-md shadow-sm">
+                            <Flame className="w-2.5 h-2.5 text-rose-400 fill-current" />
+                            <span>{t.trending}</span>
+                          </span>
+                        </div>
+
                         {/* Audio Visualizer Overlay */}
                         <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
                           <div className="visualizer-bar" />
