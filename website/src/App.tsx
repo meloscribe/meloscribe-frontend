@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download } from 'lucide-react';
+import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
@@ -69,7 +69,8 @@ const translations = {
     popularArrangements: 'Favorite Arrangements',
     popularDesc: 'Discover our handpicked favorite piano sheets and arrangements',
     downloadSheets: 'Buy Sheets',
-    currentlyDisabled: 'Currently Disabled',
+    currentlyDisabled: 'Currently Unavailable',
+    getOnArrangeMe: 'Get on ArrangeMe',
     viewAll: 'View All Arrangements',
     joinCommunity: 'Join the Community',
     communityDesc: 'Follow us for tutorials, new releases, and behind-the-scenes',
@@ -121,7 +122,8 @@ const translations = {
     popularArrangements: 'Lieblings-Arrangements',
     popularDesc: 'Entdecke unsere handverlesenen Lieblings-Klaviernoten und Arrangements',
     downloadSheets: 'Noten kaufen',
-    currentlyDisabled: 'Derzeit deaktiviert',
+    currentlyDisabled: 'Derzeit nicht verfügbar',
+    getOnArrangeMe: 'Auf ArrangeMe holen',
     viewAll: 'Alle Arrangements ansehen',
     joinCommunity: 'Werde Teil der Community',
     communityDesc: 'Folge uns für Tutorials, Neuerscheinungen und Hinter den Kulissen',
@@ -173,7 +175,8 @@ const translations = {
     popularArrangements: 'Arrangements favoris',
     popularDesc: 'Découvrez nos partitions de piano et arrangements favoris',
     downloadSheets: 'Acheter',
-    currentlyDisabled: 'Actuellement désactivé',
+    currentlyDisabled: 'Actuellement indisponible',
+    getOnArrangeMe: 'Obtenir sur ArrangeMe',
     viewAll: 'Voir tous les arrangements',
     joinCommunity: 'Reignez la communauté',
     communityDesc: 'Suivez-nous pour des tutoriels, de nouvelles sorties et les coulisses',
@@ -225,7 +228,8 @@ const translations = {
     popularArrangements: 'Arreglos favoritos',
     popularDesc: 'Descubre nuestros arreglos y partituras favoritos',
     downloadSheets: 'Comprar',
-    currentlyDisabled: 'Actualmente desactivado',
+    currentlyDisabled: 'Actualmente no disponible',
+    getOnArrangeMe: 'Obtener en ArrangeMe',
     viewAll: 'Ver todos los arreglos',
     joinCommunity: 'Únete a la comunidad',
     communityDesc: 'Síguenos para tutoriales, nuevos lanzamientos y detrás de escena',
@@ -277,7 +281,8 @@ const translations = {
     popularArrangements: 'Arrangamenti preferiti',
     popularDesc: 'Scopri i nostri spartiti e arrangiamenti preferiti',
     downloadSheets: 'Acquista',
-    currentlyDisabled: 'Attualmente disabilitato',
+    currentlyDisabled: 'Attualmente non disponibile',
+    getOnArrangeMe: 'Ottieni su ArrangeMe',
     viewAll: 'Visualizza tutti gli arrangiamenti',
     joinCommunity: 'Unisciti alla comunità',
     communityDesc: 'Seguici per tutorial, nuove uscite e dietro le quinte',
@@ -954,6 +959,11 @@ function App() {
   };
 
   const handleDownloadClick = (song: Song) => {
+    const isArrangeMe = Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
+    if (isArrangeMe && song.arrangemeUrl) {
+      window.open(song.arrangemeUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
     setSelectedSong(song);
     setIsKofiModalOpen(true);
   };
@@ -1135,6 +1145,7 @@ function App() {
                   const featuredSongs = [...pinnedSongs, ...backfillSongs].slice(0, 3);
                   return featuredSongs.map((song) => {
                     const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                    const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
                     return (
                       <div
                         key={song.id}
@@ -1210,15 +1221,31 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
+                              : isArrangeMe
+                              ? 'bg-purple-600/20 dark:bg-purple-900/30 border border-purple-500/50 text-purple-600 dark:text-purple-300 hover:bg-purple-600/30 hover:border-purple-400 cursor-pointer active:scale-[0.98]'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
-                          {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan'}`} />
+                          {isPaymentsDisabled ? (
+                            <>
+                              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                              <span>{t.currentlyDisabled}</span>
+                            </>
+                          ) : isArrangeMe ? (
+                            <>
+                              <span className="truncate">{t.getOnArrangeMe}</span>
+                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
+                            </>
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
+                            <>
+                              {isSongFree(song.price) ? (
+                                <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-cyan flex-shrink-0" />
+                              ) : (
+                                <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-pink flex-shrink-0" />
+                              )}
+                              <span>{isSongFree(song.price) ? 'FREE' : song.price}</span>
+                            </>
                           )}
-                          {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
                       </div>
                     </div>
@@ -1390,6 +1417,7 @@ function App() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {filteredSongs.map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                  const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
                   return (
                     <div
                       key={song.id}
@@ -1464,15 +1492,31 @@ function App() {
                           className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
+                              : isArrangeMe
+                              ? 'bg-purple-600/20 dark:bg-purple-900/30 border border-purple-500/50 text-purple-600 dark:text-purple-300 hover:bg-purple-600/30 hover:border-purple-400 cursor-pointer active:scale-[0.98]'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
-                          {isSongFree(song.price) ? (
-                            <Download className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-cyan'}`} />
+                          {isPaymentsDisabled ? (
+                            <>
+                              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                              <span>{t.currentlyDisabled}</span>
+                            </>
+                          ) : isArrangeMe ? (
+                            <>
+                              <span className="truncate">{t.getOnArrangeMe}</span>
+                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
+                            </>
                           ) : (
-                            <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 h-4 ${isPaymentsDisabled ? 'text-gray-400 dark:text-gray-500' : 'text-neon-pink'}`} />
+                            <>
+                              {isSongFree(song.price) ? (
+                                <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-cyan flex-shrink-0" />
+                              ) : (
+                                <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-pink flex-shrink-0" />
+                              )}
+                              <span>{isSongFree(song.price) ? 'FREE' : song.price}</span>
+                            </>
                           )}
-                          {isPaymentsDisabled ? t.currentlyDisabled : (isSongFree(song.price) ? 'FREE' : song.price)}
                         </button>
                       </div>
                     </div>

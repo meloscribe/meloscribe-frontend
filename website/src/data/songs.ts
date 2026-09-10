@@ -20,6 +20,9 @@ export interface Song {
   format?: 'viral_part' | 'full_arrangement';
   videoPreviewUrl?: string;
   theme?: string;
+  pinned?: boolean;
+  arrangemeUrl?: string;
+  isArrangeMe?: boolean;
 }
 
 export const songs = (songsData as Song[]).filter(s => s.id !== 'global_settings');
