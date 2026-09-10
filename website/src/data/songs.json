@@ -136,7 +136,8 @@
     "kofiId": "prod_dummy123",
     "pinned": false,
     "arrangemeUrl": "https://www.sheetmusicdirect.com/de-DE/se/ID_No/2120828/Product.aspx",
-    "isArrangeMe": false
+    "isArrangeMe": true,
+    "paymentsDisabled": false
   },
   {
     "id": "4",
