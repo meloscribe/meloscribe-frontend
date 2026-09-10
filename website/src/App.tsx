@@ -855,6 +855,7 @@ function App() {
   // Ko-fi Modal State
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isKofiModalOpen, setIsKofiModalOpen] = useState(false);
+  const [modalInitialDifficulty, setModalInitialDifficulty] = useState<'Original' | 'Easy' | undefined>(undefined);
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -882,7 +883,8 @@ function App() {
       
     const matchesDifficulty = 
       difficultyFilter === 'All' || 
-      song.difficulty === difficultyFilter;
+      (difficultyFilter === 'Original' && (song.difficulty === 'Original' || song.difficulty === 'Original / Easy' || song.hasOriginal)) ||
+      (difficultyFilter === 'Easy' && (song.difficulty === 'Easy' || song.difficulty === 'Original / Easy' || song.hasEasy));
       
     return matchesSearch && matchesDifficulty;
   });
@@ -924,6 +926,8 @@ function App() {
             if (versionMatch) {
               selected = versionMatch;
             }
+            if (versionParam === 'easy') setModalInitialDifficulty('Easy');
+            else if (versionParam === 'original') setModalInitialDifficulty('Original');
           }
           setSelectedSong(selected);
           setIsKofiModalOpen(true);
@@ -933,6 +937,7 @@ function App() {
   }, [currentPath, allSongs]);
 
   const navigate = (path: string) => {
+    if (path === currentPath) return;
     setTransitioning(true);
     setTimeout(() => {
       window.history.pushState(null, '', path);
@@ -944,12 +949,13 @@ function App() {
     }, 200);
   };
 
-  const handleDownloadClick = (song: Song) => {
+  const handleDownloadClick = (song: Song, preferredDifficulty?: 'Original' | 'Easy') => {
     const isArrangeMe = Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
     if (isArrangeMe && song.arrangemeUrl) {
       window.open(song.arrangemeUrl, '_blank', 'noopener,noreferrer');
       return;
     }
+    setModalInitialDifficulty(preferredDifficulty);
     setSelectedSong(song);
     setIsKofiModalOpen(true);
   };
@@ -1180,11 +1186,7 @@ function App() {
                         
                         {/* Floating Difficulty Badge */}
                         <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-                          <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm ${
-                            song.difficulty === 'Easy'
-                              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 dark:bg-emerald-500/25 dark:border-emerald-400/40 dark:text-emerald-200'
-                              : 'bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200'
-                          }`}>
+                          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
@@ -1430,11 +1432,7 @@ function App() {
                         
                         {/* Floating Difficulty Badge */}
                         <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-                          <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm ${
-                            song.difficulty === 'Easy'
-                              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 dark:bg-emerald-500/25 dark:border-emerald-400/40 dark:text-emerald-200'
-                              : 'bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200'
-                          }`}>
+                          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
@@ -1625,6 +1623,11 @@ function App() {
           songArtist={selectedSong.artist}
           language={language}
           difficulty={selectedSong.difficulty}
+          initialDifficulty={modalInitialDifficulty}
+          hasEasy={selectedSong.hasEasy}
+          easyStripePriceId={selectedSong.easyStripePriceId}
+          easyPrice={selectedSong.easyPrice}
+          easySongId={selectedSong.easyId}
           videoPreviewUrl={selectedSong.videoPreviewUrl}
           price={selectedSong.price}
           coverImage={selectedSong.coverImage}

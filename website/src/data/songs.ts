@@ -4,9 +4,15 @@ export interface Song {
   id: string;
   title: string;
   artist: string;
-  difficulty: 'Easy' | 'Original';
+  difficulty: 'Easy' | 'Original' | 'Original / Easy';
+  hasEasy?: boolean;
+  hasOriginal?: boolean;
   price: string;
   stripePriceId: string;
+  easyPrice?: string;
+  easyStripePriceId?: string;
+  easyKofiId?: string;
+  easyId?: string;
   coverImage: string;
   gradient?: string;
   hidden?: boolean;

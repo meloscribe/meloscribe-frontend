@@ -9,7 +9,12 @@ interface PaddleModalProps {
   songTitle: string;
   songArtist: string;
   language: string;
-  difficulty?: 'Easy' | 'Original';
+  difficulty?: 'Easy' | 'Original' | 'Original / Easy';
+  initialDifficulty?: 'Easy' | 'Original';
+  hasEasy?: boolean;
+  easyStripePriceId?: string;
+  easyPrice?: string | number;
+  easySongId?: string;
   videoPreviewUrl?: string;
   price?: string | number;
   coverImage?: string;
@@ -35,9 +40,7 @@ const translations = {
     videoSegment: 'Preview Clip (Note: This is only a 60-second preview clip – the full purchase contains the complete arrangement)',
     
     // New translations
-    viralPartTitle: 'Viral Part',
     fullArrangementTitle: 'Full Arrangement',
-    viralPartDesc: 'Focused entirely on the main hook & chorus. Master the most popular section instantly without the long intro or outro.',
     fullArrangementDesc: 'This learning package contains the complete arrangement of the song from start to finish.',
     packageIncludes: 'Package Includes:',
     packageIncludesDesc: 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials',
@@ -55,6 +58,13 @@ const translations = {
     videoCondensedTitle: '2K HD Video Tutorials',
     videoCondensedDesc: 'The tutorial video offline in normal & slow speed.',
     
+    // Button & Version Labels
+    buyOriginalVersion: 'Buy Original Version',
+    buyEasyVersion: 'Buy Easy Version',
+    versionOriginal: 'Original',
+    versionEasy: 'Easy',
+    selectDifficulty: 'Select Difficulty:',
+
     // Free download button labels
     pdfFreeLabel: 'Sheet PDF',
     videoOriginalLabel: 'Video (Original Speed)',
@@ -81,9 +91,7 @@ const translations = {
     videoSegment: 'Ausschnitt-Vorschau (Hinweis: Dies ist nur ein 60-Sekunden-Ausschnitt – die Vollversion enthält das komplette Arrangement)',
     
     // New translations
-    viralPartTitle: 'Viraler Part',
     fullArrangementTitle: 'Vollständiges Arrangement',
-    viralPartDesc: 'Voller Fokus auf die wichtigste Passage (Hook & Refrain). Lerne die beliebteste Sektion sofort, ohne langes Intro oder Outro.',
     fullArrangementDesc: 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.',
     packageIncludes: 'Inbegriffen im Paket:',
     packageIncludesDesc: 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD-Video-Tutorials',
@@ -101,6 +109,13 @@ const translations = {
     videoCondensedTitle: '2K HD Video-Tutorials',
     videoCondensedDesc: 'Das Tutorial-Video offline in normalem & langsamem Tempo.',
     
+    // Button & Version Labels
+    buyOriginalVersion: 'Originalversion kaufen',
+    buyEasyVersion: 'Easy-Version kaufen',
+    versionOriginal: 'Original',
+    versionEasy: 'Easy',
+    selectDifficulty: 'Schwierigkeit wählen:',
+
     // Free download button labels
     pdfFreeLabel: 'Klaviernoten (PDF)',
     videoOriginalLabel: 'Video (Originaltempo)',
@@ -127,9 +142,7 @@ const translations = {
     videoSegment: 'Aperçu (Note : Ceci est seulement un extrait de 60 secondes – l\'arrangement complet est inclus après l\'achat)',
     
     // New translations
-    viralPartTitle: 'Partie Virale',
     fullArrangementTitle: 'Arrangement Complet',
-    viralPartDesc: 'Entièrement concentré sur le hook et le refrain principaux. Maîtrisez instantanément la section la plus populaire sans longue introduction ni conclusion.',
     fullArrangementDesc: 'Ce pack d\'apprentissage contient l\'arrangement complet de la chanson du début à la fin.',
     packageIncludes: 'Inclus dans le pack :',
     packageIncludesDesc: 'Partitions de piano (PDF) + Fichiers MIDI (Normal/Lent) + Tutoriels vidéo HD',
@@ -147,6 +160,13 @@ const translations = {
     videoCondensedTitle: 'Tutoriels Vidéo 2K HD',
     videoCondensedDesc: 'La vidéo du tutoriel hors ligne en vitesse normale et lente.',
     
+    // Button & Version Labels
+    buyOriginalVersion: 'Acheter la version originale',
+    buyEasyVersion: 'Acheter la version facile (Easy)',
+    versionOriginal: 'Originale',
+    versionEasy: 'Facile (Easy)',
+    selectDifficulty: 'Choisir la difficulté :',
+
     // Free download button labels
     pdfFreeLabel: 'Partition PDF',
     videoOriginalLabel: 'Vidéo (Vitesse Normale)',
@@ -173,9 +193,7 @@ const translations = {
     videoSegment: 'Vista previa (Nota: Esto es solo un fragmento de 60 segundos – la compra incluye el arreglo completo)',
     
     // New translations
-    viralPartTitle: 'Parte Viral',
     fullArrangementTitle: 'Arreglo Completo',
-    viralPartDesc: 'Centrado completamente en el hook y estribillo principal. Domina la sección más popular al instante sin largas introducciones ni finales.',
     fullArrangementDesc: 'Este paquete de aprendizaje contiene el arreglo completo de la canción de principio a fin.',
     packageIncludes: 'Incluido en el paquete:',
     packageIncludesDesc: 'Partituras de piano (PDF) + Archivos MIDI (Normal/Lento) + Tutoriales en video HD',
@@ -193,6 +211,13 @@ const translations = {
     videoCondensedTitle: 'Tutoriales en Video 2K HD',
     videoCondensedDesc: 'El video tutorial sin conexión en velocidad normal y lenta.',
     
+    // Button & Version Labels
+    buyOriginalVersion: 'Comprar versión original',
+    buyEasyVersion: 'Comprar versión fácil (Easy)',
+    versionOriginal: 'Original',
+    versionEasy: 'Fácil (Easy)',
+    selectDifficulty: 'Seleccionar dificultad:',
+
     // Free download button labels
     pdfFreeLabel: 'Partitura PDF',
     videoOriginalLabel: 'Video (Velocidad Normal)',
@@ -219,9 +244,7 @@ const translations = {
     videoSegment: 'Anteprima (Nota: Questo è solo un estratto di 60 secondi – l\'acquisto include l\'arrangiamento completo)',
     
     // New translations
-    viralPartTitle: 'Parte Virale',
     fullArrangementTitle: 'Arrangiamento Completo',
-    viralPartDesc: 'Incentrato interamente sul gancio e sul ritornello principale. Impara subito la sezione più popolare senza lunghe introduzioni o finali.',
     fullArrangementDesc: 'Questo pacchetto di apprendimento contiene l\'arrangiamento completo della canzone dall\'inizio alla fine.',
     packageIncludes: 'Incluso nel pacchetto:',
     packageIncludesDesc: 'Spartiti per pianoforte (PDF) + File MIDI (Normale/Lento) + Video tutorial HD',
@@ -239,6 +262,13 @@ const translations = {
     videoCondensedTitle: 'Video Tutorial 2K HD',
     videoCondensedDesc: 'Il video tutorial offline a velocità normale e rallentata.',
     
+    // Button & Version Labels
+    buyOriginalVersion: 'Acquista versione originale',
+    buyEasyVersion: 'Acquista versione facile (Easy)',
+    versionOriginal: 'Originale',
+    versionEasy: 'Facile (Easy)',
+    selectDifficulty: 'Seleziona difficoltà:',
+
     // Free download button labels
     pdfFreeLabel: 'Spartito PDF',
     videoOriginalLabel: 'Video (Velocità Normale)',
@@ -248,25 +278,77 @@ const translations = {
   }
 };
 
-export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, songTitle, songArtist, language, difficulty = 'Original', videoPreviewUrl, price, coverImage }: PaddleModalProps) {
+export default function PaddleModal({ 
+  isOpen, 
+  onClose, 
+  songId, 
+  stripePriceId, 
+  songTitle, 
+  songArtist, 
+  language, 
+  difficulty = 'Original',
+  initialDifficulty,
+  hasEasy,
+  easyStripePriceId,
+  easyPrice,
+  easySongId,
+  videoPreviewUrl, 
+  price, 
+  coverImage 
+}: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [downloadingType, setDownloadingType] = useState<string | null>(null);
 
-  const cleanBaseTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "").trim();
-  const isEasy = difficulty === 'Easy' || songTitle.toLowerCase().includes('easy');
-  const rawCoverSrc = coverImage || `/covers/${cleanBaseTitle}_clean.jpg`;
+  const hasDualVersions = Boolean(hasEasy || difficulty === 'Original / Easy');
+
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'Original' | 'Easy'>(() => {
+    if (initialDifficulty) return initialDifficulty;
+    if (difficulty === 'Easy') return 'Easy';
+    return 'Original';
+  });
+
+  useEffect(() => {
+    if (initialDifficulty) {
+      setSelectedDifficulty(initialDifficulty);
+    } else if (difficulty === 'Easy') {
+      setSelectedDifficulty('Easy');
+    } else {
+      setSelectedDifficulty('Original');
+    }
+  }, [isOpen, songId, initialDifficulty, difficulty]);
+
+  const isSelectedEasy = selectedDifficulty === 'Easy';
+  const currentPrice = isSelectedEasy ? (easyPrice || price) : price;
+  const currentPriceId = isSelectedEasy ? (easyStripePriceId || stripePriceId) : stripePriceId;
+  const currentSongId = isSelectedEasy && easySongId ? easySongId : songId;
+
+  const cleanBaseTitle = songTitle
+    .replace(" (Easy Version)", "")
+    .replace(" (Easy)", "")
+    .replace(" (All Parts)", "")
+    .replace(" (Part 1)", "")
+    .replace(" (Part 2)", "")
+    .trim();
+
+  const displayTitle = hasDualVersions
+    ? `${cleanBaseTitle}${isSelectedEasy ? ' (Easy)' : ''}`
+    : songTitle;
+
+  const rawCoverSrc = isSelectedEasy 
+    ? `/covers/${cleanBaseTitle} easy_clean.jpg` 
+    : (coverImage || `/covers/${cleanBaseTitle}_clean.jpg`);
   const coverSrc = rawCoverSrc.startsWith('http') ? rawCoverSrc : encodeURI(rawCoverSrc);
 
   // Dedicated 16:9 widescreen cover with full song title & keyboard for video preview
-  const primaryWideCover = isEasy 
+  const primaryWideCover = isSelectedEasy 
     ? `/covers/${cleanBaseTitle} easy_wide.jpg` 
     : `/covers/${cleanBaseTitle}_wide.jpg`;
   const wideCoverSrc = encodeURI(primaryWideCover);
 
-  const priceStr = String(price || '').trim().toLowerCase();
+  const priceStr = String(currentPrice || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
 
   const handleFreeDownload = async (type: string) => {
@@ -275,7 +357,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
       const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8787'
         : 'https://api.meloscribe.dev';
-      const targetUrl = `${apiBaseUrl}/api/public/download?song_id=${encodeURIComponent(songId)}&type=${encodeURIComponent(type)}`;
+      const targetUrl = `${apiBaseUrl}/api/public/download?song_id=${encodeURIComponent(currentSongId)}&type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(selectedDifficulty)}`;
       const res = await fetch(targetUrl);
       if (res.ok) {
         const data = await res.json();
@@ -423,12 +505,12 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
   useEffect(() => {
     if (isOpen && songTitle) {
       setLoadingVideo(true);
-      if (videoPreviewUrl) {
+      if (videoPreviewUrl && !hasDualVersions) {
         setVideoUrl(videoPreviewUrl);
         setLoadingVideo(false);
       } else {
         const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
-        const suffix = difficulty === "Easy" ? " Easy" : "";
+        const suffix = isSelectedEasy ? " Easy" : "";
         const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
           ? 'http://localhost:8787'
           : 'https://api.meloscribe.dev';
@@ -437,7 +519,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
         setLoadingVideo(false);
       }
     }
-  }, [isOpen, songTitle, videoPreviewUrl, difficulty]);
+  }, [isOpen, songTitle, videoPreviewUrl, isSelectedEasy, hasDualVersions]);
 
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
@@ -455,9 +537,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          songId: songId,
-          format: format,
-          difficulty: difficulty,
+          songId: currentSongId,
+          format: 'full_arrangement',
+          difficulty: selectedDifficulty,
+          priceId: currentPriceId,
           language: language
         })
       });
@@ -576,7 +659,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 dark:border-dark-500/30">
                 <img 
                   src={coverSrc}
-                  alt={songTitle}
+                  alt={displayTitle}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
@@ -589,7 +672,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                 )}
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{displayTitle}</h4>
                 <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
               </div>
             </div>
@@ -608,18 +691,18 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               >
                 {/* 16:9 Widescreen Cover Thumbnail with Song Title */}
                 <img
-                  key={`${songTitle}-${difficulty}`}
+                  key={`${songTitle}-${selectedDifficulty}`}
                   src={wideCoverSrc}
-                  alt={songTitle}
+                  alt={displayTitle}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
                   onError={(e) => {
                     const step = parseInt(e.currentTarget.dataset.step || '0', 10);
-                    if (step === 0 && isEasy) {
+                    if (step === 0 && isSelectedEasy) {
                       e.currentTarget.dataset.step = '1';
                       e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}_wide.jpg`);
                     } else if (step <= 1) {
                       e.currentTarget.dataset.step = '2';
-                      e.currentTarget.src = encodeURI(isEasy ? `/covers/${cleanBaseTitle} easy.jpg` : `/covers/${cleanBaseTitle}.jpg`);
+                      e.currentTarget.src = encodeURI(isSelectedEasy ? `/covers/${cleanBaseTitle} easy.jpg` : `/covers/${cleanBaseTitle}.jpg`);
                     } else if (step <= 2) {
                       e.currentTarget.dataset.step = '3';
                       e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}.jpg`);
@@ -648,7 +731,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
               </div>
               
               <div className="min-w-0">
-                <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{songTitle}</h4>
+                <h4 className="text-lg font-display font-semibold text-gray-900 dark:text-white truncate">{displayTitle}</h4>
                 <p className="text-gray-600 dark:text-gray-400 text-sm truncate">{songArtist}</p>
               </div>
             </div>
@@ -672,7 +755,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
             <div>
               <h5 className="text-xs font-semibold text-gray-550 dark:text-gray-400 uppercase tracking-wider mb-3">{t.included}</h5>
               <div className="space-y-3">
-                {difficulty === 'Easy' && (
+                {isSelectedEasy && (
                   <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                     <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
                       <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
@@ -736,6 +819,42 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
           {/* Right Column: Secure Checkout Action */}
           <div className="md:col-span-7 md:border-l border-gray-200 dark:border-dark-600/50 md:pl-8 flex flex-col justify-center">
             <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-5 md:gap-6 py-4 md:py-8">
+              {/* Version Selector for Dual Version Songs */}
+              {hasDualVersions && (
+                <div className="w-full">
+                  <span className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-2 text-center uppercase tracking-wider">
+                    {t.selectDifficulty}
+                  </span>
+                  <div className="grid grid-cols-2 p-1 bg-gray-100 dark:bg-dark-800/90 rounded-xl border border-gray-200 dark:border-dark-600/60 shadow-inner">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDifficulty('Original')}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        !isSelectedEasy
+                          ? 'bg-white dark:bg-dark-700 text-neon-cyan shadow-sm border border-gray-200 dark:border-neon-cyan/40'
+                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                      }`}
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{t.versionOriginal}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDifficulty('Easy')}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        isSelectedEasy
+                          ? 'bg-white dark:bg-dark-700 text-neon-pink shadow-sm border border-gray-200 dark:border-neon-pink/40'
+                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                      }`}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-neon-pink" />
+                      <span>{t.versionEasy}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {isFree ? (
                 <>
                   <div className="text-center">
@@ -839,7 +958,7 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                   <button
                     onClick={handleStripeCheckout}
                     disabled={isRedirecting}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
                   >
                     {isRedirecting ? (
                       <>
@@ -849,7 +968,10 @@ export default function PaddleModal({ isOpen, onClose, songId, stripePriceId, so
                     ) : (
                       <>
                         <ShieldCheck className="w-5 h-5" />
-                        <span>{t.paySecurely}</span>
+                        <span>
+                          {isSelectedEasy ? t.buyEasyVersion : t.buyOriginalVersion}
+                          {currentPrice ? ` • ${currentPrice}` : ''}
+                        </span>
                       </>
                     )}
                   </button>
