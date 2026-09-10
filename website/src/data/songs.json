@@ -57,7 +57,7 @@
     "title": "I don't know",
     "artist": "Erika",
     "difficulty": "Original / Easy",
-    "price": "4 €",
+    "price": "1 €",
     "kofiId": "price_1Tt8KpL8a9dEAmWsSp1oRmkZ",
     "stripePriceId": "price_1Tt8KpL8a9dEAmWsSp1oRmkZ",
     "coverImage": "/covers/I don't know_clean.jpg",
@@ -70,7 +70,9 @@
     "easyPrice": "4 €",
     "easyStripePriceId": "price_1Tt8L4L8a9dEAmWsA6Iakte8",
     "easyKofiId": "price_1Tt8L4L8a9dEAmWsA6Iakte8",
-    "easyId": "55"
+    "easyId": "55",
+    "arrangemeUrl": "",
+    "isArrangeMe": false
   },
   {
     "id": "global_settings",
