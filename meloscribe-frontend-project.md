@@ -1,6 +1,6 @@
 # meloscribe-frontend — Project Status & Roadmap
 
-Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). Last updated: 2026-07-10.
+Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). Last updated: 2026-09-10.
 
 **GitHub repo:** https://github.com/meloscribe/meloscribe-frontend (public)
 **Hosted on:** Vercel (auto-deploy on push to `main`)
@@ -94,6 +94,13 @@ npm run dev
   - Fehlerhafte `hreflang`-Tags in `index.html`, die fälschlicherweise auf die fremde Domain `meloscribe.com` verwiesen, auf `https://www.meloscribe.dev` korrigiert.
   - Vollständige OpenGraph- und Twitter-Metatags hinzugefügt (`og:image`, `og:url`, `og:site_name`, `og:title`, `og:description`).
   - Valide `sitemap.xml` im `public/`-Ordner angelegt, um 404-Fehler von Crawlern (`robots.txt`) zu beheben.
+- [x] Dual Difficulty Single-Card Consolidation & Interactive Version Toggle in Checkout:
+  - Streamlined catalog to single cards for songs with both Original and Easy arrangements (*River Flows in You*, *Golden Brown*, *I don't know*) with unified grey glassmorphism badge (`Original / Easy`). Reduced catalog entries from 30 to 27.
+  - Interactive cyber-toggle (`[ Original ]` | `[ Easy ]`) in `PaddleModal.tsx` dynamically updating video preview, cover, price, and feature checklist.
+  - Explicit purchase button text displaying target version and price (e.g. `Buy Original Version • 6 €` vs `Buy Easy Version • 6 €` / `Originalversion kaufen • 6 €` vs `Easy-Version kaufen • 6 €`) with 5-language localization (EN, DE, FR, ES, IT) to prevent accidental checkout errors.
+- [x] Mobile Favorite Arrangements Layout Fix:
+  - Resolved mobile layout bug on homepage where cards defaulted to horizontal row (`flex`) instead of column (`flex-col`), squashing cover images into miniature boxes and causing title text, difficulty badges, and buy buttons to collide.
+  - Standardized card container to `flex flex-col`, aligned buttons cleanly to bottom with `mt-auto`, scaled typography responsively (`text-xs sm:text-base md:text-xl`), and adjusted badge positioning (`top-1.5 left-1.5`) for clean 2-column mobile presentation.
 
 ## Active Blockers / Next Steps
 

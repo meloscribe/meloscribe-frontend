@@ -108,3 +108,17 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 ### Floating Cover Badges for UI Cleanliness
 - Placing multiple badges (Difficulty, Format, Pricing) in a secondary metadata row below card covers clutters the vertical rhythm.
 - Moving the single difficulty indicator (`Original` / `Easy`) into a floating frosted glass badge (`absolute top-2.5 left-2.5 z-10 backdrop-blur-md`) directly on the cover artwork creates a much cleaner, app-like aesthetic and frees up space for the primary action button.
+
+---
+
+### Single-Card Consolidation with Interactive Version Switching
+- Rendering separate catalog cards for minor variations (e.g. *Easy* vs *Original* arrangement of the same piece) artificially inflates the catalog, dilutes SEO authority, and creates visual duplicates.
+- Consolidating into a single card with a unified `Original / Easy` badge and providing an interactive version toggle (`[ Original ]` | `[ Easy ]`) inside the checkout modal keeps the catalog clean while dynamically updating preview videos, audio samples, pricing, and feature checklists.
+- To prevent accidental purchases, the final CTA button must dynamically reflect the active variant (e.g. `Buy Original Version` vs `Buy Easy Version`) with full multi-language localization.
+
+---
+
+### Mobile 2-Column Card Flex Orientation Bug
+- **Bug:** On mobile 2-column grids (`grid-cols-2`), song cards in the homepage "Favorite Arrangements" section collapsed into tiny horizontal splits with overlapping text, squished covers, and deformed buttons.
+- **Root Cause:** In Tailwind, writing conditional classes like `${idx === 2 ? 'hidden md:flex' : 'flex'}` causes elements on mobile to evaluate to plain `flex`, which defaults to `flex-direction: row`. Consequently, inside a 170px mobile column, the cover image was forced onto the left (width ~105px) and the buy button was squeezed onto the right (width ~65px).
+- **Fix:** Explicitly declare `flex flex-col` so cards always maintain vertical stacking across all responsive breakpoints. Additionally, scale title typography responsively (`text-xs sm:text-base`) and position the floating badge with `top-1.5 left-1.5` to ensure generous clearance above and below song titles.

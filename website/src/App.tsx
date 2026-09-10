@@ -1134,7 +1134,7 @@ function App() {
                     return (
                       <div
                         key={song.id}
-                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} ${idx === 2 ? 'hidden md:flex' : 'flex'}`}
+                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} flex flex-col ${idx === 2 ? 'hidden md:flex' : 'flex'}`}
                         onMouseEnter={() => handleCardMouseEnter(song)}
                         onMouseLeave={handleCardMouseLeave}
                       >
@@ -1165,21 +1165,21 @@ function App() {
                         
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-5 sm:pt-0 px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
-                              <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 sm:pt-0 px-2 sm:px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                            <div className="min-h-[38px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
+                              <h3 className="text-white font-display font-bold text-xs sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[9px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
                               — {song.artist} —
                             </p>
                           </div>
                         )}
                         
                         {/* Floating Difficulty Badge */}
-                        <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
-                          <span className="px-2 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
+                        <div className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
+                          <span className="px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
@@ -1193,12 +1193,12 @@ function App() {
                         </div>
                       </div>
   
-                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col">
+                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col mt-auto">
                         <button
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
                           tabIndex={isPaymentsDisabled ? -1 : 0}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : isArrangeMe
@@ -1209,11 +1209,11 @@ function App() {
                           {isPaymentsDisabled ? (
                             <>
                               <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                              <span>{t.currentlyDisabled}</span>
+                              <span className="truncate">{t.currentlyDisabled}</span>
                             </>
                           ) : isArrangeMe ? (
                             <>
-                              <span className="truncate">{t.getOnArrangeMe}</span>
+                              <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
                               <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
                             </>
                           ) : (
@@ -1411,21 +1411,21 @@ function App() {
                         
                         {/* Clean Cover Text Overlay — Centered vertically and enhanced */}
                         {song.coverImage && (song.coverImage.includes('_clean') || song.coverImage.includes('-clean')) && (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-5 sm:pt-0 px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
-                            <div className="min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-1">
-                              <h3 className="text-white font-display font-bold text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[92%] break-words m-0">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 sm:pt-0 px-2 sm:px-4 text-center select-none pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,transparent_75%)]">
+                            <div className="min-h-[38px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center w-full mb-0.5 sm:mb-1">
+                              <h3 className="text-white font-display font-bold text-xs sm:text-base md:text-xl lg:text-2xl leading-tight sm:leading-snug tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-[95%] break-words m-0">
                                 {song.title}
                               </h3>
                             </div>
-                            <p className="text-gray-300 font-sans text-[10px] sm:text-xs md:text-sm tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                            <p className="text-gray-300 font-sans text-[9px] sm:text-xs md:text-sm tracking-wider sm:tracking-widest drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] whitespace-nowrap truncate max-w-[92%]">
                               — {song.artist} —
                             </p>
                           </div>
                         )}
                         
                         {/* Floating Difficulty Badge */}
-                        <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
-                          <span className="px-2 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
+                        <div className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
+                          <span className="px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
                             {song.difficulty}
                           </span>
                         </div>
@@ -1439,12 +1439,12 @@ function App() {
                         </div>
                       </div>
   
-                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col">
+                      <div className="p-2 sm:p-3 bg-white/40 dark:bg-dark-900/40 border-t border-gray-100 dark:border-dark-700/50 flex flex-col mt-auto">
                         <button
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
                           tabIndex={isPaymentsDisabled ? -1 : 0}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : isArrangeMe
@@ -1455,11 +1455,11 @@ function App() {
                           {isPaymentsDisabled ? (
                             <>
                               <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                              <span>{t.currentlyDisabled}</span>
+                              <span className="truncate">{t.currentlyDisabled}</span>
                             </>
                           ) : isArrangeMe ? (
                             <>
-                              <span className="truncate">{t.getOnArrangeMe}</span>
+                              <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
                               <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
                             </>
                           ) : (
