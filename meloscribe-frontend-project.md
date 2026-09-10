@@ -79,6 +79,12 @@ npm run dev
   - Mobilversion restrukturiert: Features-Checkliste ausgeblendet, kompakter Song-Header und eine Inhaltsangabe direkt über dem Checkout-Button
   - "Secure SSL Connection" Footer auf Mobile ausgeblendet
   - "Viral Part" psychologisch reframed (Vorteilsargumentation statt Warnungen/Einschränkungen) und visuell einheitlich in warmem Bernstein-Gelb/Orange gehalten auf Desktop und Mobile
+- [x] "Get on ArrangeMe ↗" Redirect & "Currently Unavailable" Status:
+  - `Song` Interface um `arrangemeUrl` und `isArrangeMe` erweitert.
+  - Karten auf Startseite & Notenkatalog (`/sheets`) zeigen bei ArrangeMe-Produkten einen stylischen "Get on ArrangeMe ↗" Button mit `ArrowUpRight` Icon und feiner violetter Akzentuierung.
+  - Klick auf Karte oder Button öffnet direkt das ArrangeMe-Produkt (Sheet Music Plus / Direct) in einem neuen Tab.
+  - "Currently Unavailable" / "Derzeit nicht verfügbar" als sauberer, deaktivierter Button-Zustand für deaktivierte Zahlungen (`paymentsDisabled: true`).
+  - Vollständige Lokalisierung in allen 5 Sprachen (DE, EN, FR, ES, IT).
 
 ## Active Blockers / Next Steps
 
