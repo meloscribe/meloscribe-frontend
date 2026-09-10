@@ -337,16 +337,22 @@ export default function PaddleModal({
     ? `${cleanBaseTitle}${isSelectedEasy ? ' (Easy)' : ''}`
     : songTitle;
 
-  const rawCoverSrc = isSelectedEasy 
-    ? `/covers/${cleanBaseTitle} easy_clean.jpg` 
-    : (coverImage || `/covers/${cleanBaseTitle}_clean.jpg`);
+  const cleanOriginalWide = coverImage 
+    ? coverImage.replace('_clean.jpg', '_wide.jpg')
+    : `/covers/${cleanBaseTitle}_wide.jpg`;
+  const cleanEasyWide = coverImage 
+    ? coverImage.replace('_clean.jpg', ' easy_wide.jpg')
+    : `/covers/${cleanBaseTitle} easy_wide.jpg`;
+  const cleanOriginalSquare = coverImage || `/covers/${cleanBaseTitle}_clean.jpg`;
+
+  const rawCoverSrc = isSelectedEasy ? cleanEasyWide : cleanOriginalSquare;
   const coverSrc = rawCoverSrc.startsWith('http') ? rawCoverSrc : encodeURI(rawCoverSrc);
 
   // Dedicated 16:9 widescreen cover with full song title & keyboard for video preview
-  const primaryWideCover = isSelectedEasy 
-    ? `/covers/${cleanBaseTitle} easy_wide.jpg` 
-    : `/covers/${cleanBaseTitle}_wide.jpg`;
-  const wideCoverSrc = encodeURI(primaryWideCover);
+  const primaryWideCover = isSelectedEasy ? cleanEasyWide : cleanOriginalWide;
+  const wideCoverSrc = primaryWideCover.startsWith('http') ? primaryWideCover : encodeURI(primaryWideCover);
+  const fallbackWideCover = cleanOriginalWide.startsWith('http') ? cleanOriginalWide : encodeURI(cleanOriginalWide);
+  const fallbackCleanCover = cleanOriginalSquare.startsWith('http') ? cleanOriginalSquare : encodeURI(cleanOriginalSquare);
 
   const priceStr = String(currentPrice || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
@@ -691,23 +697,16 @@ export default function PaddleModal({
                   key={`${songTitle}-${selectedDifficulty}`}
                   src={wideCoverSrc}
                   alt={displayTitle}
+                  style={{ display: 'block' }}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
                   onError={(e) => {
                     const step = parseInt(e.currentTarget.dataset.step || '0', 10);
-                    if (step === 0 && isSelectedEasy) {
+                    if (step === 0) {
                       e.currentTarget.dataset.step = '1';
-                      e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}_wide.jpg`);
-                    } else if (step <= 1) {
+                      e.currentTarget.src = fallbackWideCover;
+                    } else if (step === 1) {
                       e.currentTarget.dataset.step = '2';
-                      e.currentTarget.src = encodeURI(isSelectedEasy ? `/covers/${cleanBaseTitle} easy.jpg` : `/covers/${cleanBaseTitle}.jpg`);
-                    } else if (step <= 2) {
-                      e.currentTarget.dataset.step = '3';
-                      e.currentTarget.src = encodeURI(`/covers/${cleanBaseTitle}.jpg`);
-                    } else if (step <= 3) {
-                      e.currentTarget.dataset.step = '4';
-                      e.currentTarget.src = coverSrc;
-                    } else {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.src = fallbackCleanCover;
                     }
                   }}
                 />
@@ -813,11 +812,11 @@ export default function PaddleModal({
                       onClick={() => setSelectedDifficulty('Original')}
                       className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                         !isSelectedEasy
-                          ? 'bg-white dark:bg-dark-700 text-neon-cyan shadow-sm border border-gray-200 dark:border-neon-cyan/40'
+                          ? 'bg-white dark:bg-dark-700 text-neon-pink shadow-sm border border-gray-200 dark:border-neon-pink/40'
                           : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
                       }`}
                     >
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Sparkles className="w-3.5 h-3.5 text-neon-pink" />
                       <span>{t.versionOriginal}</span>
                     </button>
 
@@ -826,11 +825,11 @@ export default function PaddleModal({
                       onClick={() => setSelectedDifficulty('Easy')}
                       className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                         isSelectedEasy
-                          ? 'bg-white dark:bg-dark-700 text-neon-pink shadow-sm border border-gray-200 dark:border-neon-pink/40'
+                          ? 'bg-white dark:bg-dark-700 text-neon-cyan shadow-sm border border-gray-200 dark:border-neon-cyan/40'
                           : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
                       }`}
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-neon-pink" />
+                      <Sparkles className="w-3.5 h-3.5 text-neon-cyan" />
                       <span>{t.versionEasy}</span>
                     </button>
                   </div>
