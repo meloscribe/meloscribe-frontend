@@ -1,6 +1,6 @@
 # meloscribe-frontend — Project Status & Roadmap
 
-Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). Last updated: 2026-09-10.
+Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). Last updated: 2026-09-12.
 
 **GitHub repo:** https://github.com/meloscribe/meloscribe-frontend (public)
 **Hosted on:** Vercel (auto-deploy on push to `main`)
@@ -100,7 +100,11 @@ npm run dev
   - Explicit purchase button text displaying target version and price (e.g. `Buy Original Version • 6 €` vs `Buy Easy Version • 6 €` / `Originalversion kaufen • 6 €` vs `Easy-Version kaufen • 6 €`) with 5-language localization (EN, DE, FR, ES, IT) to prevent accidental checkout errors.
 - [x] Mobile Favorite Arrangements Layout Fix:
   - Resolved mobile layout bug on homepage where cards defaulted to horizontal row (`flex`) instead of column (`flex-col`), squashing cover images into miniature boxes and causing title text, difficulty badges, and buy buttons to collide.
-  - Standardized card container to `flex flex-col`, aligned buttons cleanly to bottom with `mt-auto`, scaled typography responsively (`text-xs sm:text-base md:text-xl`), and adjusted badge positioning (`top-1.5 left-1.5`) for clean 2-column mobile presentation.
+- [x] Brand Monogram & Typography Harmonization (Variante A):
+  - Replaced generic Lucide Music note in header and footer with custom Cyan M-monogram (`MeloLogo.tsx`).
+  - Scaled M-monogram to exact lowercase x-height (`13.2px` desktop / `10.5px` mobile) and aligned to `items-baseline` with `vertical-align: -1px` to sit flush on the baseline with `meloscribe`.
+  - Implemented silky smooth micro-hover animation: `-1.5px` float, `1.06` scale, electric cyan bloom (`drop-shadow: 0 0 8px rgba(0, 245, 255, 0.85)`), removing the erratic `musicBounce` tilt.
+  - Purged residual legacy Ko-fi comments and unused `kofiUrl` export in `siteConfig.ts`.
 
 ## Active Blockers / Next Steps
 

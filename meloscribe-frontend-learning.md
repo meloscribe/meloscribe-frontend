@@ -111,6 +111,12 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 
 ---
 
+### Typographic Baseline & x-Height Alignment for Monogram Icons
+- Pairing an SVG emblem/monogram with lowercase brand text via `flex items-center` centers on the entire font line-height bounding box (including empty descender space), causing the icon to float noticeably higher than lowercase letters without descenders (`m`, `e`, `o`, `s`, `c`, `r`).
+- Fix: Measure the font's actual x-height (`13.2px` at `24px` in *Space Grotesk*), scale the SVG to this exact height, and align via `items-baseline` with `vertical-align: -1px` so the icon's top curves and bottom stems sit on the exact same pixel lines as the text.
+
+---
+
 ### Single-Card Consolidation with Interactive Version Switching
 - Rendering separate catalog cards for minor variations (e.g. *Easy* vs *Original* arrangement of the same piece) artificially inflates the catalog, dilutes SEO authority, and creates visual duplicates.
 - Consolidating into a single card with a unified `Original / Easy` badge and providing an interactive version toggle (`[ Original ]` | `[ Easy ]`) inside the checkout modal keeps the catalog clean while dynamically updating preview videos, audio samples, pricing, and feature checklists.
