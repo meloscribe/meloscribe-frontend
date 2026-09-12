@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
+import { ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
+import { MeloLogo } from './components/MeloLogo';
 import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
 import Terms from './pages/Terms';
@@ -979,9 +980,9 @@ function App() {
               <a 
                 href="/" 
                 onClick={(e) => { e.preventDefault(); navigate('/'); }}
-                className="flex items-center gap-1.5 sm:gap-2 group"
+                className="flex items-baseline gap-1.5 sm:gap-2 group"
               >
-                <Music className="w-5 h-5 sm:w-6 sm:h-6 text-neon-cyan logo-music-note" />
+                <MeloLogo className="w-[11px] h-[10.5px] sm:w-[14px] sm:h-[13.2px] logo-m-icon" fill="#00f5ff" />
                 <span className="font-display text-lg sm:text-2xl font-bold tracking-tight">
                   <span className="text-gradient">{t.brand}</span>
                 </span>
@@ -1013,7 +1014,7 @@ function App() {
               </nav>
             </div>
 
-            {/* Right side - Theme + Language + Ko-fi support link */}
+            {/* Right side - Audio Toggle + Language */}
             <div className="flex items-center gap-1.5 sm:gap-3">
               {/* Audio Preview Mute Toggle - desktop PC only */}
               <button
@@ -1553,9 +1554,9 @@ function App() {
                 <a 
                   href="/" 
                   onClick={(e) => { e.preventDefault(); navigate('/'); }}
-                  className="flex items-center gap-2"
+                  className="flex items-baseline gap-2 group"
                 >
-                  <Music className="w-5 h-5 text-neon-cyan" />
+                  <MeloLogo className="w-[13px] h-[12.2px] logo-m-icon" fill="#00f5ff" />
                   <span className="font-display text-xl font-bold text-gradient">{t.brand}</span>
                 </a>
                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">

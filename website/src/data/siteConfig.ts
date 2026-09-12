@@ -16,8 +16,6 @@ export const socialPlatforms: SocialPlatformConfig[] = [
   { name: 'Threads', handle: '@meloscribe', url: 'https://threads.net/@meloscribe', followers: 0 }
 ];
 
-export const kofiUrl = 'https://ko-fi.com/meloscribe';
-
 export const totalFollowers = socialPlatforms.reduce((sum, p) => sum + p.followers, 0);
 
 export function formatFollowersCount(count: number): string {

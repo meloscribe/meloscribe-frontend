@@ -383,37 +383,18 @@
   }
 }
 
-/* Custom Premium Micro-Animations */
-@keyframes musicBounce {
-  0% {
-    transform: translateY(0) scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 0px rgba(0, 245, 255, 0));
-  }
-  20% {
-    transform: translateY(-5px) scale(1.2) rotate(-12deg);
-    filter: drop-shadow(0 0 6px rgba(0, 245, 255, 0.7));
-  }
-  45% {
-    transform: translateY(0) scale(0.92) rotate(8deg);
-    filter: drop-shadow(0 0 2px rgba(255, 45, 146, 0.5));
-  }
-  70% {
-    transform: translateY(-2px) scale(1.08) rotate(-4deg);
-    filter: drop-shadow(0 0 4px rgba(0, 245, 255, 0.6));
-  }
-  100% {
-    transform: translateY(0) scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 0px rgba(255, 45, 146, 0));
-  }
+/* Custom Premium Micro-Animations for Brand Logo */
+.logo-m-icon {
+  display: inline-block;
+  vertical-align: -1px;
+  filter: drop-shadow(0 0 5px rgba(0, 245, 255, 0.35));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  will-change: transform, filter;
 }
 
-.logo-music-note {
-  transition: color 0.3s ease;
-}
-
-.group:hover .logo-music-note {
-  animation: musicBounce 0.8s ease-in-out infinite;
-  color: #ff2d92 !important; /* neon-pink */
+.group:hover .logo-m-icon {
+  transform: translateY(-1.5px) scale(1.06);
+  filter: drop-shadow(0 0 8px rgba(0, 245, 255, 0.85)) drop-shadow(0 0 16px rgba(0, 245, 255, 0.4));
 }
 
 /* Audio Visualizer Overlay on Song Cards */
