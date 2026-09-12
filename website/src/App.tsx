@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
+import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
 import { socialPlatforms as configPlatforms, formattedTotalFollowers, formattedTotalSheets, formattedTotalCustomers, formatCustomersCount, formatFollowersCount } from './data/siteConfig';
 import PaddleModal from './components/PaddleModal';
