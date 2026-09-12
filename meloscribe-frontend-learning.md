@@ -128,3 +128,13 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 - **Bug:** On mobile 2-column grids (`grid-cols-2`), song cards in the homepage "Favorite Arrangements" section collapsed into tiny horizontal splits with overlapping text, squished covers, and deformed buttons.
 - **Root Cause:** In Tailwind, writing conditional classes like `${idx === 2 ? 'hidden md:flex' : 'flex'}` causes elements on mobile to evaluate to plain `flex`, which defaults to `flex-direction: row`. Consequently, inside a 170px mobile column, the cover image was forced onto the left (width ~105px) and the buy button was squeezed onto the right (width ~65px).
 - **Fix:** Explicitly declare `flex flex-col` so cards always maintain vertical stacking across all responsive breakpoints. Additionally, scale title typography responsively (`text-xs sm:text-base`) and position the floating badge with `top-1.5 left-1.5` to ensure generous clearance above and below song titles.
+
+---
+
+### Tree-Shaking & Unused Import Removal Precautions (Black Screen Prevention)
+- **Bug (2026-09-12):** Live production site `meloscribe.dev` showed a black screen with `ReferenceError: Music is not defined`.
+- **Root Cause:** When replacing the generic Lucide `Music` note icon in the header and footer with the custom `MeloLogo` SVG component, `Music` was removed from the `import { ... } from 'lucide-react'` statement in `App.tsx`. However, `Music` was still used as the fallback icon in `getPlatformIcon()` and in the hero button (`<Music className="w-5 h-5" />{t.followUs}`). Because `body` has class `bg-black`, an uncaught runtime ReferenceError during initial React rendering crashes the component tree, leaving `<div id="root"></div>` empty and producing a black screen.
+- **Rule & Prevention:**
+  1. Never delete an icon or utility import solely based on replacing one or two instances. Always grep for all remaining usages in the file (`Music` in `App.tsx`).
+  2. Always run a headless browser check with Playwright/CDP against the production build (`dist/`) before or immediately after deploying to catch uncaught runtime JavaScript exceptions that TypeScript/Vite may miss when unreferenced identifiers are not captured by TS strict flags or are shadowed/aliased.
+

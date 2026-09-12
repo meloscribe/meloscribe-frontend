@@ -105,6 +105,7 @@ npm run dev
   - Scaled M-monogram to exact lowercase x-height (`13.2px` desktop / `10.5px` mobile) and aligned to `items-baseline` with `vertical-align: -1px` to sit flush on the baseline with `meloscribe`.
   - Implemented silky smooth micro-hover animation: `-1.5px` float, `1.06` scale, electric cyan bloom (`drop-shadow: 0 0 8px rgba(0, 245, 255, 0.85)`), removing the erratic `musicBounce` tilt.
   - Purged residual legacy Ko-fi comments and unused `kofiUrl` export in `siteConfig.ts`.
+  - Hotfix (2026-09-12): Restored `Music` import in `App.tsx` used in `getPlatformIcon` fallback and hero follow button, eliminating runtime ReferenceError crash on production.
 
 ## Active Blockers / Next Steps
 
