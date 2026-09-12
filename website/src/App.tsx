@@ -935,6 +935,15 @@ function App() {
     }
   }, [currentPath, allSongs]);
 
+  // Dynamically update document title for browser tabs
+  useEffect(() => {
+    if (selectedSong) {
+      document.title = `${selectedSong.title} — meloscribe`;
+    } else {
+      document.title = 'meloscribe';
+    }
+  }, [selectedSong]);
+
   const navigate = (path: string) => {
     if (path === currentPath) return;
     setTransitioning(true);
