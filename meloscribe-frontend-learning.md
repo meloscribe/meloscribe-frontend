@@ -138,3 +138,14 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
   1. Never delete an icon or utility import solely based on replacing one or two instances. Always grep for all remaining usages in the file (`Music` in `App.tsx`).
   2. Always run a headless browser check with Playwright/CDP against the production build (`dist/`) before or immediately after deploying to catch uncaught runtime JavaScript exceptions that TypeScript/Vite may miss when unreferenced identifiers are not captured by TS strict flags or are shadowed/aliased.
 
+---
+
+### Browser Favicon Tab-Bar Caching & Edge-to-Edge Icon Sizing
+- **Bug / Phenomenon:** Replacing `favicon.png` or `favicon.ico` on the server frequently fails to reflect in users' browser tabs even after hard-refreshing (Ctrl+F5). The browser tab retains an old, stale icon (e.g. black background) indefinitely. Furthermore, favicons designed with generous whitespace padding appear microscopic in browser tabs (16x16 / 32x32 px).
+- **Root Cause:**
+  1. Chromium and Firefox maintain dedicated internal SQLite databases (`Favicons` db) that bind icon data to origin URLs independently of standard HTTP Cache-Control headers. The browser tab bar does not re-query the network unless the `<link rel="icon">` URL string changes.
+  2. Tab bars render icons at 16x16 logical pixels. A 512x512 canvas with 10% transparent padding reduces the glyph to ~12px inside the tab, losing fine curves and sharpness.
+- **Rule & Solution:**
+  1. **Edge-to-Edge Maximization:** Tightly crop the SVG/raster bounding box to remove 100% of empty margins, then scale the glyph so its widest axis touches the 0 and 511 pixel boundaries. This ensures every single subpixel of a 16x16 tab icon is utilized.
+  2. **Query String Cache-Busting:** In `index.html`, always append an explicit version parameter to all favicon declarations (e.g. `<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=4" />`). Any change to the icon file must increment this version parameter to immediately force browsers to invalidate their internal favicon database.
+

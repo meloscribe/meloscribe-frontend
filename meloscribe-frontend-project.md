@@ -106,6 +106,11 @@ npm run dev
   - Implemented silky smooth micro-hover animation: `-1.5px` float, `1.06` scale, electric cyan bloom (`drop-shadow: 0 0 8px rgba(0, 245, 255, 0.85)`), removing the erratic `musicBounce` tilt.
   - Purged residual legacy Ko-fi comments and unused `kofiUrl` export in `siteConfig.ts`.
   - Hotfix (2026-09-12): Restored `Music` import in `App.tsx` used in `getPlatformIcon` fallback and hero follow button, eliminating runtime ReferenceError crash on production.
+- [x] Maximized Transparent Favicon & Complete Transparent Asset Suite:
+  - Generated edge-to-edge transparent M-monogram favicon (`512x512`, `32x32`, `16x16`, multi-size `.ico`) with 0px horizontal padding, utilizing 100% of browser tab rendering real estate.
+  - Implemented `?v=4` cache-busting on all favicon declarations in `index.html` to instantly force browsers to invalidate stale internal SQLite favicon caches.
+  - Deployed live to production on Vercel (`https://www.meloscribe.dev`).
+  - Generated full transparent asset suite in `tools/pfps/` (high-resolution PNG + SVG) for website logos (with and without icon) and 1024x1024 square PFP avatars (with and without cyan glow).
 
 ## Active Blockers / Next Steps
 
