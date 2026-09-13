@@ -80,7 +80,7 @@ const translations = {
     paymentMethod: 'Payment Method',
     payNow: 'Pay Securely',
     processingPayment: 'Processing payment...',
-    pciCompliant: '256-Bit SSL • Instant download after purchase',
+    pciCompliant: 'Instant download after purchase',
     loadingExpress: 'Loading Express Checkout...',
     payWithCard: 'Credit or Debit Card',
     cardBrands: 'Visa, Mastercard, Amex',
@@ -142,7 +142,7 @@ const translations = {
     paymentMethod: 'Zahlungsmethode',
     payNow: 'Jetzt sicher bezahlen',
     processingPayment: 'Zahlung wird verarbeitet...',
-    pciCompliant: '256-Bit SSL-Verschlüsselung • Sofortiger Download nach Kauf',
+    pciCompliant: 'Sofortiger Download nach Kauf',
     loadingExpress: 'Express Checkout wird geladen...',
     payWithCard: 'Kreditkarte / Debitkarte',
     cardBrands: 'Visa, Mastercard, Amex',
@@ -204,7 +204,7 @@ const translations = {
     paymentMethod: 'Moyen de paiement',
     payNow: 'Payer en toute sécurité',
     processingPayment: 'Traitement du paiement...',
-    pciCompliant: 'Chiffrement SSL 256 bits • Téléchargement instantané',
+    pciCompliant: 'Téléchargement instantané après l\'achat',
     loadingExpress: 'Chargement du paiement express...',
     payWithCard: 'Carte bancaire',
     cardBrands: 'Visa, Mastercard, Amex',
@@ -266,7 +266,7 @@ const translations = {
     paymentMethod: 'Método de pago',
     payNow: 'Pagar con seguridad',
     processingPayment: 'Procesando el pago...',
-    pciCompliant: 'Cifrado SSL de 256 bits • Descarga instantánea tras la compra',
+    pciCompliant: 'Descarga instantánea tras la compra',
     loadingExpress: 'Cargando pago exprés...',
     payWithCard: 'Tarjeta de crédito o débito',
     cardBrands: 'Visa, Mastercard, Amex',
@@ -328,7 +328,7 @@ const translations = {
     paymentMethod: 'Metodo di pagamento',
     payNow: 'Paga in sicurezza',
     processingPayment: 'Elaborazione del pagamento...',
-    pciCompliant: 'Crittografia SSL a 256 bit • Download immediato',
+    pciCompliant: 'Download immediato dopo l\'acquisto',
     loadingExpress: 'Caricamento pagamento rapido...',
     payWithCard: 'Carta di credito o debito',
     cardBrands: 'Visa, Mastercard, Amex',
@@ -366,7 +366,6 @@ export default function PaddleModal({
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
   const [expressAvailable, setExpressAvailable] = useState(false);
   const [isExpressLoading, setIsExpressLoading] = useState(true);
-  const [isCardExpanded, setIsCardExpanded] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
 
   const stripeRef = useRef<Stripe | null>(null);
@@ -425,7 +424,6 @@ export default function PaddleModal({
     setIsSubmittingPayment(false);
     setExpressAvailable(false);
     setIsExpressLoading(true);
-    setIsCardExpanded(false);
   };
 
   useEffect(() => {
@@ -777,7 +775,6 @@ export default function PaddleModal({
     setPaymentFormError(null);
     setExpressAvailable(false);
     setIsExpressLoading(true);
-    setIsCardExpanded(false);
 
     if (expressTimeoutRef.current) {
       window.clearTimeout(expressTimeoutRef.current);
@@ -926,7 +923,15 @@ export default function PaddleModal({
       });
 
       const paymentElement = elements.create('payment', {
-        layout: 'tabs',
+        layout: {
+          type: 'accordion',
+          defaultCollapsed: true,
+          radios: 'always',
+          spacedAccordionItems: true,
+        },
+        wallets: {
+          link: 'never',
+        },
       });
       paymentElementRef.current = paymentElement;
 
@@ -959,11 +964,6 @@ export default function PaddleModal({
   const handleConfirmPayment = async () => {
     if (!stripeRef.current || !elementsRef.current) return;
 
-    if (!isCardExpanded) {
-      setIsCardExpanded(true);
-      return;
-    }
-
     const email = customerEmail.trim();
     if (!email || !email.includes('@') || !email.includes('.')) {
       setPaymentFormError(
@@ -993,7 +993,6 @@ export default function PaddleModal({
       });
 
       if (error) {
-        setIsCardExpanded(true);
         console.error("[Stripe Confirm Error]:", error);
         setPaymentFormError(error.message || (language === 'de' ? 'Zahlung fehlgeschlagen. Bitte prüfe deine Angaben.' : 'Payment failed. Please check your details.'));
         setIsSubmittingPayment(false);
@@ -1382,50 +1381,12 @@ export default function PaddleModal({
                         />
                       </div>
 
-                      {/* Regular Payment Element (Card) */}
+                      {/* Regular Payment Element (Card, Link, Klarna, iDEAL, EPS) */}
                       <div>
-                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">
                           {t.paymentMethod}
                         </span>
-
-                        {/* Collapsible Card Toggle Bar */}
-                        <button
-                          type="button"
-                          onClick={() => setIsCardExpanded(!isCardExpanded)}
-                          className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl border transition-all cursor-pointer select-none ${
-                            isCardExpanded
-                              ? 'bg-[#161616] border-neon-cyan/70 text-white shadow-[0_0_12px_rgba(0,245,255,0.15)]'
-                              : 'bg-[#161616] border-[#262626] text-gray-300 hover:border-gray-500 hover:bg-[#1A1A1A]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
-                              isCardExpanded ? 'border-neon-cyan bg-neon-cyan/20' : 'border-gray-500'
-                            }`}>
-                              {isCardExpanded && <div className="w-1.5 h-1.5 rounded-full bg-neon-cyan" />}
-                            </div>
-                            <span className="text-xs font-semibold tracking-wide">
-                              {t.payWithCard}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-gray-400 font-mono tracking-wider">
-                              {t.cardBrands}
-                            </span>
-                            <span className={`text-xs text-gray-400 transition-transform duration-200 ${isCardExpanded ? 'rotate-180 text-neon-cyan' : ''}`}>
-                              ▾
-                            </span>
-                          </div>
-                        </button>
-
-                        {/* Expandable Card Inputs Container */}
-                        <div
-                          className={`transition-all duration-300 overflow-hidden ${
-                            isCardExpanded ? 'max-h-[500px] opacity-100 mt-2.5' : 'max-h-0 opacity-0 pointer-events-none'
-                          }`}
-                        >
-                          <div id="stripe-payment-element" className="overflow-hidden" style={{ overflow: 'hidden' }} />
-                        </div>
+                        <div id="stripe-payment-element" className="overflow-hidden" style={{ overflow: 'hidden' }} />
                       </div>
 
                       {/* Error Message if submit fails */}
