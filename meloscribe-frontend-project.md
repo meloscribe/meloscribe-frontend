@@ -115,7 +115,10 @@ npm run dev
   - Altes Klaviertasten-Vorschaubild (`meloscribe-website.jpg`) restlos durch kanonisches 1024x1024 Brand-Logo (`meloscribe.png`) ersetzt.
   - `og:image` und `twitter:image` in `index.html` auf `https://www.meloscribe.dev/meloscribe.png` (1024x1024, `image/png`) umgestellt.
   - `meloscribe-website.jpg` im `public/`-Ordner als Fallback mit dem neuen Logo überschrieben, um alte Crawler-Caches abzufangen.
-  - Live auf Vercel (`main`) deployed.
+- [x] Trending Arrangements & Dynamic Social-Proof Stats Threshold:
+  - Homepage-Sektion von "Favorite Arrangements" zu "Trending Arrangements" umbenannt (inkl. angepasster Beschreibungen in allen 5 Sprachen DE, EN, FR, ES, IT).
+  - Social-Proof Anti-Pattern ("14 Customers") behoben: Solange die Kundenzahl unter 100 liegt, wird die Kunden-Spalte vollständig ausgeblendet und die Stats zentrieren sich im harmonischen 2-Spalten-Grid (Follower + Noten-Arrangements).
+  - Automatisches Einblenden ab 100+ mit stufenloser Hunderter-Progression (`100+`, `200+`, `300+`, ..., `1K+`, `1.1K+` usw.) in `siteConfig.ts` und `App.tsx` implementiert.
 
 ## Active Blockers / Next Steps
 
