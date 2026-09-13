@@ -111,6 +111,11 @@ npm run dev
   - Implemented `?v=4` cache-busting on all favicon declarations in `index.html` to instantly force browsers to invalidate stale internal SQLite favicon caches.
   - Deployed live to production on Vercel (`https://www.meloscribe.dev`).
   - Generated full transparent asset suite in `tools/pfps/` (high-resolution PNG + SVG) for website logos (with and without icon) and 1024x1024 square PFP avatars (with and without cyan glow).
+- [x] Social Preview & OpenGraph Assets synchronisiert:
+  - Altes Klaviertasten-Vorschaubild (`meloscribe-website.jpg`) restlos durch kanonisches 1024x1024 Brand-Logo (`meloscribe.png`) ersetzt.
+  - `og:image` und `twitter:image` in `index.html` auf `https://www.meloscribe.dev/meloscribe.png` (1024x1024, `image/png`) umgestellt.
+  - `meloscribe-website.jpg` im `public/`-Ordner als Fallback mit dem neuen Logo überschrieben, um alte Crawler-Caches abzufangen.
+  - Live auf Vercel (`main`) deployed.
 
 ## Active Blockers / Next Steps
 
