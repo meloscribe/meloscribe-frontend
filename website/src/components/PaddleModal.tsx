@@ -976,10 +976,14 @@ export default function PaddleModal({
           (availablePaymentMethods.applePay || availablePaymentMethods.googlePay)
         );
         const hasPayPal = Boolean(availablePaymentMethods && availablePaymentMethods.paypal);
+        const hasAnyExpress = Boolean(
+          availablePaymentMethods &&
+          (availablePaymentMethods.applePay || availablePaymentMethods.googlePay || availablePaymentMethods.paypal)
+        );
         setHasStripeExpress(hasWallets);
         setStripeHasPayPalExpress(hasPayPal);
         setExpressReady(true);
-        setExpressAvailable(true);
+        setExpressAvailable(hasAnyExpress);
       });
 
       expressCheckout.on('confirm', async () => {
