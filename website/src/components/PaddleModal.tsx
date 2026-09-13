@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
-import type { StripeEmbeddedCheckout } from '@stripe/stripe-js';
+import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -75,6 +75,10 @@ const translations = {
     midiSlowLabel: 'MIDI (Slow Practice)',
     backToSelection: 'Back to selection',
     loadingCheckout: 'Loading secure checkout...',
+    orCardKlarna: 'Or pay with Card / Klarna',
+    payNow: 'Pay Securely',
+    processingPayment: 'Processing payment...',
+    pciCompliant: '256-Bit SSL • Instant download after purchase',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -128,6 +132,10 @@ const translations = {
     midiSlowLabel: 'MIDI (Langsam)',
     backToSelection: 'Zurück zur Auswahl',
     loadingCheckout: 'Sicherer Checkout wird geladen...',
+    orCardKlarna: 'Oder mit Karte / Klarna / EPS',
+    payNow: 'Jetzt sicher bezahlen',
+    processingPayment: 'Zahlung wird verarbeitet...',
+    pciCompliant: '256-Bit SSL-Verschlüsselung • Sofortiger Download nach Kauf',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -181,6 +189,10 @@ const translations = {
     midiSlowLabel: 'MIDI (Lent)',
     backToSelection: 'Retour à la sélection',
     loadingCheckout: 'Chargement du paiement sécurisé...',
+    orCardKlarna: 'Ou avec Carte / Klarna',
+    payNow: 'Payer en toute sécurité',
+    processingPayment: 'Traitement du paiement...',
+    pciCompliant: 'Chiffrement SSL 256 bits • Téléchargement instantané',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -234,6 +246,10 @@ const translations = {
     midiSlowLabel: 'MIDI (Lento)',
     backToSelection: 'Volver a la selección',
     loadingCheckout: 'Cargando pago seguro...',
+    orCardKlarna: 'O con Tarjeta / Klarna',
+    payNow: 'Pagar con seguridad',
+    processingPayment: 'Procesando el pago...',
+    pciCompliant: 'Cifrado SSL de 256 bits • Descarga instantánea tras la compra',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -287,6 +303,10 @@ const translations = {
     midiSlowLabel: 'MIDI (Lento)',
     backToSelection: 'Torna alla selezione',
     loadingCheckout: 'Caricamento del pagamento sicuro...',
+    orCardKlarna: 'O con Carta / Klarna',
+    payNow: 'Paga in sicurezza',
+    processingPayment: 'Elaborazione del pagamento...',
+    pciCompliant: 'Crittografia SSL a 256 bit • Download immediato',
   }
 };
 
@@ -317,7 +337,14 @@ export default function PaddleModal({
   const [checkoutStep, setCheckoutStep] = useState<'details' | 'embedded'>('details');
   const [isEmbeddedLoading, setIsEmbeddedLoading] = useState(false);
   const [embeddedError, setEmbeddedError] = useState<string | null>(null);
-  const checkoutInstanceRef = useRef<StripeEmbeddedCheckout | null>(null);
+  const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
+  const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
+  const [expressAvailable, setExpressAvailable] = useState(false);
+
+  const stripeRef = useRef<Stripe | null>(null);
+  const elementsRef = useRef<StripeElements | null>(null);
+  const expressCheckoutRef = useRef<StripeExpressCheckoutElement | null>(null);
+  const paymentElementRef = useRef<StripePaymentElement | null>(null);
 
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' || 
@@ -326,17 +353,30 @@ export default function PaddleModal({
   );
 
   const cleanupEmbeddedCheckout = () => {
-    if (checkoutInstanceRef.current) {
+    if (expressCheckoutRef.current) {
       try {
-        checkoutInstanceRef.current.destroy();
+        expressCheckoutRef.current.destroy();
       } catch (e) {
-        console.warn("Failed to destroy checkout instance", e);
+        console.warn("Failed to destroy expressCheckout instance", e);
       }
-      checkoutInstanceRef.current = null;
+      expressCheckoutRef.current = null;
     }
+    if (paymentElementRef.current) {
+      try {
+        paymentElementRef.current.destroy();
+      } catch (e) {
+        console.warn("Failed to destroy paymentElement instance", e);
+      }
+      paymentElementRef.current = null;
+    }
+    elementsRef.current = null;
+    stripeRef.current = null;
     setCheckoutStep('details');
     setIsEmbeddedLoading(false);
     setEmbeddedError(null);
+    setPaymentFormError(null);
+    setIsSubmittingPayment(false);
+    setExpressAvailable(false);
   };
 
   useEffect(() => {
@@ -624,6 +664,8 @@ export default function PaddleModal({
     setCheckoutStep('embedded');
     setIsEmbeddedLoading(true);
     setEmbeddedError(null);
+    setPaymentFormError(null);
+    setExpressAvailable(false);
 
     try {
       const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -658,36 +700,154 @@ export default function PaddleModal({
       if (!stripe) {
         throw new Error('Could not initialize Stripe SDK');
       }
+      stripeRef.current = stripe;
 
-      if (checkoutInstanceRef.current) {
-        try {
-          checkoutInstanceRef.current.destroy();
-        } catch (_) {}
-        checkoutInstanceRef.current = null;
+      if (expressCheckoutRef.current) {
+        try { expressCheckoutRef.current.destroy(); } catch (_) {}
+        expressCheckoutRef.current = null;
+      }
+      if (paymentElementRef.current) {
+        try { paymentElementRef.current.destroy(); } catch (_) {}
+        paymentElementRef.current = null;
       }
 
-      const createFn = (stripe as any).createEmbeddedCheckoutPage || (stripe as any).initEmbeddedCheckout;
-      if (!createFn) {
-        throw new Error('Stripe Embedded Checkout method not found on Stripe instance');
-      }
-
-      const checkout = await createFn.call(stripe, {
+      const elements = stripe.elements({
         clientSecret: data.clientSecret,
+        appearance: {
+          theme: 'night',
+          variables: {
+            colorPrimary: '#00F5FF',
+            colorBackground: '#0E1420',
+            colorText: '#F8FAFC',
+            colorDanger: '#FF4D4D',
+            fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+            borderRadius: '12px',
+            colorTextSecondary: '#94A3B8',
+            colorIcon: '#94A3B8',
+            spacingUnit: '4px',
+            gridRowSpacing: '14px',
+            gridColumnSpacing: '14px',
+          },
+          rules: {
+            '.Tab': {
+              backgroundColor: '#131926',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '10px',
+              color: '#94A3B8',
+              transition: 'all 0.2s ease',
+            },
+            '.Tab:hover': {
+              backgroundColor: '#1A2234',
+              border: '1px solid rgba(0, 245, 255, 0.3)',
+              color: '#FFFFFF',
+            },
+            '.Tab--selected': {
+              backgroundColor: '#131926',
+              borderColor: '#00F5FF',
+              boxShadow: '0 0 12px rgba(0, 245, 255, 0.25)',
+              color: '#00F5FF',
+            },
+            '.Input': {
+              backgroundColor: '#131926',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '10px',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              boxShadow: 'none',
+              transition: 'border-color 0.2s, box-shadow 0.2s',
+            },
+            '.Input:focus': {
+              border: '1px solid #00F5FF',
+              boxShadow: '0 0 12px rgba(0, 245, 255, 0.25)',
+              outline: 'none',
+            },
+            '.Label': {
+              color: '#94A3B8',
+              fontWeight: '500',
+              fontSize: '12px',
+              marginBottom: '6px',
+            },
+            '.Dropdown': {
+              backgroundColor: '#131926',
+              borderColor: 'rgba(255, 255, 255, 0.12)',
+            }
+          }
+        }
+      });
+      elementsRef.current = elements;
+
+      const expressCheckout = elements.create('expressCheckout', {
+        buttonHeight: 46,
+        buttonTheme: {
+          applePay: 'black',
+          googlePay: 'black',
+          paypal: 'gold'
+        }
+      });
+      expressCheckoutRef.current = expressCheckout;
+
+      expressCheckout.on('ready', ({ availablePaymentMethods }) => {
+        if (availablePaymentMethods && (
+          availablePaymentMethods.applePay || 
+          availablePaymentMethods.googlePay || 
+          availablePaymentMethods.paypal || 
+          availablePaymentMethods.link
+        )) {
+          setExpressAvailable(true);
+        } else {
+          setExpressAvailable(false);
+        }
       });
 
-      checkoutInstanceRef.current = checkout;
+      const paymentElement = elements.create('payment', {
+        layout: 'tabs'
+      });
+      paymentElementRef.current = paymentElement;
+
+      paymentElement.on('ready', () => {
+        setIsEmbeddedLoading(false);
+      });
 
       requestAnimationFrame(() => {
-        const mountPoint = document.getElementById('stripe-embedded-checkout');
-        if (mountPoint) {
-          checkout.mount('#stripe-embedded-checkout');
+        const expressMount = document.getElementById('stripe-express-checkout');
+        if (expressMount) {
+          expressCheckout.mount('#stripe-express-checkout');
         }
-        setIsEmbeddedLoading(false);
+        const paymentMount = document.getElementById('stripe-payment-element');
+        if (paymentMount) {
+          paymentElement.mount('#stripe-payment-element');
+        }
       });
     } catch (e: any) {
       console.error("[Embedded Checkout Error]:", e);
       setEmbeddedError(e.message || (language === 'de' ? 'Fehler beim Laden des Checkouts.' : 'Failed to load checkout.'));
       setIsEmbeddedLoading(false);
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    if (!stripeRef.current || !elementsRef.current) return;
+    setIsSubmittingPayment(true);
+    setPaymentFormError(null);
+
+    try {
+      const origin = window.location.origin;
+      const { error } = await stripeRef.current.confirmPayment({
+        elements: elementsRef.current,
+        confirmParams: {
+          return_url: `${origin}/success`,
+        },
+      });
+
+      if (error) {
+        console.error("[Stripe Confirm Error]:", error);
+        setPaymentFormError(error.message || (language === 'de' ? 'Zahlung fehlgeschlagen. Bitte prüfe deine Angaben.' : 'Payment failed. Please check your details.'));
+        setIsSubmittingPayment(false);
+      }
+    } catch (err: any) {
+      console.error("[Payment Error]:", err);
+      setPaymentFormError(err.message || (language === 'de' ? 'Fehler bei der Zahlungsabwicklung.' : 'Payment processing error.'));
+      setIsSubmittingPayment(false);
     }
   };
 
@@ -721,14 +881,13 @@ export default function PaddleModal({
           width: 0 !important;
           height: 0 !important;
         }
-        #stripe-embedded-checkout {
+        #stripe-express-checkout {
           width: 100% !important;
-          min-height: 440px !important;
+          min-height: 46px;
         }
-        #stripe-embedded-checkout iframe {
+        #stripe-payment-element {
           width: 100% !important;
-          border: none !important;
-          border-radius: 12px !important;
+          min-height: 250px;
         }
         .modal-backdrop-blur {
           backdrop-filter: blur(16px) !important;
@@ -959,17 +1118,17 @@ export default function PaddleModal({
                 </div>
 
                 {/* Stripe Mount Container */}
-                <div className="relative w-full mt-3 rounded-xl overflow-hidden bg-gray-50/50 dark:bg-dark-950/60 border border-gray-200 dark:border-dark-600/50 min-h-[460px] max-h-[580px] overflow-y-auto custom-scrollbar">
+                <div className="relative w-full mt-3 rounded-2xl bg-[#0B0F17] border border-gray-200 dark:border-dark-600/60 p-4 md:p-5 shadow-2xl transition-all duration-300">
                   {isEmbeddedLoading && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white/85 dark:bg-dark-900/85 backdrop-blur-sm z-20">
+                    <div className="flex flex-col items-center justify-center gap-3 py-14 bg-[#0B0F17]/95 backdrop-blur-sm z-20">
                       <Loader2 className="w-8 h-8 text-neon-cyan animate-spin" />
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300">{t.loadingCheckout}</p>
+                      <p className="text-xs font-medium text-gray-300">{t.loadingCheckout}</p>
                     </div>
                   )}
 
-                  {embeddedError && (
+                  {embeddedError ? (
                     <div className="p-6 text-center space-y-3">
-                      <p className="text-sm text-red-500 dark:text-red-400 font-medium">{embeddedError}</p>
+                      <p className="text-sm text-red-400 font-medium">{embeddedError}</p>
                       <div className="flex justify-center gap-3">
                         <button
                           type="button"
@@ -981,15 +1140,63 @@ export default function PaddleModal({
                         <button
                           type="button"
                           onClick={cleanupEmbeddedCheckout}
-                          className="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 transition-all cursor-pointer"
+                          className="px-4 py-2 rounded-lg text-xs font-semibold bg-dark-700 text-gray-300 hover:bg-dark-600 transition-all cursor-pointer"
                         >
                           {t.backToSelection}
                         </button>
                       </div>
                     </div>
-                  )}
+                  ) : (
+                    <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
+                      {/* Express Checkout Element (Apple Pay, Google Pay, PayPal) */}
+                      <div id="stripe-express-checkout" className={expressAvailable ? 'block' : 'hidden'} />
 
-                  <div id="stripe-embedded-checkout" className="w-full" />
+                      {/* Divider between Express and regular tabs */}
+                      {expressAvailable && (
+                        <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                          <div className="flex-1 border-b border-white/10" />
+                          <span className="px-3">{t.orCardKlarna}</span>
+                          <div className="flex-1 border-b border-white/10" />
+                        </div>
+                      )}
+
+                      {/* Regular Payment Element (Card, Klarna, EPS, etc.) */}
+                      <div id="stripe-payment-element" />
+
+                      {/* Error Message if submit fails */}
+                      {paymentFormError && (
+                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
+                          {paymentFormError}
+                        </div>
+                      )}
+
+                      {/* Custom Glowing Gradient Pay Button */}
+                      <button
+                        type="button"
+                        onClick={handleConfirmPayment}
+                        disabled={isSubmittingPayment}
+                        className="w-full mt-4 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        {isSubmittingPayment ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>{t.processingPayment}</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="w-5 h-5" />
+                            <span>{t.payNow} • {currentPrice}</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Trust Guarantee / PCI Compliance Footer */}
+                      <div className="pt-2 flex items-center justify-center gap-1.5 text-[11px] text-gray-400 text-center">
+                        <ShieldCheck className="w-3.5 h-3.5 text-neon-cyan flex-shrink-0" />
+                        <span>{t.pciCompliant}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

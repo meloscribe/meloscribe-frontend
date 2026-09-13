@@ -75,11 +75,11 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
 
   // Get checkout_id from URL params
   const queryParams = new URLSearchParams(window.location.search);
-  const checkoutId = queryParams.get('checkout_id') || queryParams.get('checkout') || 'demo_checkout_123';
+  const checkoutId = queryParams.get('payment_intent') || queryParams.get('checkout_id') || queryParams.get('checkout') || 'demo_checkout_123';
 
   const API_BASE = import.meta.env.VITE_API_URL || 
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'https://wooing-encrust-ladle.ngrok-free.dev'
+      ? 'http://localhost:8787'
       : 'https://api.meloscribe.dev');
 
   useEffect(() => {
