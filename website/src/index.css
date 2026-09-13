@@ -9,6 +9,9 @@
     scroll-behavior: smooth;
     background-color: #0b0f19;
     -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
   }
 
   body {
@@ -16,6 +19,8 @@
     @apply text-white;
     font-feature-settings: 'cv11', 'ss01';
     overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
     -webkit-overflow-scrolling: touch;
   }
 

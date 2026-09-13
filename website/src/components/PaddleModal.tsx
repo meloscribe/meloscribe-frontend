@@ -75,7 +75,7 @@ const translations = {
     midiSlowLabel: 'MIDI (Slow Practice)',
     backToSelection: 'Back to selection',
     loadingCheckout: 'Loading secure checkout...',
-    orCardKlarna: 'Or pay with Card / Klarna',
+    orCardKlarna: 'or',
     contactInformation: 'Contact Information',
     paymentMethod: 'Payment Method',
     payNow: 'Pay Securely',
@@ -134,7 +134,7 @@ const translations = {
     midiSlowLabel: 'MIDI (Langsam)',
     backToSelection: 'Zurück zur Auswahl',
     loadingCheckout: 'Sicherer Checkout wird geladen...',
-    orCardKlarna: 'Oder mit Karte / Klarna / EPS',
+    orCardKlarna: 'oder',
     contactInformation: 'Kontaktinformationen',
     paymentMethod: 'Zahlungsmethode',
     payNow: 'Jetzt sicher bezahlen',
@@ -193,7 +193,7 @@ const translations = {
     midiSlowLabel: 'MIDI (Lent)',
     backToSelection: 'Retour à la sélection',
     loadingCheckout: 'Chargement du paiement sécurisé...',
-    orCardKlarna: 'Ou avec Carte / Klarna',
+    orCardKlarna: 'ou',
     contactInformation: 'Coordonnées',
     paymentMethod: 'Moyen de paiement',
     payNow: 'Payer en toute sécurité',
@@ -252,7 +252,7 @@ const translations = {
     midiSlowLabel: 'MIDI (Lento)',
     backToSelection: 'Volver a la selección',
     loadingCheckout: 'Cargando pago seguro...',
-    orCardKlarna: 'O con Tarjeta / Klarna',
+    orCardKlarna: 'o',
     contactInformation: 'Información de contacto',
     paymentMethod: 'Método de pago',
     payNow: 'Pagar con seguridad',
@@ -311,7 +311,7 @@ const translations = {
     midiSlowLabel: 'MIDI (Lento)',
     backToSelection: 'Torna alla selezione',
     loadingCheckout: 'Caricamento del pagamento sicuro...',
-    orCardKlarna: 'O con Carta / Klarna',
+    orCardKlarna: 'o',
     contactInformation: 'Informazioni di contatto',
     paymentMethod: 'Metodo di pagamento',
     payNow: 'Paga in sicurezza',
@@ -557,14 +557,39 @@ export default function PaddleModal({
 
   useEffect(() => {
     if (isOpen) {
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalHtmlOverflowX = document.documentElement.style.overflowX;
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalBodyOverflowX = document.body.style.overflowX;
+
+      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.overflowX = 'hidden';
       document.body.style.overflow = 'hidden';
+      document.body.style.overflowX = 'hidden';
+      window.scrollTo(0, window.scrollY);
+
+      const preventHorizontalScroll = () => {
+        if (window.scrollX !== 0) {
+          window.scrollTo(0, window.scrollY);
+        }
+      };
+      window.addEventListener('scroll', preventHorizontalScroll, { passive: true });
+
+      return () => {
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.documentElement.style.overflowX = originalHtmlOverflowX;
+        document.body.style.overflow = originalBodyOverflow;
+        document.body.style.overflowX = originalBodyOverflowX;
+        window.removeEventListener('scroll', preventHorizontalScroll);
+      };
     } else {
-      document.body.style.overflow = '';
+      window.scrollTo(0, window.scrollY);
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
+
+  useEffect(() => {
+    window.scrollTo(0, window.scrollY);
+  }, [checkoutStep]);
 
   const togglePlay = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -944,7 +969,7 @@ export default function PaddleModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto max-w-[100vw] animate-in fade-in duration-300">
       <style dangerouslySetInnerHTML={{ __html: `
         .paddle-frame,
         .paddle-frame-inline,
@@ -973,14 +998,20 @@ export default function PaddleModal({
         }
         #stripe-express-checkout {
           width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
           min-height: 46px;
         }
         #stripe-link-auth {
           width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
           min-height: 48px;
         }
         #stripe-payment-element {
           width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
           min-height: 180px;
         }
         .modal-backdrop-blur {
@@ -1012,7 +1043,7 @@ export default function PaddleModal({
       />
 
       {/* Modal Container */}
-      <div className={`relative w-full max-w-xl ${checkoutStep === 'embedded' ? 'md:max-w-5xl' : 'md:max-w-4xl'} bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]`}>
+      <div className={`relative w-full max-w-xl ${checkoutStep === 'embedded' ? 'md:max-w-5xl' : 'md:max-w-4xl'} mx-auto bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]`}>
         
         {/* Glow Orb in Modal */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
