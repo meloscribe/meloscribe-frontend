@@ -76,6 +76,7 @@ const translations = {
     backToSelection: 'Back to selection',
     loadingCheckout: 'Loading secure checkout...',
     orCardKlarna: 'or',
+    orPayWithCard: 'or pay with card',
     contactInformation: 'Contact Information',
     paymentMethod: 'Payment Method',
     payNow: 'Pay {price}',
@@ -149,6 +150,7 @@ const translations = {
     backToSelection: 'Zurück zur Auswahl',
     loadingCheckout: 'Sicherer Checkout wird geladen...',
     orCardKlarna: 'oder',
+    orPayWithCard: 'oder mit Karte bezahlen',
     contactInformation: 'Kontaktinformationen',
     paymentMethod: 'Zahlungsmethode',
     payNow: 'Jetzt {price} bezahlen',
@@ -222,6 +224,7 @@ const translations = {
     backToSelection: 'Retour à la sélection',
     loadingCheckout: 'Chargement du paiement sécurisé...',
     orCardKlarna: 'ou',
+    orPayWithCard: 'ou payer par carte',
     contactInformation: 'Coordonnées',
     paymentMethod: 'Moyen de paiement',
     payNow: 'Payer {price}',
@@ -295,6 +298,7 @@ const translations = {
     backToSelection: 'Volver a la selección',
     loadingCheckout: 'Cargando pago seguro...',
     orCardKlarna: 'o',
+    orPayWithCard: 'o pagar con tarjeta',
     contactInformation: 'Información de contacto',
     paymentMethod: 'Método de pago',
     payNow: 'Pagar {price}',
@@ -368,6 +372,7 @@ const translations = {
     backToSelection: 'Torna alla selezione',
     loadingCheckout: 'Caricamento del pagamento sicuro...',
     orCardKlarna: 'o',
+    orPayWithCard: 'o paga con carta',
     contactInformation: 'Informazioni di contatto',
     paymentMethod: 'Metodo di pagamento',
     payNow: 'Paga {price}',
@@ -420,6 +425,9 @@ export default function PaddleModal({
   const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
   const [expressAvailable, setExpressAvailable] = useState(false);
+  const [hasStripeExpress, setHasStripeExpress] = useState(false);
+  const [stripeHasPayPalExpress, setStripeHasPayPalExpress] = useState(false);
+  const [expressReady, setExpressReady] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
 
@@ -427,6 +435,7 @@ export default function PaddleModal({
   const elementsRef = useRef<StripeElements | null>(null);
   const expressCheckoutRef = useRef<StripeExpressCheckoutElement | null>(null);
   const paymentElementRef = useRef<StripePaymentElement | null>(null);
+  const currentClientSecretRef = useRef<string | null>(null);
   const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
   const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
 
@@ -467,12 +476,16 @@ export default function PaddleModal({
     }
     elementsRef.current = null;
     stripeRef.current = null;
+    currentClientSecretRef.current = null;
     setCheckoutStep('details');
     setIsEmbeddedLoading(false);
     setEmbeddedError(null);
     setPaymentFormError(null);
     setIsSubmittingPayment(false);
     setExpressAvailable(false);
+    setHasStripeExpress(false);
+    setStripeHasPayPalExpress(false);
+    setExpressReady(false);
     setSelectedPaymentMethod(null);
   };
 
@@ -729,7 +742,15 @@ export default function PaddleModal({
     }
   }, [isOpen, songTitle, videoPreviewUrl, isSelectedEasy, hasDualVersions]);
 
-  const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
+  const normalizeLang = (raw: string | null | undefined): keyof typeof translations => {
+    if (!raw && typeof navigator !== 'undefined') {
+      raw = navigator.language || (navigator.languages && navigator.languages[0]);
+    }
+    const clean = (raw || 'en').toLowerCase().split('-')[0].split('_')[0];
+    return (['en', 'de', 'fr', 'es', 'it'].includes(clean) ? clean : 'en') as keyof typeof translations;
+  };
+
+  const activeLang = normalizeLang(language);
   const t = translations[activeLang];
 
   const handleStripeCheckoutRedirect = async () => {
@@ -836,6 +857,7 @@ export default function PaddleModal({
       if (!data || !data.clientSecret || !data.publishableKey) {
         throw new Error('Invalid response from payment server');
       }
+      currentClientSecretRef.current = data.clientSecret;
 
       const stripe = await loadStripe(data.publishableKey);
       if (!stripe) {
@@ -852,7 +874,7 @@ export default function PaddleModal({
         paymentElementRef.current = null;
       }
 
-      const stripeLocale = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'auto') as any;
+      const stripeLocale = activeLang as any;
 
       const elements = stripe.elements({
         clientSecret: data.clientSecret,
@@ -949,14 +971,15 @@ export default function PaddleModal({
       expressCheckoutRef.current = expressCheckout;
 
       expressCheckout.on('ready', ({ availablePaymentMethods }) => {
-        const hasMethods = Boolean(
+        const hasWallets = Boolean(
           availablePaymentMethods &&
-          (availablePaymentMethods.applePay ||
-            availablePaymentMethods.googlePay ||
-            availablePaymentMethods.paypal ||
-            Object.values(availablePaymentMethods).some(Boolean))
+          (availablePaymentMethods.applePay || availablePaymentMethods.googlePay)
         );
-        setExpressAvailable(hasMethods);
+        const hasPayPal = Boolean(availablePaymentMethods && availablePaymentMethods.paypal);
+        setHasStripeExpress(hasWallets);
+        setStripeHasPayPalExpress(hasPayPal);
+        setExpressReady(true);
+        setExpressAvailable(true);
       });
 
       expressCheckout.on('confirm', async () => {
@@ -1039,6 +1062,42 @@ export default function PaddleModal({
       console.error("[Embedded Checkout Error]:", e);
       setEmbeddedError(e.message || t.failedToLoadCheckout);
       setIsEmbeddedLoading(false);
+    }
+  };
+
+  const handleDirectPayPalPayment = async () => {
+    if (!stripeRef.current || !currentClientSecretRef.current) return;
+    setIsSubmittingPayment(true);
+    setSelectedPaymentMethod('paypal_express');
+    setPaymentFormError(null);
+
+    try {
+      const origin = window.location.origin;
+      const confirmData: any = {
+        return_url: `${origin}/success`,
+      };
+
+      const email = customerEmail.trim();
+      if (email && email.includes('@') && email.includes('.')) {
+        confirmData.receipt_email = email;
+      }
+
+      const { error } = await stripeRef.current.confirmPayPalPayment(
+        currentClientSecretRef.current,
+        confirmData
+      );
+
+      if (error) {
+        console.error("[PayPal Direct Confirm Error]:", error);
+        setPaymentFormError(error.message || t.paymentFailed);
+        setIsSubmittingPayment(false);
+        setSelectedPaymentMethod(null);
+      }
+    } catch (err: any) {
+      console.error("[PayPal Confirm Error]:", err);
+      setPaymentFormError(err.message || t.paymentProcessingError);
+      setIsSubmittingPayment(false);
+      setSelectedPaymentMethod(null);
     }
   };
 
@@ -1425,28 +1484,58 @@ export default function PaddleModal({
                   ) : (
                     <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
                       {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
-                      <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'h-0 overflow-hidden invisible pointer-events-none'}`}>
+                      <div className="w-full space-y-2.5">
+                        {/* 1. Stripe Native Express (Google Pay / Apple Pay / Desktop PayPal) */}
                         <div
                           id="stripe-express-checkout"
-                          className="w-full overflow-hidden"
+                          className={`w-full overflow-hidden ${hasStripeExpress ? 'block' : 'h-0 overflow-hidden invisible pointer-events-none'}`}
                           style={{ overflow: 'hidden' }}
                         />
 
-                        {/* Divider between Express and regular tabs */}
-                        {expressAvailable && (
-                          <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
-                            <span className="px-3">{t.orCardKlarna}</span>
-                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
-                          </div>
+                        {/* 2. Standalone PayPal Express Quick Button (renders whenever Stripe doesn't show PayPal in Express) */}
+                        {!stripeHasPayPalExpress && (
+                          <button
+                            type="button"
+                            onClick={handleDirectPayPalPayment}
+                            disabled={isSubmittingPayment}
+                            className="w-full h-[46px] rounded-xl font-bold bg-[#FFC439] hover:bg-[#F2BA36] active:bg-[#E0AC30] text-[#003087] shadow-sm flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer disabled:opacity-50 text-sm tracking-wide border border-[#F0B630]/60"
+                            style={{ minHeight: '46px' }}
+                          >
+                            {/* Official PayPal Dual-P Monogram SVG */}
+                            <svg className="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24">
+                              <path fill="#003087" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.786.786 0 0 1 .775-.654h6.582c2.186 0 3.842.508 4.921 1.51 1.042.966 1.487 2.378 1.323 4.198-.316 3.513-2.52 5.522-6.551 5.522H8.847l-1.07 6.386a.641.641 0 0 1-.633.541l-.068.114z"/>
+                              <path fill="#0079C1" d="M19.467 8.354c-.035-.382-.107-.743-.217-1.082a4.912 4.912 0 0 0-.853-1.496C17.318 4.774 15.662 4.266 13.476 4.266H6.894a.786.786 0 0 0-.775.654L3.012 21.791a.641.641 0 0 0 .633.74h4.606l1.17-6.981-.037.214a.786.786 0 0 1 .775-.654h2.15c4.032 0 6.236-2.009 6.552-5.522.14-1.554-.153-2.822-1.394-3.234z"/>
+                              <path fill="#00457C" d="M8.286 15.764l.561-3.344.037-.214h2.15c4.032 0 6.236-2.009 6.552-5.522.07-.777.025-1.472-.134-2.07a6.223 6.223 0 0 0-1.408-.348 7.55 7.55 0 0 0-2.568-.198H6.894a.786.786 0 0 0-.775.654L3.012 21.791a.641.641 0 0 0 .633.74h4.606l1.17-6.981-.037.214a.786.786 0 0 1 .775-.654z"/>
+                            </svg>
+                            <span className="font-bold text-[#003087] text-[14px] sm:text-[15px] font-sans">
+                              {isSubmittingPayment && selectedPaymentMethod === 'paypal_express' ? (
+                                <span className="flex items-center gap-2">
+                                  <Loader2 className="w-4 h-4 animate-spin text-[#003087]" />
+                                  <span>{t.redirectingStripe}</span>
+                                </span>
+                              ) : (
+                                <>
+                                  <span>{t.payWithPaypal}</span>
+                                  {currentPrice ? <span className="opacity-90 font-medium"> • {currentPrice}</span> : null}
+                                </>
+                              )}
+                            </span>
+                          </button>
                         )}
+
+                        {/* Divider between Express and regular form */}
+                        <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                          <span className="px-3">{t.orPayWithCard || t.orCardKlarna}</span>
+                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                        </div>
                       </div>
 
                       {/* Contact Information (Email) */}
                       <div>
                         <label className="flex items-center justify-between text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                           <span>{t.contactInformation}</span>
-                          {selectedPaymentMethod === 'paypal' && (
+                          {(selectedPaymentMethod === 'paypal' || selectedPaymentMethod === 'paypal_express') && (
                             <span className="text-[11px] font-normal text-neon-cyan/90 normal-case tracking-normal">
                               {t.optionalForPaypal}
                             </span>

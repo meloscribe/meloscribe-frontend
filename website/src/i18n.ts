@@ -8,8 +8,11 @@ i18n
   .init({
     fallbackLng: 'en',
     supportedLngs: ['en', 'de', 'fr', 'es', 'it'],
+    nonExplicitSupportedLngs: true,
+    load: 'languageOnly',
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['querystring', 'localStorage', 'navigator'],
+      lookupQuerystring: 'lang',
       lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage'],
     },

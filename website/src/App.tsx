@@ -404,6 +404,12 @@ function smartSearchMatch(title: string, artist: string, query: string): boolean
 
 type Language = keyof typeof translations;
 
+export const normalizeLanguage = (raw: string | null | undefined): Language => {
+  if (!raw) return 'en';
+  const clean = raw.toLowerCase().split('-')[0].split('_')[0];
+  return (['en', 'de', 'fr', 'es', 'it'].includes(clean) ? clean : 'en') as Language;
+};
+
 // Custom SVG Icons
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -522,8 +528,21 @@ function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrollingActive, setIsScrollingActive] = useState(false);
   const [language, setLanguageState] = useState<Language>(() => {
-    const current = (i18n.resolvedLanguage || i18n.language) as Language;
-    return ['en', 'de', 'fr', 'es', 'it'].includes(current) ? current : 'en';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlLang = params.get('lang') || params.get('locale');
+      if (urlLang) {
+        return normalizeLanguage(urlLang);
+      }
+    }
+    const current = i18n.resolvedLanguage || i18n.language;
+    if (current) {
+      return normalizeLanguage(current);
+    }
+    if (typeof navigator !== 'undefined') {
+      return normalizeLanguage(navigator.language);
+    }
+    return 'en';
   });
   const [liveCustomers, setLiveCustomers] = useState<string>(formattedTotalCustomers);
   const [liveFollowers, setLiveFollowers] = useState<string>(formattedTotalFollowers);
@@ -803,17 +822,29 @@ function App() {
 
   // Wrapper function to change language in i18n and state
   const setLanguage = (lang: Language) => {
-    i18n.changeLanguage(lang);
-    setLanguageState(lang);
+    const norm = normalizeLanguage(lang);
+    i18n.changeLanguage(norm);
+    setLanguageState(norm);
+    try {
+      localStorage.setItem('i18nextLng', norm);
+    } catch (_) {}
   };
 
   // Sync language state with i18n resolved language
   useEffect(() => {
-    const current = (i18n.resolvedLanguage || i18n.language) as Language;
-    if (current && ['en', 'de', 'fr', 'es', 'it'].includes(current) && current !== language) {
+    const handleLangChange = (lng: string) => {
+      const norm = normalizeLanguage(lng);
+      setLanguageState(norm);
+    };
+    const current = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
+    if (current !== language) {
       setLanguageState(current);
     }
-  }, [i18n.resolvedLanguage, i18n.language]);
+    i18n.on('languageChanged', handleLangChange);
+    return () => {
+      i18n.off('languageChanged', handleLangChange);
+    };
+  }, [i18n, i18n.resolvedLanguage, i18n.language]);
 
   // Fetch live customers and followers from the backend on mount
   useEffect(() => {

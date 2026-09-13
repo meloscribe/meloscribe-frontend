@@ -70,7 +70,8 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
+  const cleanLang = (language || '').toLowerCase().split('-')[0].split('_')[0];
+  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(cleanLang) ? cleanLang : 'en';
   const t = translations[activeLang as keyof typeof translations];
 
   // Get checkout_id from URL params

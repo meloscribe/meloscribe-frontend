@@ -255,7 +255,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
   const [showTiktokModal, setShowTiktokModal] = useState(false);
 
-  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(language) ? language : 'en';
+  const cleanLang = (language || '').toLowerCase().split('-')[0].split('_')[0];
+  const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(cleanLang) ? cleanLang : 'en';
   const t = translations[activeLang as keyof typeof translations];
 
   const formatOrderDate = (dateStr?: string) => {
