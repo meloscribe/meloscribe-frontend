@@ -59,8 +59,10 @@ const translations = {
     errFailed: 'Download failed',
     errNetwork: 'Network error during download',
     accessDenied: 'Access Denied',
-    tiktokNoticeTitle: '💡 TikTok / Instagram Browser Notice',
-    tiktokNoticeDesc: 'If downloads do not start in TikTok: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).'
+    tiktokNoticeTitle: '💡 In-App Browser Notice',
+    tiktokNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
+    tapHere: 'Tap here (...)',
+    gotIt: 'Got it!'
   },
   de: {
     title: 'Dein Lernpaket',
@@ -105,8 +107,10 @@ const translations = {
     errFailed: 'Download fehlgeschlagen',
     errNetwork: 'Netzwerkfehler beim Download',
     accessDenied: 'Fehler',
-    tiktokNoticeTitle: '💡 Hinweis für TikTok / Instagram Browser',
-    tiktokNoticeDesc: 'Falls Downloads im TikTok-Browser nicht starten: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).'
+    tiktokNoticeTitle: '💡 Hinweis für In-App-Browser',
+    tiktokNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
+    tapHere: 'Hier tippen (...)',
+    gotIt: 'Alles klar!'
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -151,8 +155,10 @@ const translations = {
     errFailed: 'Téléchargement échoué',
     errNetwork: 'Erreur réseau lors du téléchargement',
     accessDenied: 'Accès refusé',
-    tiktokNoticeTitle: '💡 Remarque pour le navigateur TikTok / Instagram',
-    tiktokNoticeDesc: 'Si les téléchargements ne démarrent pas dans TikTok : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).'
+    tiktokNoticeTitle: '💡 Remarque pour le navigateur intégré',
+    tiktokNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    tapHere: 'Appuyez ici (...)',
+    gotIt: 'Compris !'
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -197,8 +203,10 @@ const translations = {
     errFailed: 'Descarga fallida',
     errNetwork: 'Error de red durante la descarga',
     accessDenied: 'Acceso denegado',
-    tiktokNoticeTitle: '💡 Aviso para el navegador de TikTok / Instagram',
-    tiktokNoticeDesc: 'Si las descargas no se inician en TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).'
+    tiktokNoticeTitle: '💡 Aviso para el navegador integrado',
+    tiktokNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    tapHere: 'Toca aquí (...)',
+    gotIt: '¡Entendido!'
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -243,8 +251,10 @@ const translations = {
     errFailed: 'Download fallito',
     errNetwork: 'Errore di rete durante il download',
     accessDenied: 'Accesso negato',
-    tiktokNoticeTitle: '💡 Avviso per il browser TikTok / Instagram',
-    tiktokNoticeDesc: 'Se i download non si avviano in TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).'
+    tiktokNoticeTitle: '💡 Avviso per il browser in-app',
+    tiktokNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    tapHere: 'Tocca qui (...)',
+    gotIt: 'Ho capito!'
   }
 };
 
@@ -433,8 +443,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <div className="absolute -top-12 -left-12 w-24 h-24 bg-neon-cyan/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -right-12 w-24 h-24 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none" />
 
-          {/* TikTok In-App Browser Warning Banner */}
-          {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) && (
+          {/* Social In-App Browser Warning Banner */}
+          {/TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV/i.test(navigator.userAgent) && (
             <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs sm:text-sm flex items-start gap-3">
               <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
               <div>
@@ -741,7 +751,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             <div className="absolute top-4 right-8 flex flex-col items-end text-amber-400 animate-bounce">
               <span className="text-4xl font-bold">↗</span>
               <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/40">
-                {activeLang === 'de' ? 'Hier tippen (...)' : 'Tap here (...)'}
+                {t.tapHere}
               </span>
             </div>
 
@@ -759,7 +769,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 onClick={() => setShowTiktokModal(false)}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan text-white font-bold text-sm hover:from-neon-cyan/30 hover:to-neon-pink/30 transition-all cursor-pointer"
               >
-                {activeLang === 'de' ? 'Alles klar!' : 'Got it!'}
+                {t.gotIt}
               </button>
             </div>
           </div>

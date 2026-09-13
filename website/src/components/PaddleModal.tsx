@@ -96,7 +96,7 @@ const translations = {
     payWithPaypal: 'Pay with PayPal',
     optionalForPaypal: '(optional with PayPal)',
     emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
-    tiktokDownloadNotice: 'If downloads do not start in TikTok: Tap "..." in the top right corner and choose "Open in browser".',
+    tiktokDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -171,7 +171,7 @@ const translations = {
     payWithPaypal: 'Mit PayPal bezahlen',
     optionalForPaypal: '(optional bei PayPal)',
     emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
-    tiktokDownloadNotice: 'Falls der Download in TikTok nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“.',
+    tiktokDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -246,7 +246,7 @@ const translations = {
     payWithPaypal: 'Payer avec PayPal',
     optionalForPaypal: '(facultatif avec PayPal)',
     emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
-    tiktokDownloadNotice: 'Si le téléchargement ne démarre pas dans TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur ».',
+    tiktokDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -321,7 +321,7 @@ const translations = {
     payWithPaypal: 'Pagar con PayPal',
     optionalForPaypal: '(opcional con PayPal)',
     emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
-    tiktokDownloadNotice: 'Si la descarga no se inicia en TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador".',
+    tiktokDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -396,7 +396,7 @@ const translations = {
     payWithPaypal: 'Paga con PayPal',
     optionalForPaypal: '(facoltativo con PayPal)',
     emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
-    tiktokDownloadNotice: 'Se il download non si avvia in TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser".',
+    tiktokDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
   }
 };
 
@@ -1611,7 +1611,7 @@ export default function PaddleModal({
                       </p>
                     </div>
 
-                    {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) && (
+                    {/TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV/i.test(navigator.userAgent) && (
                       <div className="w-full bg-amber-500/10 border border-amber-500/25 rounded-xl p-3 text-xs text-amber-300 flex items-start gap-2.5 my-1 text-left">
                         <span className="text-sm leading-none mt-0.5">💡</span>
                         <div className="flex-1 leading-snug">
