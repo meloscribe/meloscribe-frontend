@@ -98,7 +98,7 @@ const translations = {
     emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
     tiktokDownloadNotice: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
     inAppDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
-    tapHere: 'Tap here (...)',
+    tapHere: 'Tap here (...) and open browser',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -175,7 +175,7 @@ const translations = {
     emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
     tiktokDownloadNotice: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
     inAppDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
-    tapHere: 'Hier tippen (...)',
+    tapHere: 'Hier tippen (...) und im Browser öffnen',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -252,7 +252,7 @@ const translations = {
     emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
     tiktokDownloadNotice: 'Les téléchargements ne fonctionnent pas directement dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
     inAppDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
-    tapHere: 'Appuyez ici (...)',
+    tapHere: 'Appuyez ici (...) et ouvrez dans le navigateur',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -329,7 +329,7 @@ const translations = {
     emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
     tiktokDownloadNotice: 'Las descargas no funcionan directamente en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     inAppDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
-    tapHere: 'Toca aquí (...)',
+    tapHere: 'Toca aquí (...) y abre en el navegador',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -406,7 +406,7 @@ const translations = {
     emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
     tiktokDownloadNotice: 'I download non funzionano direttamente nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     inAppDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
-    tapHere: 'Tocca qui (...)',
+    tapHere: 'Tocca qui (...) e apri nel browser',
   }
 };
 
@@ -1937,7 +1937,7 @@ export default function PaddleModal({
           <div className="mr-3 sm:mr-6 mt-2 flex flex-col items-end text-amber-400 animate-bounce pointer-events-none">
             <span className="text-5xl font-bold leading-none">↗</span>
             <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/25 px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 shadow-xl mt-1">
-              {t.tapHere || 'Tap here (...)'}
+              {t.tapHere || 'Tap here (...) and open browser'}
             </span>
           </div>
         </div>

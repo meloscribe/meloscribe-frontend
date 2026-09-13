@@ -63,7 +63,7 @@ const translations = {
     tiktokNoticeDesc: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right and select "Open in Browser" (Safari / Chrome).',
     inAppNoticeTitle: '💡 In-App Browser Notice',
     inAppNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
-    tapHere: 'Tap here (...)',
+    tapHere: 'Tap here (...) and open browser',
   },
   de: {
     title: 'Dein Lernpaket',
@@ -112,7 +112,7 @@ const translations = {
     tiktokNoticeDesc: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
     inAppNoticeTitle: '💡 Hinweis für In-App-Browser',
     inAppNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
-    tapHere: 'Hier tippen (...)',
+    tapHere: 'Hier tippen (...) und im Browser öffnen',
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -161,7 +161,7 @@ const translations = {
     tiktokNoticeDesc: 'Les téléchargements ne fonctionnent pas dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
     inAppNoticeTitle: '💡 Remarque pour le navigateur intégré',
     inAppNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
-    tapHere: 'Appuyez ici (...)',
+    tapHere: 'Appuyez ici (...) et ouvrez dans le navigateur',
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -210,7 +210,7 @@ const translations = {
     tiktokNoticeDesc: 'Las descargas no funcionan en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     inAppNoticeTitle: '💡 Aviso para el navegador integrado',
     inAppNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
-    tapHere: 'Toca aquí (...)',
+    tapHere: 'Toca aquí (...) y abre en el navegador',
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -259,7 +259,7 @@ const translations = {
     tiktokNoticeDesc: 'I download non funzionano nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     inAppNoticeTitle: '💡 Avviso per il browser in-app',
     inAppNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
-    tapHere: 'Tocca qui (...)',
+    tapHere: 'Tocca qui (...) e apri nel browser',
   }
 };
 
