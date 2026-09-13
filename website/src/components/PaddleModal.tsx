@@ -96,10 +96,9 @@ const translations = {
     payWithPaypal: 'Pay with PayPal',
     optionalForPaypal: '(optional with PayPal)',
     emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
-    tiktokDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
-    tiktokNoticeTitle: '💡 In-App Browser Notice',
+    tiktokDownloadNotice: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
+    inAppDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
     tapHere: 'Tap here (...)',
-    gotIt: 'Got it!',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -174,10 +173,9 @@ const translations = {
     payWithPaypal: 'Mit PayPal bezahlen',
     optionalForPaypal: '(optional bei PayPal)',
     emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
-    tiktokDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
-    tiktokNoticeTitle: '💡 Hinweis für In-App-Browser',
+    tiktokDownloadNotice: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
+    inAppDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
     tapHere: 'Hier tippen (...)',
-    gotIt: 'Alles klar!',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -252,10 +250,9 @@ const translations = {
     payWithPaypal: 'Payer avec PayPal',
     optionalForPaypal: '(facultatif avec PayPal)',
     emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
-    tiktokDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
-    tiktokNoticeTitle: '💡 Remarque pour le navigateur intégré',
+    tiktokDownloadNotice: 'Les téléchargements ne fonctionnent pas directement dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    inAppDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
     tapHere: 'Appuyez ici (...)',
-    gotIt: 'Compris !',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -330,10 +327,9 @@ const translations = {
     payWithPaypal: 'Pagar con PayPal',
     optionalForPaypal: '(opcional con PayPal)',
     emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
-    tiktokDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
-    tiktokNoticeTitle: '💡 Aviso para el navegador integrado',
+    tiktokDownloadNotice: 'Las descargas no funcionan directamente en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    inAppDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     tapHere: 'Toca aquí (...)',
-    gotIt: '¡Entendido!',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -408,10 +404,9 @@ const translations = {
     payWithPaypal: 'Paga con PayPal',
     optionalForPaypal: '(facoltativo con PayPal)',
     emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
-    tiktokDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
-    tiktokNoticeTitle: '💡 Avviso per il browser in-app',
+    tiktokDownloadNotice: 'I download non funzionano direttamente nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    inAppDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     tapHere: 'Tocca qui (...)',
-    gotIt: 'Ho capito!',
   }
 };
 
@@ -1627,7 +1622,7 @@ export default function PaddleModal({
                       <div className="w-full bg-amber-500/10 border border-amber-500/25 rounded-xl p-3 text-xs text-amber-300 flex items-start gap-2.5 my-1 text-left">
                         <span className="text-sm leading-none mt-0.5">💡</span>
                         <div className="flex-1 leading-snug">
-                          {t.tiktokDownloadNotice}
+                          {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) ? t.tiktokDownloadNotice : t.inAppDownloadNotice}
                         </div>
                       </div>
                     )}
@@ -1932,33 +1927,18 @@ export default function PaddleModal({
         </div>
       )}
 
-      {/* TikTok Helper Modal overlay */}
+      {/* TikTok Helper Overlay - only arrow top-right, no popup box */}
       {showTiktokModal && (
-        <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div 
+          onClick={() => setShowTiktokModal(false)}
+          className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex flex-col items-end p-4 cursor-pointer"
+        >
           {/* Pointer Arrow pointing to top right */}
-          <div className="absolute top-4 right-8 flex flex-col items-end text-amber-400 animate-bounce">
-            <span className="text-4xl font-bold">↗</span>
-            <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/40">
+          <div className="mr-3 sm:mr-6 mt-2 flex flex-col items-end text-amber-400 animate-bounce pointer-events-none">
+            <span className="text-5xl font-bold leading-none">↗</span>
+            <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/25 px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 shadow-xl mt-1">
               {t.tapHere || 'Tap here (...)'}
             </span>
-          </div>
-
-          <div className="max-w-sm w-full bg-dark-800 border border-amber-500/40 rounded-2xl p-6 text-center shadow-2xl relative">
-            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-4">
-              <Info className="w-6 h-6 text-amber-400" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">
-              {t.tiktokNoticeTitle || '💡 In-App Browser Notice'}
-            </h3>
-            <p className="text-xs text-gray-300 mb-6 leading-relaxed">
-              {t.tiktokDownloadNotice}
-            </p>
-            <button
-              onClick={() => setShowTiktokModal(false)}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan text-white font-bold text-sm hover:from-neon-cyan/30 hover:to-neon-pink/30 transition-all cursor-pointer"
-            >
-              {t.gotIt || 'Got it!'}
-            </button>
           </div>
         </div>
       )}

@@ -59,10 +59,11 @@ const translations = {
     errFailed: 'Download failed',
     errNetwork: 'Network error during download',
     accessDenied: 'Access Denied',
-    tiktokNoticeTitle: '💡 In-App Browser Notice',
-    tiktokNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 TikTok Browser Notice',
+    tiktokNoticeDesc: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right and select "Open in Browser" (Safari / Chrome).',
+    inAppNoticeTitle: '💡 In-App Browser Notice',
+    inAppNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
     tapHere: 'Tap here (...)',
-    gotIt: 'Got it!'
   },
   de: {
     title: 'Dein Lernpaket',
@@ -107,10 +108,11 @@ const translations = {
     errFailed: 'Download fehlgeschlagen',
     errNetwork: 'Netzwerkfehler beim Download',
     accessDenied: 'Fehler',
-    tiktokNoticeTitle: '💡 Hinweis für In-App-Browser',
-    tiktokNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Hinweis für TikTok-Browser',
+    tiktokNoticeDesc: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
+    inAppNoticeTitle: '💡 Hinweis für In-App-Browser',
+    inAppNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
     tapHere: 'Hier tippen (...)',
-    gotIt: 'Alles klar!'
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -155,10 +157,11 @@ const translations = {
     errFailed: 'Téléchargement échoué',
     errNetwork: 'Erreur réseau lors du téléchargement',
     accessDenied: 'Accès refusé',
-    tiktokNoticeTitle: '💡 Remarque pour le navigateur intégré',
-    tiktokNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Navigateur TikTok',
+    tiktokNoticeDesc: 'Les téléchargements ne fonctionnent pas dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    inAppNoticeTitle: '💡 Remarque pour le navigateur intégré',
+    inAppNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
     tapHere: 'Appuyez ici (...)',
-    gotIt: 'Compris !'
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -203,10 +206,11 @@ const translations = {
     errFailed: 'Descarga fallida',
     errNetwork: 'Error de red durante la descarga',
     accessDenied: 'Acceso denegado',
-    tiktokNoticeTitle: '💡 Aviso para el navegador integrado',
-    tiktokNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Navegador de TikTok',
+    tiktokNoticeDesc: 'Las descargas no funcionan en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    inAppNoticeTitle: '💡 Aviso para el navegador integrado',
+    inAppNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     tapHere: 'Toca aquí (...)',
-    gotIt: '¡Entendido!'
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -251,10 +255,11 @@ const translations = {
     errFailed: 'Download fallito',
     errNetwork: 'Errore di rete durante il download',
     accessDenied: 'Accesso negato',
-    tiktokNoticeTitle: '💡 Avviso per il browser in-app',
-    tiktokNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Browser TikTok',
+    tiktokNoticeDesc: 'I download non funzionano nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    inAppNoticeTitle: '💡 Avviso per il browser in-app',
+    inAppNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     tapHere: 'Tocca qui (...)',
-    gotIt: 'Ho capito!'
   }
 };
 
@@ -443,10 +448,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
               <div>
                 <span className="font-bold block mb-1">
-                  {t.tiktokNoticeTitle}
+                  {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) ? t.tiktokNoticeTitle : t.inAppNoticeTitle}
                 </span>
                 <span>
-                  {t.tiktokNoticeDesc}
+                  {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) ? t.tiktokNoticeDesc : t.inAppNoticeDesc}
                 </span>
               </div>
             </div>
@@ -738,33 +743,18 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <span>{t.backHome}</span>
         </button>
 
-        {/* TikTok Helper Modal for iOS/TikTok in-app browser */}
+        {/* TikTok Helper Overlay - only arrow top-right, no popup box */}
         {showTiktokModal && (
-          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div 
+            onClick={() => setShowTiktokModal(false)}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col items-end p-4 cursor-pointer"
+          >
             {/* Pointer Arrow pointing to top right */}
-            <div className="absolute top-4 right-8 flex flex-col items-end text-amber-400 animate-bounce">
-              <span className="text-4xl font-bold">↗</span>
-              <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/40">
+            <div className="mr-3 sm:mr-6 mt-2 flex flex-col items-end text-amber-400 animate-bounce pointer-events-none">
+              <span className="text-5xl font-bold leading-none">↗</span>
+              <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/25 px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 shadow-xl mt-1">
                 {t.tapHere}
               </span>
-            </div>
-
-            <div className="max-w-sm w-full bg-dark-800 border border-amber-500/40 rounded-2xl p-6 text-center shadow-2xl relative">
-              <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-4">
-                <Info className="w-6 h-6 text-amber-400" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">
-                {t.tiktokNoticeTitle}
-              </h3>
-              <p className="text-xs text-gray-300 mb-6 leading-relaxed">
-                {t.tiktokNoticeDesc}
-              </p>
-              <button
-                onClick={() => setShowTiktokModal(false)}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan text-white font-bold text-sm hover:from-neon-cyan/30 hover:to-neon-pink/30 transition-all cursor-pointer"
-              >
-                {t.gotIt}
-              </button>
             </div>
           </div>
         )}
