@@ -999,20 +999,40 @@ export default function PaddleModal({
         #stripe-express-checkout {
           width: 100% !important;
           max-width: 100% !important;
-          overflow-x: hidden !important;
+          overflow: hidden !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
           min-height: 46px;
         }
-        #stripe-link-auth {
-          width: 100% !important;
-          max-width: 100% !important;
-          overflow-x: hidden !important;
-          min-height: 48px;
+        #stripe-express-checkout iframe,
+        #stripe-express-checkout * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        #stripe-express-checkout::-webkit-scrollbar,
+        #stripe-express-checkout *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
         }
         #stripe-payment-element {
           width: 100% !important;
           max-width: 100% !important;
-          overflow-x: hidden !important;
+          overflow: hidden !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
           min-height: 180px;
+        }
+        #stripe-payment-element iframe,
+        #stripe-payment-element * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        #stripe-payment-element::-webkit-scrollbar,
+        #stripe-payment-element *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
         }
         .modal-backdrop-blur {
           backdrop-filter: blur(16px) !important;
@@ -1274,7 +1294,7 @@ export default function PaddleModal({
                   ) : (
                     <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
                       {/* Express Checkout Element (Apple Pay, Google Pay, PayPal) */}
-                      <div id="stripe-express-checkout" className={expressAvailable ? 'block' : 'hidden'} />
+                      <div id="stripe-express-checkout" className={`${expressAvailable ? 'block' : 'hidden'} overflow-hidden`} style={{ overflow: 'hidden' }} />
 
                       {/* Divider between Express and regular tabs */}
                       {expressAvailable && (
@@ -1304,7 +1324,7 @@ export default function PaddleModal({
                         <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                           {t.paymentMethod}
                         </span>
-                        <div id="stripe-payment-element" />
+                        <div id="stripe-payment-element" className="overflow-hidden" style={{ overflow: 'hidden' }} />
                       </div>
 
                       {/* Error Message if submit fails */}
