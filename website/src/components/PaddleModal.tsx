@@ -954,6 +954,7 @@ export default function PaddleModal({
           maxRows: 0,
           overflow: 'never',
         },
+        emailRequired: true,
         paymentMethods: {
           link: 'never',
           klarna: 'never',
@@ -986,7 +987,7 @@ export default function PaddleModal({
         setExpressAvailable(hasAnyExpress);
       });
 
-      expressCheckout.on('confirm', async () => {
+      expressCheckout.on('confirm', async (event: any) => {
         setIsSubmittingPayment(true);
         setPaymentFormError(null);
         try {
@@ -997,12 +998,21 @@ export default function PaddleModal({
             return;
           }
           const origin = window.location.origin;
+          const confirmParams: any = {
+            return_url: `${origin}/success`,
+          };
+          if (event && event.billingDetails && event.billingDetails.email) {
+            confirmParams.receipt_email = event.billingDetails.email;
+            confirmParams.payment_method_data = {
+              billing_details: {
+                email: event.billingDetails.email,
+              },
+            };
+          }
           const { error } = await stripe.confirmPayment({
             elements,
             clientSecret: data.clientSecret,
-            confirmParams: {
-              return_url: `${origin}/success`,
-            },
+            confirmParams,
           });
           if (error) {
             setPaymentFormError(error.message || t.paymentFailed);
@@ -1074,11 +1084,10 @@ export default function PaddleModal({
 
     const email = customerEmail.trim();
     const isEmailValid = Boolean(email && email.includes('@') && email.includes('.'));
-    const isCard = selectedPaymentMethod === 'card';
 
-    // Email is only strictly required upfront for Card payments if not provided.
-    // For PayPal (and other redirect wallets), PayPal automatically returns the verified buyer email.
-    if (isCard && !isEmailValid) {
+    // A valid email address is strictly required for all payment methods so the customer
+    // receives their sheet music download link and proof of purchase.
+    if (!isEmailValid) {
       setPaymentFormError(t.invalidEmail);
       return;
     }
@@ -1473,17 +1482,13 @@ export default function PaddleModal({
                       <div>
                         <label className="flex items-center justify-between text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                           <span>{t.contactInformation}</span>
-                          {(selectedPaymentMethod === 'paypal' || selectedPaymentMethod === 'paypal_express') && (
-                            <span className="text-[11px] font-normal text-neon-cyan/90 normal-case tracking-normal">
-                              {t.optionalForPaypal}
-                            </span>
-                          )}
                         </label>
                         <input
                           type="email"
+                          required
                           value={customerEmail}
                           onChange={(e) => setCustomerEmail(e.target.value)}
-                          placeholder={selectedPaymentMethod === 'paypal' ? (t.emailPlaceholderPaypal || t.emailPlaceholder) : t.emailPlaceholder}
+                          placeholder={t.emailPlaceholder}
                           className="w-full bg-[#161616] border border-[#262626] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan outline-none transition-all shadow-inner"
                         />
                       </div>
