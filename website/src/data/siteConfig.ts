@@ -44,13 +44,17 @@ export const formattedTotalSheets = formatSheetsCount(totalSheets);
 export const totalCustomers = 14;
 
 export function formatCustomersCount(count: number): string {
+  if (!count || count < 100) {
+    return '';
+  }
   if (count >= 1000000) {
     return (count / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
   }
   if (count >= 1000) {
-    return (count / 1000).toFixed(0) + 'K+';
+    const hundreds = Math.floor(count / 100) / 10;
+    return hundreds.toFixed(1).replace(/\.0$/, '') + 'K+';
   }
-  return count.toString();
+  return `${Math.floor(count / 100) * 100}+`;
 }
 
 export const formattedTotalCustomers = formatCustomersCount(totalCustomers);

@@ -1299,21 +1299,25 @@ function App() {
                 })}
               </div>
 
-              {/* Stats Section with dynamic Total Followers calculation */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-16 pt-16 border-t border-gray-200 dark:border-dark-600/50">
-                <div className="text-center">
-                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">
-                    {liveFollowers}
+              {/* Stats Section with dynamic Total Followers calculation and threshold-based customer showcase */}
+              <div className="mt-16 pt-16 border-t border-gray-200 dark:border-dark-600/50">
+                <div className={`grid ${liveCustomers ? 'grid-cols-3 max-w-3xl' : 'grid-cols-2 max-w-xl'} gap-4 sm:gap-8 mx-auto`}>
+                  <div className="text-center">
+                    <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">
+                      {liveFollowers}
+                    </div>
+                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsFollowers}</div>
                   </div>
-                  <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsFollowers}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{formattedTotalSheets}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsSheets}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{liveCustomers}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsCustomers}</div>
+                  <div className="text-center">
+                    <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{formattedTotalSheets}</div>
+                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsSheets}</div>
+                  </div>
+                  {liveCustomers ? (
+                    <div className="text-center animate-in fade-in duration-300">
+                      <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">{liveCustomers}</div>
+                      <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{t.statsCustomers}</div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
