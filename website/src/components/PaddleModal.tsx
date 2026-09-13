@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
-import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
+import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement, StripeLinkAuthenticationElement } from '@stripe/stripe-js';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -76,6 +76,8 @@ const translations = {
     backToSelection: 'Back to selection',
     loadingCheckout: 'Loading secure checkout...',
     orCardKlarna: 'Or pay with Card / Klarna',
+    contactInformation: 'Contact Information',
+    paymentMethod: 'Payment Method',
     payNow: 'Pay Securely',
     processingPayment: 'Processing payment...',
     pciCompliant: '256-Bit SSL • Instant download after purchase',
@@ -133,6 +135,8 @@ const translations = {
     backToSelection: 'Zurück zur Auswahl',
     loadingCheckout: 'Sicherer Checkout wird geladen...',
     orCardKlarna: 'Oder mit Karte / Klarna / EPS',
+    contactInformation: 'Kontaktinformationen',
+    paymentMethod: 'Zahlungsmethode',
     payNow: 'Jetzt sicher bezahlen',
     processingPayment: 'Zahlung wird verarbeitet...',
     pciCompliant: '256-Bit SSL-Verschlüsselung • Sofortiger Download nach Kauf',
@@ -190,6 +194,8 @@ const translations = {
     backToSelection: 'Retour à la sélection',
     loadingCheckout: 'Chargement du paiement sécurisé...',
     orCardKlarna: 'Ou avec Carte / Klarna',
+    contactInformation: 'Coordonnées',
+    paymentMethod: 'Moyen de paiement',
     payNow: 'Payer en toute sécurité',
     processingPayment: 'Traitement du paiement...',
     pciCompliant: 'Chiffrement SSL 256 bits • Téléchargement instantané',
@@ -247,6 +253,8 @@ const translations = {
     backToSelection: 'Volver a la selección',
     loadingCheckout: 'Cargando pago seguro...',
     orCardKlarna: 'O con Tarjeta / Klarna',
+    contactInformation: 'Información de contacto',
+    paymentMethod: 'Método de pago',
     payNow: 'Pagar con seguridad',
     processingPayment: 'Procesando el pago...',
     pciCompliant: 'Cifrado SSL de 256 bits • Descarga instantánea tras la compra',
@@ -304,6 +312,8 @@ const translations = {
     backToSelection: 'Torna alla selezione',
     loadingCheckout: 'Caricamento del pagamento sicuro...',
     orCardKlarna: 'O con Carta / Klarna',
+    contactInformation: 'Informazioni di contatto',
+    paymentMethod: 'Metodo di pagamento',
     payNow: 'Paga in sicurezza',
     processingPayment: 'Elaborazione del pagamento...',
     pciCompliant: 'Crittografia SSL a 256 bit • Download immediato',
@@ -344,7 +354,10 @@ export default function PaddleModal({
   const stripeRef = useRef<Stripe | null>(null);
   const elementsRef = useRef<StripeElements | null>(null);
   const expressCheckoutRef = useRef<StripeExpressCheckoutElement | null>(null);
+  const linkAuthenticationRef = useRef<StripeLinkAuthenticationElement | null>(null);
   const paymentElementRef = useRef<StripePaymentElement | null>(null);
+  const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
+  const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
 
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' || 
@@ -360,6 +373,14 @@ export default function PaddleModal({
         console.warn("Failed to destroy expressCheckout instance", e);
       }
       expressCheckoutRef.current = null;
+    }
+    if (linkAuthenticationRef.current) {
+      try {
+        linkAuthenticationRef.current.destroy();
+      } catch (e) {
+        console.warn("Failed to destroy linkAuthentication instance", e);
+      }
+      linkAuthenticationRef.current = null;
     }
     if (paymentElementRef.current) {
       try {
@@ -655,6 +676,55 @@ export default function PaddleModal({
     setIsRedirecting(false);
   };
 
+  const prefetchCheckoutSession = async (diff: string, sId: string, pId?: string) => {
+    const cacheKey = `${sId}_${diff}_${pId || ''}_${language}`;
+    if (sessionCacheRef.current[cacheKey]) {
+      return sessionCacheRef.current[cacheKey];
+    }
+    if (prefetchPromiseRef.current[cacheKey]) {
+      return prefetchPromiseRef.current[cacheKey];
+    }
+
+    const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8787'
+      : 'https://api.meloscribe.dev';
+
+    const promise = (async () => {
+      const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          songId: sId,
+          format: 'full_arrangement',
+          difficulty: diff,
+          priceId: pId,
+          language: language,
+          embedded: true
+        })
+      });
+      if (!res.ok) {
+        throw new Error(await res.text() || 'Failed to create checkout session');
+      }
+      const data = await res.json();
+      sessionCacheRef.current[cacheKey] = data;
+      if (data.publishableKey) {
+        loadStripe(data.publishableKey).catch(() => {});
+      }
+      return data;
+    })();
+
+    prefetchPromiseRef.current[cacheKey] = promise;
+    return promise;
+  };
+
+  useEffect(() => {
+    if (isOpen && !isFree && isLocalhost && currentSongId) {
+      prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId).catch((e) => {
+        console.warn("[Prefetch Session Error]:", e);
+      });
+    }
+  }, [isOpen, selectedDifficulty, currentSongId, currentPriceId, isFree, isLocalhost, language]);
+
   const handleBuyClick = async () => {
     if (!isLocalhost) {
       handleStripeCheckoutRedirect();
@@ -668,31 +738,17 @@ export default function PaddleModal({
     setExpressAvailable(false);
 
     try {
-      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8787'
-        : 'https://api.meloscribe.dev';
-
-      const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          songId: currentSongId,
-          format: 'full_arrangement',
-          difficulty: selectedDifficulty,
-          priceId: currentPriceId,
-          language: language,
-          embedded: true
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error(await res.text() || 'Failed to create embedded checkout session');
+      const cacheKey = `${currentSongId}_${selectedDifficulty}_${currentPriceId || ''}_${language}`;
+      let data = sessionCacheRef.current[cacheKey];
+      if (!data) {
+        if (prefetchPromiseRef.current[cacheKey]) {
+          data = await prefetchPromiseRef.current[cacheKey];
+        } else {
+          data = await prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId);
+        }
       }
 
-      const data = await res.json();
-      if (!data.clientSecret || !data.publishableKey) {
+      if (!data || !data.clientSecret || !data.publishableKey) {
         throw new Error('Invalid response from payment server');
       }
 
@@ -706,50 +762,57 @@ export default function PaddleModal({
         try { expressCheckoutRef.current.destroy(); } catch (_) {}
         expressCheckoutRef.current = null;
       }
+      if (linkAuthenticationRef.current) {
+        try { linkAuthenticationRef.current.destroy(); } catch (_) {}
+        linkAuthenticationRef.current = null;
+      }
       if (paymentElementRef.current) {
         try { paymentElementRef.current.destroy(); } catch (_) {}
         paymentElementRef.current = null;
       }
 
+      const stripeLocale = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'auto') as any;
+
       const elements = stripe.elements({
         clientSecret: data.clientSecret,
+        locale: stripeLocale,
         appearance: {
           theme: 'night',
           variables: {
             colorPrimary: '#00F5FF',
-            colorBackground: '#0E1420',
-            colorText: '#F8FAFC',
+            colorBackground: '#111111',
+            colorText: '#FFFFFF',
             colorDanger: '#FF4D4D',
             fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-            borderRadius: '12px',
+            borderRadius: '10px',
             colorTextSecondary: '#94A3B8',
             colorIcon: '#94A3B8',
             spacingUnit: '4px',
-            gridRowSpacing: '14px',
-            gridColumnSpacing: '14px',
+            gridRowSpacing: '12px',
+            gridColumnSpacing: '12px',
           },
           rules: {
-            '.Tab': {
-              backgroundColor: '#131926',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+            '.Tab, .AccordionItem': {
+              backgroundColor: '#161616',
+              border: '1px solid #262626',
               borderRadius: '10px',
               color: '#94A3B8',
               transition: 'all 0.2s ease',
             },
-            '.Tab:hover': {
-              backgroundColor: '#1A2234',
-              border: '1px solid rgba(0, 245, 255, 0.3)',
+            '.Tab:hover, .AccordionItem:hover': {
+              backgroundColor: '#1C1C1C',
+              borderColor: 'rgba(0, 245, 255, 0.4)',
               color: '#FFFFFF',
             },
-            '.Tab--selected': {
-              backgroundColor: '#131926',
+            '.Tab--selected, .AccordionItem--selected': {
+              backgroundColor: '#161616',
               borderColor: '#00F5FF',
-              boxShadow: '0 0 12px rgba(0, 245, 255, 0.25)',
+              boxShadow: '0 0 12px rgba(0, 245, 255, 0.2)',
               color: '#00F5FF',
             },
             '.Input': {
-              backgroundColor: '#131926',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              backgroundColor: '#161616',
+              border: '1px solid #262626',
               borderRadius: '10px',
               color: '#FFFFFF',
               fontSize: '14px',
@@ -757,8 +820,8 @@ export default function PaddleModal({
               transition: 'border-color 0.2s, box-shadow 0.2s',
             },
             '.Input:focus': {
-              border: '1px solid #00F5FF',
-              boxShadow: '0 0 12px rgba(0, 245, 255, 0.25)',
+              borderColor: '#00F5FF',
+              boxShadow: '0 0 10px rgba(0, 245, 255, 0.25)',
               outline: 'none',
             },
             '.Label': {
@@ -768,8 +831,13 @@ export default function PaddleModal({
               marginBottom: '6px',
             },
             '.Dropdown': {
-              backgroundColor: '#131926',
-              borderColor: 'rgba(255, 255, 255, 0.12)',
+              backgroundColor: '#161616',
+              borderColor: '#262626',
+              color: '#FFFFFF',
+            },
+            '.CheckboxInput': {
+              backgroundColor: '#161616',
+              borderColor: '#333333',
             }
           }
         }
@@ -799,8 +867,16 @@ export default function PaddleModal({
         }
       });
 
+      const linkAuth = elements.create('linkAuthentication');
+      linkAuthenticationRef.current = linkAuth;
+
       const paymentElement = elements.create('payment', {
-        layout: 'tabs'
+        layout: {
+          type: 'accordion',
+          defaultCollapsed: true,
+          radios: 'always',
+          spacedAccordionItems: false,
+        }
       });
       paymentElementRef.current = paymentElement;
 
@@ -812,6 +888,10 @@ export default function PaddleModal({
         const expressMount = document.getElementById('stripe-express-checkout');
         if (expressMount) {
           expressCheckout.mount('#stripe-express-checkout');
+        }
+        const linkMount = document.getElementById('stripe-link-auth');
+        if (linkMount) {
+          linkAuth.mount('#stripe-link-auth');
         }
         const paymentMount = document.getElementById('stripe-payment-element');
         if (paymentMount) {
@@ -885,9 +965,13 @@ export default function PaddleModal({
           width: 100% !important;
           min-height: 46px;
         }
+        #stripe-link-auth {
+          width: 100% !important;
+          min-height: 48px;
+        }
         #stripe-payment-element {
           width: 100% !important;
-          min-height: 250px;
+          min-height: 180px;
         }
         .modal-backdrop-blur {
           backdrop-filter: blur(16px) !important;
@@ -1118,11 +1202,11 @@ export default function PaddleModal({
                 </div>
 
                 {/* Stripe Mount Container */}
-                <div className="relative w-full mt-3 rounded-2xl bg-[#0B0F17] border border-gray-200 dark:border-dark-600/60 p-4 md:p-5 shadow-2xl transition-all duration-300">
+                <div className="relative w-full mt-3 rounded-2xl bg-gray-50 dark:bg-dark-800 border border-gray-200 dark:border-dark-600/60 p-4 md:p-5 shadow-2xl transition-all duration-300">
                   {isEmbeddedLoading && (
-                    <div className="flex flex-col items-center justify-center gap-3 py-14 bg-[#0B0F17]/95 backdrop-blur-sm z-20">
+                    <div className="flex flex-col items-center justify-center gap-3 py-14 bg-gray-50/95 dark:bg-dark-800/95 backdrop-blur-sm z-20">
                       <Loader2 className="w-8 h-8 text-neon-cyan animate-spin" />
-                      <p className="text-xs font-medium text-gray-300">{t.loadingCheckout}</p>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{t.loadingCheckout}</p>
                     </div>
                   )}
 
@@ -1154,14 +1238,27 @@ export default function PaddleModal({
                       {/* Divider between Express and regular tabs */}
                       {expressAvailable && (
                         <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                          <div className="flex-1 border-b border-white/10" />
+                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
                           <span className="px-3">{t.orCardKlarna}</span>
-                          <div className="flex-1 border-b border-white/10" />
+                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
                         </div>
                       )}
 
+                      {/* Contact Information (Email) */}
+                      <div>
+                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                          {t.contactInformation}
+                        </span>
+                        <div id="stripe-link-auth" />
+                      </div>
+
                       {/* Regular Payment Element (Card, Klarna, EPS, etc.) */}
-                      <div id="stripe-payment-element" />
+                      <div>
+                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                          {t.paymentMethod}
+                        </span>
+                        <div id="stripe-payment-element" />
+                      </div>
 
                       {/* Error Message if submit fails */}
                       {paymentFormError && (
