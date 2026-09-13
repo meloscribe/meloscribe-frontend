@@ -365,14 +365,12 @@ export default function PaddleModal({
   const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
   const [expressAvailable, setExpressAvailable] = useState(false);
-  const [isExpressLoading, setIsExpressLoading] = useState(true);
   const [customerEmail, setCustomerEmail] = useState('');
 
   const stripeRef = useRef<Stripe | null>(null);
   const elementsRef = useRef<StripeElements | null>(null);
   const expressCheckoutRef = useRef<StripeExpressCheckoutElement | null>(null);
   const paymentElementRef = useRef<StripePaymentElement | null>(null);
-  const expressTimeoutRef = useRef<number | null>(null);
   const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
   const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
 
@@ -413,17 +411,12 @@ export default function PaddleModal({
     }
     elementsRef.current = null;
     stripeRef.current = null;
-    if (expressTimeoutRef.current) {
-      window.clearTimeout(expressTimeoutRef.current);
-      expressTimeoutRef.current = null;
-    }
     setCheckoutStep('details');
     setIsEmbeddedLoading(false);
     setEmbeddedError(null);
     setPaymentFormError(null);
     setIsSubmittingPayment(false);
     setExpressAvailable(false);
-    setIsExpressLoading(true);
   };
 
   useEffect(() => {
@@ -774,14 +767,6 @@ export default function PaddleModal({
     setEmbeddedError(null);
     setPaymentFormError(null);
     setExpressAvailable(false);
-    setIsExpressLoading(true);
-
-    if (expressTimeoutRef.current) {
-      window.clearTimeout(expressTimeoutRef.current);
-    }
-    expressTimeoutRef.current = window.setTimeout(() => {
-      setIsExpressLoading(false);
-    }, 4500);
 
     try {
       const cacheKey = `${currentSongId}_${selectedDifficulty}_${currentPriceId || ''}_${language}`;
@@ -905,21 +890,14 @@ export default function PaddleModal({
       expressCheckoutRef.current = expressCheckout;
 
       expressCheckout.on('ready', ({ availablePaymentMethods }) => {
-        if (expressTimeoutRef.current) {
-          window.clearTimeout(expressTimeoutRef.current);
-          expressTimeoutRef.current = null;
-        }
-        setIsExpressLoading(false);
-        if (
+        const hasMethods = Boolean(
           availablePaymentMethods &&
           (availablePaymentMethods.applePay ||
             availablePaymentMethods.googlePay ||
-            availablePaymentMethods.paypal)
-        ) {
-          setExpressAvailable(true);
-        } else {
-          setExpressAvailable(false);
-        }
+            availablePaymentMethods.paypal ||
+            Object.values(availablePaymentMethods).some(Boolean))
+        );
+        setExpressAvailable(hasMethods);
       });
 
       const paymentElement = elements.create('payment', {
@@ -950,11 +928,6 @@ export default function PaddleModal({
         }
       });
     } catch (e: any) {
-      if (expressTimeoutRef.current) {
-        window.clearTimeout(expressTimeoutRef.current);
-        expressTimeoutRef.current = null;
-      }
-      setIsExpressLoading(false);
       console.error("[Embedded Checkout Error]:", e);
       setEmbeddedError(e.message || (language === 'de' ? 'Fehler beim Laden des Checkouts.' : 'Failed to load checkout.'));
       setIsEmbeddedLoading(false);
@@ -1332,40 +1305,22 @@ export default function PaddleModal({
                   ) : (
                     <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
                       {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
-                      {(isExpressLoading || expressAvailable) && (
-                        <div className="w-full transition-all duration-300">
-                          <div className="relative w-full min-h-[46px] rounded-xl overflow-hidden">
-                            {/* Stripe Express Checkout Mount - always in DOM to initialize without disruption */}
-                            <div
-                              id="stripe-express-checkout"
-                              className={`w-full overflow-hidden transition-opacity duration-300 ${
-                                expressAvailable ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'
-                              }`}
-                              style={{ overflow: 'hidden' }}
-                            />
+                      <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'h-0 overflow-hidden invisible pointer-events-none'}`}>
+                        <div
+                          id="stripe-express-checkout"
+                          className="w-full overflow-hidden"
+                          style={{ overflow: 'hidden' }}
+                        />
 
-                            {/* Shimmer Skeleton Placeholder while PayPal/ApplePay/GPay handshake completes */}
-                            {isExpressLoading && !expressAvailable && (
-                              <div className="w-full h-[46px] rounded-xl bg-[#161616] border border-[#262626] flex items-center justify-center relative overflow-hidden shadow-inner select-none">
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent animate-pulse" />
-                                <div className="flex items-center gap-2 text-xs text-gray-400 z-10">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-ping" />
-                                  <span className="font-medium text-[11px] tracking-wide text-gray-400">
-                                    {t.loadingExpress}
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Divider between Express and regular tabs */}
+                        {/* Divider between Express and regular tabs */}
+                        {expressAvailable && (
                           <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
                             <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
                             <span className="px-3">{t.orCardKlarna}</span>
                             <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
 
                       {/* Contact Information (Email) */}
                       <div>
