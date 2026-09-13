@@ -1065,42 +1065,6 @@ export default function PaddleModal({
     }
   };
 
-  const handleDirectPayPalPayment = async () => {
-    if (!stripeRef.current || !currentClientSecretRef.current) return;
-    setIsSubmittingPayment(true);
-    setSelectedPaymentMethod('paypal_express');
-    setPaymentFormError(null);
-
-    try {
-      const origin = window.location.origin;
-      const confirmData: any = {
-        return_url: `${origin}/success`,
-      };
-
-      const email = customerEmail.trim();
-      if (email && email.includes('@') && email.includes('.')) {
-        confirmData.receipt_email = email;
-      }
-
-      const { error } = await stripeRef.current.confirmPayPalPayment(
-        currentClientSecretRef.current,
-        confirmData
-      );
-
-      if (error) {
-        console.error("[PayPal Direct Confirm Error]:", error);
-        setPaymentFormError(error.message || t.paymentFailed);
-        setIsSubmittingPayment(false);
-        setSelectedPaymentMethod(null);
-      }
-    } catch (err: any) {
-      console.error("[PayPal Confirm Error]:", err);
-      setPaymentFormError(err.message || t.paymentProcessingError);
-      setIsSubmittingPayment(false);
-      setSelectedPaymentMethod(null);
-    }
-  };
-
   const handleConfirmPayment = async () => {
     if (!stripeRef.current || !elementsRef.current) return;
 
@@ -1484,51 +1448,21 @@ export default function PaddleModal({
                   ) : (
                     <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
                       {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
-                      <div className="w-full space-y-2.5">
-                        {/* 1. Stripe Native Express (Google Pay / Apple Pay / Desktop PayPal) */}
+                      <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'h-0 overflow-hidden invisible pointer-events-none'}`}>
                         <div
                           id="stripe-express-checkout"
-                          className={`w-full overflow-hidden ${hasStripeExpress ? 'block' : 'h-0 overflow-hidden invisible pointer-events-none'}`}
+                          className="w-full overflow-hidden"
                           style={{ overflow: 'hidden' }}
                         />
 
-                        {/* 2. Standalone PayPal Express Quick Button (renders whenever Stripe doesn't show PayPal in Express) */}
-                        {!stripeHasPayPalExpress && (
-                          <button
-                            type="button"
-                            onClick={handleDirectPayPalPayment}
-                            disabled={isSubmittingPayment}
-                            className="w-full h-[46px] rounded-xl font-bold bg-[#FFC439] hover:bg-[#F2BA36] active:bg-[#E0AC30] text-[#003087] shadow-sm flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer disabled:opacity-50 text-sm tracking-wide border border-[#F0B630]/60"
-                            style={{ minHeight: '46px' }}
-                          >
-                            {/* Official PayPal Dual-P Monogram SVG */}
-                            <svg className="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24">
-                              <path fill="#003087" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.786.786 0 0 1 .775-.654h6.582c2.186 0 3.842.508 4.921 1.51 1.042.966 1.487 2.378 1.323 4.198-.316 3.513-2.52 5.522-6.551 5.522H8.847l-1.07 6.386a.641.641 0 0 1-.633.541l-.068.114z"/>
-                              <path fill="#0079C1" d="M19.467 8.354c-.035-.382-.107-.743-.217-1.082a4.912 4.912 0 0 0-.853-1.496C17.318 4.774 15.662 4.266 13.476 4.266H6.894a.786.786 0 0 0-.775.654L3.012 21.791a.641.641 0 0 0 .633.74h4.606l1.17-6.981-.037.214a.786.786 0 0 1 .775-.654h2.15c4.032 0 6.236-2.009 6.552-5.522.14-1.554-.153-2.822-1.394-3.234z"/>
-                              <path fill="#00457C" d="M8.286 15.764l.561-3.344.037-.214h2.15c4.032 0 6.236-2.009 6.552-5.522.07-.777.025-1.472-.134-2.07a6.223 6.223 0 0 0-1.408-.348 7.55 7.55 0 0 0-2.568-.198H6.894a.786.786 0 0 0-.775.654L3.012 21.791a.641.641 0 0 0 .633.74h4.606l1.17-6.981-.037.214a.786.786 0 0 1 .775-.654z"/>
-                            </svg>
-                            <span className="font-bold text-[#003087] text-[14px] sm:text-[15px] font-sans">
-                              {isSubmittingPayment && selectedPaymentMethod === 'paypal_express' ? (
-                                <span className="flex items-center gap-2">
-                                  <Loader2 className="w-4 h-4 animate-spin text-[#003087]" />
-                                  <span>{t.redirectingStripe}</span>
-                                </span>
-                              ) : (
-                                <>
-                                  <span>{t.payWithPaypal}</span>
-                                  {currentPrice ? <span className="opacity-90 font-medium"> • {currentPrice}</span> : null}
-                                </>
-                              )}
-                            </span>
-                          </button>
+                        {/* Divider between Express and regular tabs */}
+                        {expressAvailable && (
+                          <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                            <span className="px-3">{t.orCardKlarna}</span>
+                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                          </div>
                         )}
-
-                        {/* Divider between Express and regular form */}
-                        <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
-                          <span className="px-3">{t.orPayWithCard || t.orCardKlarna}</span>
-                          <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
-                        </div>
                       </div>
 
                       {/* Contact Information (Email) */}
