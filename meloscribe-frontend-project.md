@@ -120,7 +120,19 @@ npm run dev
   - Social-Proof Anti-Pattern ("14 Customers") behoben: Solange die Kundenzahl unter 100 liegt, wird die Kunden-Spalte vollständig ausgeblendet und die Stats zentrieren sich im harmonischen 2-Spalten-Grid (Follower + Noten-Arrangements).
   - Automatisches Einblenden ab 100+ mit stufenloser Hunderter-Progression (`100+`, `200+`, `300+`, ..., `1K+`, `1.1K+` usw.) in `siteConfig.ts` und `App.tsx` implementiert.
 
+- [x] Security Hardening & Headers:
+  - Added modern HTTP security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`, `Strict-Transport-Security`) in `vercel.json`.
+- [x] Translation Completeness (i18n):
+  - Localized difficulty filter buttons (`diffAll`, `diffOriginal`, `diffEasy`) and floating song card badges across all 5 languages (`en`, `de`, `fr`, `es`, `it`) using `getLocalizedDifficulty`.
+  - Localized inline error notifications (`invalidEmail`, `paymentFailed`, `paymentProcessingError`, `failedToLoadCheckout`), retry CTA, email placeholder, and security badges in `PaddleModal.tsx`.
+- [x] Legal Pages & Checkout Text Modernization:
+  - Updated `Datenschutz.tsx`, `Terms.tsx`, and `Refunds.tsx`, replacing outdated Paddle references with accurate Stripe payment processing and PCI-DSS compliance specifications.
+  - Replaced legacy Paddle copy in `PaddleModal.tsx` (`buttonPay`, `encrypted`, `merchantOfRecord`) with Stripe.
+- [x] Stripe Checkout Accordion Default-Collapsed State:
+  - In `PaddleModal.tsx` `paymentElement.collapse()` upon `ready` (and tick fallback) implemented to prevent Card option from auto-expanding on mount.
+  - All payment methods (Card, iDEAL, EPS) start in clean, compact collapsed rows with no pre-selected radio buttons, focusing attention on Express Checkout (PayPal / Google Pay).
+
 ## Active Blockers / Next Steps
 
-- Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout. Vercel-Deployment ist live.
+- Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout mit dynamischer Währungsumrechnung. Vercel-Deployment ist live.
 - Pinterest Domain-Unblock Appeal eingereicht nach Behebung der Crawler-Diskrepanzen.

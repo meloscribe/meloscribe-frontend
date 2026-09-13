@@ -29,6 +29,14 @@ const getThemeIconColorClass = (theme: string | undefined): string => {
   return 'text-orange-500 dark:text-orange-400'; // warm or default
 };
 
+const getLocalizedDifficulty = (diff: string | undefined, tObj: any): string => {
+  if (!diff) return '';
+  if (diff === 'Original') return tObj.diffOriginal || 'Original';
+  if (diff === 'Easy') return tObj.diffEasy || 'Easy';
+  if (diff === 'Original / Easy') return `${tObj.diffOriginal || 'Original'} / ${tObj.diffEasy || 'Easy'}`;
+  return diff;
+};
+
 
 
 const resolveAudioUrl = (song: Song): string => {
@@ -97,6 +105,9 @@ const translations = {
     muteAudio: 'Mute Audio Preview',
     unmuteAudio: 'Unmute Audio Preview',
     trending: 'Trending',
+    diffAll: 'All',
+    diffOriginal: 'Original',
+    diffEasy: 'Easy',
   },
   de: {
     brand: 'meloscribe',
@@ -151,6 +162,9 @@ const translations = {
     muteAudio: 'Audio-Vorschau stummschalten',
     unmuteAudio: 'Audio-Vorschau aktivieren',
     trending: 'Beliebt',
+    diffAll: 'Alle',
+    diffOriginal: 'Original',
+    diffEasy: 'Easy',
   },
   fr: {
     brand: 'meloscribe',
@@ -205,6 +219,9 @@ const translations = {
     muteAudio: 'Couper l\'aperçu audio',
     unmuteAudio: 'Activer l\'aperçu audio',
     trending: 'Tendance',
+    diffAll: 'Tous',
+    diffOriginal: 'Original',
+    diffEasy: 'Facile',
   },
   es: {
     brand: 'meloscribe',
@@ -259,6 +276,9 @@ const translations = {
     muteAudio: 'Silenciar vista previa de audio',
     unmuteAudio: 'Activar vista previa de audio',
     trending: 'Tendencia',
+    diffAll: 'Todos',
+    diffOriginal: 'Original',
+    diffEasy: 'Fácil',
   },
   it: {
     brand: 'meloscribe',
@@ -313,6 +333,9 @@ const translations = {
     muteAudio: 'Disattiva l\'anteprima audio',
     unmuteAudio: 'Attiva l\'anteprima audio',
     trending: 'Popolare',
+    diffAll: 'Tutti',
+    diffOriginal: 'Originale',
+    diffEasy: 'Facile',
   },
 };
 
@@ -1202,7 +1225,7 @@ function App() {
                         {/* Floating Difficulty Badge */}
                         <div className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
                           <span className="px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
-                            {song.difficulty}
+                            {getLocalizedDifficulty(song.difficulty, t)}
                           </span>
                         </div>
                         
@@ -1387,17 +1410,21 @@ function App() {
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                   <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>
                   <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
-                    {['All', 'Original', 'Easy'].map((diff) => (
+                    {[
+                      { id: 'All', label: t.diffAll || 'All' },
+                      { id: 'Original', label: t.diffOriginal || 'Original' },
+                      { id: 'Easy', label: t.diffEasy || 'Easy' }
+                    ].map(({ id, label }) => (
                       <button
-                        key={diff}
-                        onClick={() => setDifficultyFilter(diff)}
+                        key={id}
+                        onClick={() => setDifficultyFilter(id)}
                         className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer ${
-                          difficultyFilter === diff
+                          difficultyFilter === id
                             ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
                         }`}
                       >
-                        {diff}
+                        {label}
                       </button>
                     ))}
                   </div>
@@ -1460,7 +1487,7 @@ function App() {
                         {/* Floating Difficulty Badge */}
                         <div className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 z-10 pointer-events-none">
                           <span className="px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-[10px] font-semibold tracking-normal sm:tracking-wide backdrop-blur-md border shadow-sm bg-dark-950/70 border-white/15 text-gray-200 dark:bg-dark-950/80 dark:border-white/20 dark:text-gray-200">
-                            {song.difficulty}
+                            {getLocalizedDifficulty(song.difficulty, t)}
                           </span>
                         </div>
 

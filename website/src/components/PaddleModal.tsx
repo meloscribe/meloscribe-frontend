@@ -33,12 +33,12 @@ const translations = {
     midiDesc: 'Load the MIDIs into Synthesia, your DAW, or your digital piano.',
     videoTitle: '2K HD Practice Videos',
     videoDesc: 'Includes the original performance and a slowed-down version with a metronome track for easy practicing.',
-    buttonPay: 'Secure Payment with Paddle',
+    buttonPay: 'Secure Payment with Stripe',
     buttonOpening: 'Opening secure checkout...',
     errorLoad: 'The payment system could not be loaded. Please disable your adblocker and try again.',
-    encrypted: 'Payments are securely processed by Paddle. Instant download access after checkout.',
+    encrypted: 'Payments are securely processed by Stripe. Instant download access after checkout.',
     secureSsl: 'Secure SSL Connection',
-    merchantOfRecord: 'Merchant of Record: Paddle',
+    merchantOfRecord: 'Payments processed by Stripe',
     videoSegment: 'Preview Clip (Note: This is only a 60-second preview clip – the full purchase contains the complete arrangement)',
     
     // New translations
@@ -84,6 +84,17 @@ const translations = {
     loadingExpress: 'Loading Express Checkout...',
     payWithCard: 'Credit or Debit Card',
     cardBrands: 'Visa, Mastercard, Amex',
+    invalidEmail: 'Please enter a valid email address for sheet music delivery.',
+    paymentFailed: 'Payment failed. Please check your details.',
+    paymentProcessingError: 'Payment processing error.',
+    failedToLoadCheckout: 'Failed to load checkout.',
+    retry: 'Retry',
+    emailPlaceholder: 'name@example.com',
+    paymentsSecuredByStripe: 'Payments secured by Stripe',
+    failedToRedirectStripe: 'Failed to redirect to Stripe: ',
+    payWithPaypal: 'Pay with PayPal',
+    optionalForPaypal: '(optional with PayPal)',
+    emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -95,12 +106,12 @@ const translations = {
     midiDesc: 'Lade die MIDIs in Synthesia, deine DAW oder dein Digitalpiano.',
     videoTitle: '2K HD Übungsvideos',
     videoDesc: 'Enthält die Originalversion und eine verlangsamte Version mit Metronom-Spur zum einfachen Üben.',
-    buttonPay: 'Sicher bezahlen mit Paddle',
+    buttonPay: 'Sicher bezahlen mit Stripe',
     buttonOpening: 'Öffne sicheren Checkout...',
     errorLoad: 'Das Zahlungssystem konnte nicht geladen werden. Bitte deaktiviere deinen Werbeblocker und versuche es erneut.',
-    encrypted: 'Zahlungsabwicklung erfolgt verschlüsselt über Paddle. Sofortiger Download-Zugriff nach Kaufabschluss.',
+    encrypted: 'Zahlungsabwicklung erfolgt verschlüsselt über Stripe. Sofortiger Download-Zugriff nach Kaufabschluss.',
     secureSsl: 'Sichere SSL-Verbindung',
-    merchantOfRecord: 'Zahlungsabwickler: Paddle',
+    merchantOfRecord: 'Zahlungsabwicklung durch Stripe',
     videoSegment: 'Ausschnitt-Vorschau (Hinweis: Dies ist nur ein 60-Sekunden-Ausschnitt – die Vollversion enthält das komplette Arrangement)',
     
     // New translations
@@ -146,6 +157,17 @@ const translations = {
     loadingExpress: 'Express Checkout wird geladen...',
     payWithCard: 'Kreditkarte / Debitkarte',
     cardBrands: 'Visa, Mastercard, Amex',
+    invalidEmail: 'Bitte gib eine gültige E-Mail-Adresse für den Download-Link an.',
+    paymentFailed: 'Zahlung fehlgeschlagen. Bitte prüfe deine Angaben.',
+    paymentProcessingError: 'Fehler bei der Zahlungsabwicklung.',
+    failedToLoadCheckout: 'Fehler beim Laden des Checkouts.',
+    retry: 'Erneut versuchen',
+    emailPlaceholder: 'name@beispiel.de',
+    paymentsSecuredByStripe: 'Zahlungsabwicklung durch Stripe',
+    failedToRedirectStripe: 'Fehler beim Weiterleiten zu Stripe: ',
+    payWithPaypal: 'Mit PayPal bezahlen',
+    optionalForPaypal: '(optional bei PayPal)',
+    emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -157,12 +179,12 @@ const translations = {
     midiDesc: 'Chargez les fichiers MIDI dans Synthesia, votre DAW ou votre piano numérique.',
     videoTitle: 'Vidéos de pratique 2K HD',
     videoDesc: 'Comprend la performance originale et une version ralentie avec une piste de métronome pour s\'entraîner facilement.',
-    buttonPay: 'Paiement sécurisé avec Paddle',
+    buttonPay: 'Paiement sécurisé avec Stripe',
     buttonOpening: 'Ouverture du paiement sécurisé...',
     errorLoad: 'Le système de paiement n\'a pas pu être chargé. Veuillez désactiver votre bloqueur de publicité et réessayer.',
-    encrypted: 'Les paiements sont traités de manière sécurisée par Paddle. Accès instantané au téléchargement après l\'achat.',
+    encrypted: 'Les paiements sont traités de manière sécurisée par Stripe. Accès instantané au téléchargement après l\'achat.',
     secureSsl: 'Connexion SSL sécurisée',
-    merchantOfRecord: 'Commerçant officiel : Paddle',
+    merchantOfRecord: 'Paiements traités par Stripe',
     videoSegment: 'Aperçu (Note : Ceci est seulement un extrait de 60 secondes – l\'arrangement complet est inclus après l\'achat)',
     
     // New translations
@@ -208,6 +230,17 @@ const translations = {
     loadingExpress: 'Chargement du paiement express...',
     payWithCard: 'Carte bancaire',
     cardBrands: 'Visa, Mastercard, Amex',
+    invalidEmail: 'Veuillez saisir une adresse e-mail valide pour la livraison des partitions.',
+    paymentFailed: 'Le paiement a échoué. Veuillez vérifier vos informations.',
+    paymentProcessingError: 'Erreur lors du traitement du paiement.',
+    failedToLoadCheckout: 'Échec du chargement du paiement.',
+    retry: 'Réessayer',
+    emailPlaceholder: 'nom@exemple.fr',
+    paymentsSecuredByStripe: 'Paiements sécurisés par Stripe',
+    failedToRedirectStripe: 'Échec de la redirection vers Stripe : ',
+    payWithPaypal: 'Payer avec PayPal',
+    optionalForPaypal: '(facultatif avec PayPal)',
+    emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -219,12 +252,12 @@ const translations = {
     midiDesc: 'Carga los MIDIs en Synthesia, tu DAW o tu piano digital.',
     videoTitle: 'Videos de práctica 2K HD',
     videoDesc: 'Incluye la interpretación original y una versión más lenta con pista de metrónomo para practicar fácilmente.',
-    buttonPay: 'Pago seguro con Paddle',
+    buttonPay: 'Pago seguro con Stripe',
     buttonOpening: 'Abriendo pago seguro...',
     errorLoad: 'No se pudo cargar el sistema de pago. Desactiva tu bloqueador de anuncios e inténtalo de nuevo.',
-    encrypted: 'Los pagos se procesan de forma segura a través de Paddle. Acceso de descarga instantánea tras la compra.',
+    encrypted: 'Los pagos se procesan de forma segura a través de Stripe. Acceso de descarga instantánea tras la compra.',
     secureSsl: 'Conexión SSL segura',
-    merchantOfRecord: 'Comerciante registrado: Paddle',
+    merchantOfRecord: 'Pagos procesados por Stripe',
     videoSegment: 'Vista previa (Nota: Esto es solo un fragmento de 60 segundos – la compra incluye el arreglo completo)',
     
     // New translations
@@ -270,6 +303,17 @@ const translations = {
     loadingExpress: 'Cargando pago exprés...',
     payWithCard: 'Tarjeta de crédito o débito',
     cardBrands: 'Visa, Mastercard, Amex',
+    invalidEmail: 'Por favor ingresa un correo electrónico válido para la entrega de las partituras.',
+    paymentFailed: 'El pago falló. Por favor verifica tus datos.',
+    paymentProcessingError: 'Error en el procesamiento del pago.',
+    failedToLoadCheckout: 'Error al cargar el pago.',
+    retry: 'Reintentar',
+    emailPlaceholder: 'nombre@ejemplo.es',
+    paymentsSecuredByStripe: 'Pagos asegurados por Stripe',
+    failedToRedirectStripe: 'Error al redirigir a Stripe: ',
+    payWithPaypal: 'Pagar con PayPal',
+    optionalForPaypal: '(opcional con PayPal)',
+    emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -281,12 +325,12 @@ const translations = {
     midiDesc: 'Carica i MIDI in Synthesia, nella tua DAW o sul tuo pianoforte digitale.',
     videoTitle: 'Video di pratica 2K HD',
     videoDesc: 'Include l\'esecuzione originale e una versione rallentata con traccia metronomo per esercitarsi facilmente.',
-    buttonPay: 'Pagamento sicuro con Paddle',
+    buttonPay: 'Pagamento sicuro con Stripe',
     buttonOpening: 'Apertura del pagamento sicuro...',
     errorLoad: 'Il sistema di pagamento non può essere caricato. Disattiva il blocco degli annunci e riprova.',
-    encrypted: 'I pagamenti sono elaborati in modo sicuro da Paddle. Accesso immediato al download dopo l\'acquisto.',
+    encrypted: 'I pagamenti sono elaborati in modo sicuro da Stripe. Accesso immediato al download dopo l\'acquisto.',
     secureSsl: 'Connessione SSL sicura',
-    merchantOfRecord: 'Commerciante registrato: Paddle',
+    merchantOfRecord: 'Pagamenti elaborati da Stripe',
     videoSegment: 'Anteprima (Nota: Questo è solo un estratto di 60 secondi – l\'acquisto include l\'arrangiamento completo)',
     
     // New translations
@@ -332,6 +376,17 @@ const translations = {
     loadingExpress: 'Caricamento pagamento rapido...',
     payWithCard: 'Carta di credito o debito',
     cardBrands: 'Visa, Mastercard, Amex',
+    invalidEmail: 'Inserisci un indirizzo email valido per la consegna degli spartiti.',
+    paymentFailed: 'Pagamento non riuscito. Controlla i tuoi dati.',
+    paymentProcessingError: 'Errore durante l\'elaborazione del pagamento.',
+    failedToLoadCheckout: 'Impossibile caricare il pagamento.',
+    retry: 'Riprova',
+    emailPlaceholder: 'nome@esempio.it',
+    paymentsSecuredByStripe: 'Pagamenti protetti da Stripe',
+    failedToRedirectStripe: 'Impossibile reindirizzare a Stripe: ',
+    payWithPaypal: 'Paga con PayPal',
+    optionalForPaypal: '(facoltativo con PayPal)',
+    emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
   }
 };
 
@@ -366,6 +421,7 @@ export default function PaddleModal({
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
   const [expressAvailable, setExpressAvailable] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
 
   const stripeRef = useRef<Stripe | null>(null);
   const elementsRef = useRef<StripeElements | null>(null);
@@ -417,6 +473,7 @@ export default function PaddleModal({
     setPaymentFormError(null);
     setIsSubmittingPayment(false);
     setExpressAvailable(false);
+    setSelectedPaymentMethod(null);
   };
 
   useEffect(() => {
@@ -706,10 +763,7 @@ export default function PaddleModal({
       }
     } catch (e: any) {
       console.error("[Stripe Redirect Error]:", e);
-      alert(language === 'de' 
-        ? "Fehler beim Weiterleiten zu Stripe: " + e.message
-        : "Failed to redirect to Stripe: " + e.message
-      );
+      alert((t.failedToRedirectStripe || "Failed to redirect to Stripe: ") + e.message);
     }
     setIsRedirecting(false);
   };
@@ -905,6 +959,35 @@ export default function PaddleModal({
         setExpressAvailable(hasMethods);
       });
 
+      expressCheckout.on('confirm', async () => {
+        setIsSubmittingPayment(true);
+        setPaymentFormError(null);
+        try {
+          const { error: submitError } = await elements.submit();
+          if (submitError) {
+            setPaymentFormError(submitError.message || t.paymentFailed);
+            setIsSubmittingPayment(false);
+            return;
+          }
+          const origin = window.location.origin;
+          const { error } = await stripe.confirmPayment({
+            elements,
+            clientSecret: data.clientSecret,
+            confirmParams: {
+              return_url: `${origin}/success`,
+            },
+          });
+          if (error) {
+            setPaymentFormError(error.message || t.paymentFailed);
+            setIsSubmittingPayment(false);
+          }
+        } catch (err: any) {
+          console.error("[Express Confirm Error]:", err);
+          setPaymentFormError(err.message || t.paymentProcessingError);
+          setIsSubmittingPayment(false);
+        }
+      });
+
       const paymentElement = elements.create('payment', {
         layout: {
           type: 'accordion',
@@ -912,6 +995,7 @@ export default function PaddleModal({
           radios: 'always',
           spacedAccordionItems: true,
         },
+        paymentMethodOrder: ['paypal', 'card', 'ideal', 'eps'],
         wallets: {
           link: 'never',
           applePay: 'never',
@@ -920,8 +1004,25 @@ export default function PaddleModal({
       });
       paymentElementRef.current = paymentElement;
 
+      paymentElement.on('change', (event: any) => {
+        if (event && event.value && event.value.type) {
+          setSelectedPaymentMethod(event.value.type);
+          if (event.value.type === 'paypal') {
+            setPaymentFormError(null);
+          }
+        }
+      });
+
       paymentElement.on('ready', () => {
+        try {
+          paymentElement.collapse();
+        } catch (_) {}
         setIsEmbeddedLoading(false);
+        setTimeout(() => {
+          try {
+            paymentElement.collapse();
+          } catch (_) {}
+        }, 50);
       });
 
       requestAnimationFrame(() => {
@@ -936,7 +1037,7 @@ export default function PaddleModal({
       });
     } catch (e: any) {
       console.error("[Embedded Checkout Error]:", e);
-      setEmbeddedError(e.message || (language === 'de' ? 'Fehler beim Laden des Checkouts.' : 'Failed to load checkout.'));
+      setEmbeddedError(e.message || t.failedToLoadCheckout);
       setIsEmbeddedLoading(false);
     }
   };
@@ -945,12 +1046,13 @@ export default function PaddleModal({
     if (!stripeRef.current || !elementsRef.current) return;
 
     const email = customerEmail.trim();
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      setPaymentFormError(
-        language === 'de'
-          ? 'Bitte gib eine gültige E-Mail-Adresse für den Download-Link an.'
-          : 'Please enter a valid email address for sheet music delivery.'
-      );
+    const isEmailValid = Boolean(email && email.includes('@') && email.includes('.'));
+    const isCard = selectedPaymentMethod === 'card';
+
+    // Email is only strictly required upfront for Card payments if not provided.
+    // For PayPal (and other redirect wallets), PayPal automatically returns the verified buyer email.
+    if (isCard && !isEmailValid) {
+      setPaymentFormError(t.invalidEmail);
       return;
     }
 
@@ -959,27 +1061,32 @@ export default function PaddleModal({
 
     try {
       const origin = window.location.origin;
+      const confirmParams: any = {
+        return_url: `${origin}/success`,
+      };
+
+      if (isEmailValid) {
+        confirmParams.receipt_email = email;
+        confirmParams.payment_method_data = {
+          billing_details: {
+            email: email,
+          },
+        };
+      }
+
       const { error } = await stripeRef.current.confirmPayment({
         elements: elementsRef.current,
-        confirmParams: {
-          return_url: `${origin}/success`,
-          receipt_email: email,
-          payment_method_data: {
-            billing_details: {
-              email: email,
-            },
-          },
-        },
+        confirmParams,
       });
 
       if (error) {
         console.error("[Stripe Confirm Error]:", error);
-        setPaymentFormError(error.message || (language === 'de' ? 'Zahlung fehlgeschlagen. Bitte prüfe deine Angaben.' : 'Payment failed. Please check your details.'));
+        setPaymentFormError(error.message || t.paymentFailed);
         setIsSubmittingPayment(false);
       }
     } catch (err: any) {
       console.error("[Payment Error]:", err);
-      setPaymentFormError(err.message || (language === 'de' ? 'Fehler bei der Zahlungsabwicklung.' : 'Payment processing error.'));
+      setPaymentFormError(err.message || t.paymentProcessingError);
       setIsSubmittingPayment(false);
     }
   };
@@ -1304,7 +1411,7 @@ export default function PaddleModal({
                           onClick={handleBuyClick}
                           className="px-4 py-2 rounded-lg text-xs font-semibold bg-neon-cyan/20 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/30 transition-all cursor-pointer"
                         >
-                          {language === 'de' ? 'Erneut versuchen' : 'Retry'}
+                          {t.retry}
                         </button>
                         <button
                           type="button"
@@ -1337,14 +1444,19 @@ export default function PaddleModal({
 
                       {/* Contact Information (Email) */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                          {t.contactInformation}
+                        <label className="flex items-center justify-between text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                          <span>{t.contactInformation}</span>
+                          {selectedPaymentMethod === 'paypal' && (
+                            <span className="text-[11px] font-normal text-neon-cyan/90 normal-case tracking-normal">
+                              {t.optionalForPaypal}
+                            </span>
+                          )}
                         </label>
                         <input
                           type="email"
                           value={customerEmail}
                           onChange={(e) => setCustomerEmail(e.target.value)}
-                          placeholder={language === 'de' ? 'name@beispiel.de' : 'name@example.com'}
+                          placeholder={selectedPaymentMethod === 'paypal' ? (t.emailPlaceholderPaypal || t.emailPlaceholder) : t.emailPlaceholder}
                           className="w-full bg-[#161616] border border-[#262626] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan outline-none transition-all shadow-inner"
                         />
                       </div>
@@ -1379,7 +1491,11 @@ export default function PaddleModal({
                         ) : (
                           <>
                             <ShieldCheck className="w-5 h-5" />
-                            <span>{t.payNow.replace('{price}', String(currentPrice))}</span>
+                            <span>
+                              {selectedPaymentMethod === 'paypal'
+                                ? `${t.payWithPaypal} • ${currentPrice}`
+                                : t.payNow.replace('{price}', String(currentPrice))}
+                            </span>
                           </>
                         )}
                       </button>
@@ -1555,7 +1671,7 @@ export default function PaddleModal({
             <ShieldCheck className="w-4 h-4 text-neon-cyan" /> {t.secureSsl}
           </span>
           <span className="text-gray-500 dark:text-gray-500">
-            {language === 'de' ? 'Zahlungsabwicklung durch Stripe' : 'Payments secured by Stripe'}
+            {t.paymentsSecuredByStripe}
           </span>
         </div>
       </div>

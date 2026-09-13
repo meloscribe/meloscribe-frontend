@@ -56,12 +56,12 @@ export default function Terms({ onBack, language }: TermsProps) {
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
-                {language === 'de' ? '2. Zahlungsabwicklung (Paddle)' : '2. Payment Processing (Paddle)'}
+                {language === 'de' ? '2. Zahlungsabwicklung (Stripe)' : '2. Payment Processing (Stripe)'}
               </h2>
               <p className="text-sm">
                 {language === 'de'
-                  ? 'Unsere Bestellabwicklung wird durch unseren Händler (Merchant of Record) Paddle durchgeführt. Paddle ist das verantwortliche Unternehmen für die Zahlungsabwicklung und Abrechnung aller Käufe. Mit der Durchführung einer Zahlung stimmst du den Nutzungsbedingungen und Datenschutzrichtlinien von Paddle zu.'
-                  : 'Our order process is conducted by our Merchant of Record, Paddle. Paddle is the responsible merchant for billing and customer service for all purchases. By making a payment, you agree to the terms and privacy policy of Paddle.'}
+                  ? 'Die Zahlungsabwicklung für Käufe auf meloscribe.dev erfolgt sicher über unseren Zahlungsdienstleister Stripe. Sämtliche Transaktions- und Zahlungsdaten werden direkt über verschlüsselte, PCI-DSS-zertifizierte Verbindungen verarbeitet. Mit der Durchführung einer Zahlung stimmst du den Nutzungsbedingungen von meloscribe sowie der Zahlungsabwicklung über Stripe zu.'
+                  : 'Payment processing for purchases on meloscribe.dev is conducted securely via our payment provider Stripe. All transaction and payment data are handled directly through encrypted, PCI-DSS certified connections. By completing a payment, you agree to these Terms of Service and payment processing via Stripe.'}
               </p>
             </div>
 

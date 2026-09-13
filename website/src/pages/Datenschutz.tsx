@@ -94,38 +94,38 @@ export default function Datenschutz({ onBack, language }: DatenschutzProps) {
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
-                {language === 'de' ? '4. Bezahlvorgang & Digitale Auslieferung (Paddle)' : '4. Checkout & Digital Delivery (Paddle)'}
+                {language === 'de' ? '4. Bezahlvorgang & Digitale Auslieferung (Stripe)' : '4. Checkout & Digital Delivery (Stripe)'}
               </h2>
               <p>
                 {language === 'de' ? (
                   <>
-                    Der Erwerb und Download von Klaviernoten, MIDI- und MP4-Dateien läuft über die Bezahl- und Shop-Plattform <strong>Paddle.com</strong> (Paddle.com Market Ltd).
+                    Die Bezahlung von Klaviernoten, MIDI- und MP4-Dateien erfolgt über den Zahlungsdienstleister <strong>Stripe</strong> (Stripe Payments Europe, Ltd., 1 Grand Canal Street Lower, Grand Canal Dock, Dublin, D02 H210, Irland).
                     Wenn Sie ein Sheet-Music-Paket erwerben, läuft im Hintergrund folgendes System ab:
                     <br /><br />
-                    1. <strong>Der Klick:</strong> Durch Klick auf den „Buy"-Button öffnet sich das sichere Checkout-Overlay von Paddle für das gewählte Produkt.
+                    1. <strong>Der Klick:</strong> Durch Klick auf den Kauf-Button öffnet sich das sichere Stripe-Checkout-Fenster.
                     <br />
-                    2. <strong>Die Zahlung:</strong> Zur Bestellabwicklung geben Sie Ihre E-Mail-Adresse ein und zahlen per Kreditkarte oder anderen von Paddle unterstützten Methoden.
+                    2. <strong>Die Zahlung:</strong> Zur Bestellabwicklung geben Sie Ihre E-Mail-Adresse an und zahlen sicher per Kreditkarte, Apple Pay, Google Pay, PayPal, iDEAL oder weiteren unterstützten Methoden. Stripe verarbeitet Ihre Zahlungsdaten auf PCI-DSS-zertifizierten Servern; wir selbst speichern keine vollständigen Kartendaten.
                     <br />
-                    3. <strong>Der Download:</strong> Direkt nach erfolgreicher Zahlung werden Sie auf eine sichere Download-Seite weitergeleitet. Jede Datei (PDF, MIDI, MP4) wird als separater, temporärer 15-Minuten-Link ausgeliefert, der direkt aus dem Cloudflare R2-Speicher bezogen wird.
+                    3. <strong>Der Download:</strong> Direkt nach erfolgreicher Zahlung werden Sie auf eine sichere Download-Seite weitergeleitet. Jede Datei (PDF, MIDI, MP4) wird als separater, temporärer Link ausgeliefert, der geschützt aus dem Cloudflare R2-Speicher bezogen wird.
                     <br />
-                    4. <strong>Die Sicherheits-E-Mail:</strong> Paddle sendet automatisch eine Kaufbestätigung mit der Zugangs-URL an Ihre angegebene Adresse, falls Sie die Download-Seite versehentlich schließen. Download-Links können bis zu 20× genutzt werden.
+                    4. <strong>Die Sicherheits-E-Mail:</strong> Sie erhalten automatisch eine Kaufbestätigung mit der Bestellnummer und dem Download-Zugang an Ihre angegebene Adresse.
                     <br /><br />
-                    Die Rechtsgrundlage ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung). Die Bindung an temporäre Download-Links dient dem Schutz digitaler Urheberrechte (<strong>Art. 6 Abs. 1 lit. f DSGVO</strong>).
+                    Die Rechtsgrundlage ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung) sowie <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> (unser berechtigtes Interesse an einer effizienten und sicheren Zahlungsabwicklung).
                   </>
                 ) : (
                   <>
-                    The purchase and download of sheet music PDFs, MIDI, and MP4 files is processed via the checkout and billing platform <strong>Paddle.com</strong> (Paddle.com Market Ltd).
+                    The purchase and download of sheet music PDFs, MIDI, and MP4 files is processed via the payment platform <strong>Stripe</strong> (Stripe Payments Europe, Ltd., 1 Grand Canal Street Lower, Grand Canal Dock, Dublin, D02 H210, Ireland).
                     When you purchase a practice package, the following step-by-step workflow is initiated:
                     <br /><br />
-                    1. <strong>The Click:</strong> Clicking the "Buy" button opens Paddle's secure checkout overlay for the selected product.
+                    1. <strong>The Click:</strong> Clicking the purchase button opens Stripe's secure checkout window for the selected product.
                     <br />
-                    2. <strong>The Payment:</strong> You enter your email address and pay by credit card or another method supported by Paddle.
+                    2. <strong>The Payment:</strong> You enter your email address and pay securely by credit card, Apple Pay, Google Pay, PayPal, iDEAL, or other supported methods. Stripe processes your details on PCI-DSS certified systems; we never store full credit card details.
                     <br />
-                    3. <strong>The Download:</strong> Immediately after a successful transaction, you are redirected to a secure download page. Each file (PDF, MIDI, MP4) is delivered as a separate, temporary 15-minute link served directly from Cloudflare R2 storage.
+                    3. <strong>The Download:</strong> Immediately after a successful transaction, you are redirected to a secure download page. Each file (PDF, MIDI, MP4) is delivered as a separate, secure temporary link served directly from Cloudflare R2 storage.
                     <br />
-                    4. <strong>Backup Email:</strong> Paddle automatically sends a purchase confirmation containing your download URL to your inbox. Download links can be used up to 20 times.
+                    4. <strong>Backup Email:</strong> An automated purchase confirmation containing your order reference and download link is sent to your inbox.
                     <br /><br />
-                    The legal basis is <strong>Art. 6(1)(b) GDPR</strong> (performance of a contract). The buyer-bound limitation of download links serves the protection of digital copyright (<strong>Art. 6(1)(f) GDPR</strong>).
+                    The legal basis is <strong>Art. 6(1)(b) GDPR</strong> (performance of a contract) and <strong>Art. 6(1)(f) GDPR</strong> (our legitimate interest in secure payment processing).
                   </>
                 )}
               </p>
