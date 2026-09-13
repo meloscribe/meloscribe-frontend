@@ -739,19 +739,14 @@ export default function PaddleModal({
   };
 
   useEffect(() => {
-    if (isOpen && !isFree && isLocalhost && currentSongId) {
+    if (isOpen && !isFree && currentSongId) {
       prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId).catch((e) => {
         console.warn("[Prefetch Session Error]:", e);
       });
     }
-  }, [isOpen, selectedDifficulty, currentSongId, currentPriceId, isFree, isLocalhost, language]);
+  }, [isOpen, selectedDifficulty, currentSongId, currentPriceId, isFree, language]);
 
   const handleBuyClick = async () => {
-    if (!isLocalhost) {
-      handleStripeCheckoutRedirect();
-      return;
-    }
-
     setCheckoutStep('embedded');
     setIsEmbeddedLoading(true);
     setEmbeddedError(null);
