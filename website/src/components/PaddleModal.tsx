@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
-import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement, StripeLinkAuthenticationElement } from '@stripe/stripe-js';
+import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -350,11 +350,11 @@ export default function PaddleModal({
   const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
   const [expressAvailable, setExpressAvailable] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState('');
 
   const stripeRef = useRef<Stripe | null>(null);
   const elementsRef = useRef<StripeElements | null>(null);
   const expressCheckoutRef = useRef<StripeExpressCheckoutElement | null>(null);
-  const linkAuthenticationRef = useRef<StripeLinkAuthenticationElement | null>(null);
   const paymentElementRef = useRef<StripePaymentElement | null>(null);
   const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
   const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
@@ -362,6 +362,9 @@ export default function PaddleModal({
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' || 
     window.location.hostname === '127.0.0.1' ||
+    window.location.hostname.startsWith('192.168.') ||
+    window.location.hostname.startsWith('10.') ||
+    window.location.hostname.endsWith('.ngrok-free.app') ||
     new URLSearchParams(window.location.search).has('embedded')
   );
 
@@ -373,14 +376,6 @@ export default function PaddleModal({
         console.warn("Failed to destroy expressCheckout instance", e);
       }
       expressCheckoutRef.current = null;
-    }
-    if (linkAuthenticationRef.current) {
-      try {
-        linkAuthenticationRef.current.destroy();
-      } catch (e) {
-        console.warn("Failed to destroy linkAuthentication instance", e);
-      }
-      linkAuthenticationRef.current = null;
     }
     if (paymentElementRef.current) {
       try {
@@ -846,29 +841,34 @@ export default function PaddleModal({
 
       const expressCheckout = elements.create('expressCheckout', {
         buttonHeight: 46,
+        paymentMethods: {
+          link: 'never',
+          klarna: 'never',
+          amazonPay: 'never',
+          applePay: 'auto',
+          googlePay: 'auto',
+          paypal: 'auto',
+        },
         buttonTheme: {
           applePay: 'black',
           googlePay: 'black',
-          paypal: 'gold'
-        }
+          paypal: 'gold',
+        },
       });
       expressCheckoutRef.current = expressCheckout;
 
       expressCheckout.on('ready', ({ availablePaymentMethods }) => {
-        if (availablePaymentMethods && (
-          availablePaymentMethods.applePay || 
-          availablePaymentMethods.googlePay || 
-          availablePaymentMethods.paypal || 
-          availablePaymentMethods.link
-        )) {
+        if (
+          availablePaymentMethods &&
+          (availablePaymentMethods.applePay ||
+            availablePaymentMethods.googlePay ||
+            availablePaymentMethods.paypal)
+        ) {
           setExpressAvailable(true);
         } else {
           setExpressAvailable(false);
         }
       });
-
-      const linkAuth = elements.create('linkAuthentication');
-      linkAuthenticationRef.current = linkAuth;
 
       const paymentElement = elements.create('payment', {
         layout: {
@@ -876,7 +876,7 @@ export default function PaddleModal({
           defaultCollapsed: true,
           radios: 'always',
           spacedAccordionItems: false,
-        }
+        },
       });
       paymentElementRef.current = paymentElement;
 
@@ -888,10 +888,6 @@ export default function PaddleModal({
         const expressMount = document.getElementById('stripe-express-checkout');
         if (expressMount) {
           expressCheckout.mount('#stripe-express-checkout');
-        }
-        const linkMount = document.getElementById('stripe-link-auth');
-        if (linkMount) {
-          linkAuth.mount('#stripe-link-auth');
         }
         const paymentMount = document.getElementById('stripe-payment-element');
         if (paymentMount) {
@@ -907,6 +903,17 @@ export default function PaddleModal({
 
   const handleConfirmPayment = async () => {
     if (!stripeRef.current || !elementsRef.current) return;
+
+    const email = customerEmail.trim();
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      setPaymentFormError(
+        language === 'de'
+          ? 'Bitte gib eine gültige E-Mail-Adresse für den Download-Link an.'
+          : 'Please enter a valid email address for sheet music delivery.'
+      );
+      return;
+    }
+
     setIsSubmittingPayment(true);
     setPaymentFormError(null);
 
@@ -916,6 +923,12 @@ export default function PaddleModal({
         elements: elementsRef.current,
         confirmParams: {
           return_url: `${origin}/success`,
+          receipt_email: email,
+          payment_method_data: {
+            billing_details: {
+              email: email,
+            },
+          },
         },
       });
 
@@ -1246,10 +1259,16 @@ export default function PaddleModal({
 
                       {/* Contact Information (Email) */}
                       <div>
-                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                           {t.contactInformation}
-                        </span>
-                        <div id="stripe-link-auth" />
+                        </label>
+                        <input
+                          type="email"
+                          value={customerEmail}
+                          onChange={(e) => setCustomerEmail(e.target.value)}
+                          placeholder={language === 'de' ? 'name@beispiel.de' : 'name@example.com'}
+                          className="w-full bg-[#161616] border border-[#262626] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan outline-none transition-all shadow-inner"
+                        />
                       </div>
 
                       {/* Regular Payment Element (Card, Klarna, EPS, etc.) */}
