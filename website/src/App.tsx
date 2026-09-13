@@ -32,8 +32,10 @@ const getThemeIconColorClass = (theme: string | undefined): string => {
 
 
 const resolveAudioUrl = (song: Song): string => {
-  const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8787'
+  const h = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const isLocal = h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h.startsWith('10.') || h.startsWith('172.');
+  const apiBaseUrl = isLocal
+    ? `http://${h}:8787`
     : 'https://api.meloscribe.dev';
 
   const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
@@ -482,8 +484,14 @@ function LanguageDropdown({ language, setLanguage }: { language: Language; setLa
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'https://wooing-encrust-ladle.ngrok-free.dev'
+  (typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname.startsWith('192.168.') ||
+    window.location.hostname.startsWith('10.') ||
+    window.location.hostname.startsWith('172.')
+  )
+    ? `http://${window.location.hostname}:8787`
     : 'https://api.meloscribe.dev');
 
 function App() {

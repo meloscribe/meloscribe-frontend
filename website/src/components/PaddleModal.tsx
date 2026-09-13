@@ -368,6 +368,15 @@ export default function PaddleModal({
     new URLSearchParams(window.location.search).has('embedded')
   );
 
+  const getApiBaseUrl = () => {
+    if (typeof window === 'undefined') return 'http://localhost:8787';
+    const h = window.location.hostname;
+    if (h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h.startsWith('10.') || h.startsWith('172.')) {
+      return `http://${h}:8787`;
+    }
+    return 'https://api.meloscribe.dev';
+  };
+
   const cleanupEmbeddedCheckout = () => {
     if (expressCheckoutRef.current) {
       try {
@@ -460,9 +469,7 @@ export default function PaddleModal({
   const handleFreeDownload = async (type: string) => {
     setDownloadingType(type);
     try {
-      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8787'
-        : 'https://api.meloscribe.dev';
+      const apiBaseUrl = getApiBaseUrl();
       const targetUrl = `${apiBaseUrl}/api/public/download?song_id=${encodeURIComponent(currentSongId)}&type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(selectedDifficulty)}`;
       const res = await fetch(targetUrl);
       if (res.ok) {
@@ -617,9 +624,7 @@ export default function PaddleModal({
       } else {
         const cleanTitle = songTitle.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
         const suffix = isSelectedEasy ? " Easy" : "";
-        const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-          ? 'http://localhost:8787'
-          : 'https://api.meloscribe.dev';
+        const apiBaseUrl = getApiBaseUrl();
            
         setVideoUrl(`${apiBaseUrl}/api/public/video-stream?song_name=${encodeURIComponent(cleanTitle + suffix)}`);
         setLoadingVideo(false);
@@ -633,9 +638,7 @@ export default function PaddleModal({
   const handleStripeCheckoutRedirect = async () => {
     setIsRedirecting(true);
     try {
-      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8787'
-        : 'https://api.meloscribe.dev';
+      const apiBaseUrl = getApiBaseUrl();
         
       const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
         method: 'POST',
@@ -680,9 +683,7 @@ export default function PaddleModal({
       return prefetchPromiseRef.current[cacheKey];
     }
 
-    const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8787'
-      : 'https://api.meloscribe.dev';
+    const apiBaseUrl = getApiBaseUrl();
 
     const promise = (async () => {
       const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
