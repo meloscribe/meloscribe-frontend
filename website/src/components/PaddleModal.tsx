@@ -758,10 +758,6 @@ export default function PaddleModal({
         try { expressCheckoutRef.current.destroy(); } catch (_) {}
         expressCheckoutRef.current = null;
       }
-      if (linkAuthenticationRef.current) {
-        try { linkAuthenticationRef.current.destroy(); } catch (_) {}
-        linkAuthenticationRef.current = null;
-      }
       if (paymentElementRef.current) {
         try { paymentElementRef.current.destroy(); } catch (_) {}
         paymentElementRef.current = null;
