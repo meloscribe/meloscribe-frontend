@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, Info } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
 
@@ -97,6 +97,9 @@ const translations = {
     optionalForPaypal: '(optional with PayPal)',
     emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
     tiktokDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
+    tiktokNoticeTitle: '💡 In-App Browser Notice',
+    tapHere: 'Tap here (...)',
+    gotIt: 'Got it!',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -172,6 +175,9 @@ const translations = {
     optionalForPaypal: '(optional bei PayPal)',
     emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
     tiktokDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
+    tiktokNoticeTitle: '💡 Hinweis für In-App-Browser',
+    tapHere: 'Hier tippen (...)',
+    gotIt: 'Alles klar!',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -247,6 +253,9 @@ const translations = {
     optionalForPaypal: '(facultatif avec PayPal)',
     emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
     tiktokDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Remarque pour le navigateur intégré',
+    tapHere: 'Appuyez ici (...)',
+    gotIt: 'Compris !',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -322,6 +331,9 @@ const translations = {
     optionalForPaypal: '(opcional con PayPal)',
     emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
     tiktokDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Aviso para el navegador integrado',
+    tapHere: 'Toca aquí (...)',
+    gotIt: '¡Entendido!',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -397,6 +409,9 @@ const translations = {
     optionalForPaypal: '(facoltativo con PayPal)',
     emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
     tiktokDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    tiktokNoticeTitle: '💡 Avviso per il browser in-app',
+    tapHere: 'Tocca qui (...)',
+    gotIt: 'Ho capito!',
   }
 };
 
@@ -423,6 +438,7 @@ export default function PaddleModal({
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [downloadingType, setDownloadingType] = useState<string | null>(null);
+  const [showTiktokModal, setShowTiktokModal] = useState(false);
 
   const [checkoutStep, setCheckoutStep] = useState<'details' | 'embedded'>('details');
   const [isEmbeddedLoading, setIsEmbeddedLoading] = useState(false);
@@ -570,12 +586,8 @@ export default function PaddleModal({
           const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
           if (isTikTok) {
-            if (isAndroid) {
-              const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
-              window.location.href = `intent://${cleanUrl}#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
-            } else {
-              window.open(data.download_url, '_blank');
-            }
+            setShowTiktokModal(true);
+            return;
           } else if (isAndroid || isIOS) {
             // Facebook (FBAN/FBAV), Instagram, and native mobile browsers handle direct URL navigation cleanly.
             // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
@@ -1916,6 +1928,37 @@ export default function PaddleModal({
               </div>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* TikTok Helper Modal overlay */}
+      {showTiktokModal && (
+        <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          {/* Pointer Arrow pointing to top right */}
+          <div className="absolute top-4 right-8 flex flex-col items-end text-amber-400 animate-bounce">
+            <span className="text-4xl font-bold">↗</span>
+            <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/40">
+              {t.tapHere || 'Tap here (...)'}
+            </span>
+          </div>
+
+          <div className="max-w-sm w-full bg-dark-800 border border-amber-500/40 rounded-2xl p-6 text-center shadow-2xl relative">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-4">
+              <Info className="w-6 h-6 text-amber-400" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">
+              {t.tiktokNoticeTitle || '💡 In-App Browser Notice'}
+            </h3>
+            <p className="text-xs text-gray-300 mb-6 leading-relaxed">
+              {t.tiktokDownloadNotice}
+            </p>
+            <button
+              onClick={() => setShowTiktokModal(false)}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan text-white font-bold text-sm hover:from-neon-cyan/30 hover:to-neon-pink/30 transition-all cursor-pointer"
+            >
+              {t.gotIt || 'Got it!'}
+            </button>
           </div>
         </div>
       )}
