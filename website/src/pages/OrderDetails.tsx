@@ -319,17 +319,22 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       if (res.ok) {
         const data = await res.json();
         if (data && data.download_url) {
-          const isSocialInApp = /TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent);
+          const isTikTok = /TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent);
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
           
-          if (isSocialInApp) {
-            if (/Android/i.test(navigator.userAgent)) {
+          if (isTikTok) {
+            if (isAndroid) {
               const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
               window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+              setShowTiktokModal(true);
             } else {
               window.open(data.download_url, '_blank');
               setShowTiktokModal(true);
             }
-          } else if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          } else if (isAndroid || isIOS) {
+            // Facebook (FBAN/FBAV), Instagram and standard mobile browsers support direct downloads natively.
+            // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
             window.location.href = data.download_url;
           } else {
             const link = document.createElement('a');
@@ -428,8 +433,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <div className="absolute -top-12 -left-12 w-24 h-24 bg-neon-cyan/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -right-12 w-24 h-24 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none" />
 
-          {/* TikTok / Instagram In-App Browser Warning Banner */}
-          {/TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV|Line|Twitter/i.test(navigator.userAgent) && (
+          {/* TikTok In-App Browser Warning Banner */}
+          {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) && (
             <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs sm:text-sm flex items-start gap-3">
               <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
               <div>

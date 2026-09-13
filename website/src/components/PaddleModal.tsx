@@ -96,6 +96,7 @@ const translations = {
     payWithPaypal: 'Pay with PayPal',
     optionalForPaypal: '(optional with PayPal)',
     emailPlaceholderPaypal: 'name@example.com (handled by PayPal)',
+    tiktokDownloadNotice: 'If downloads do not start in TikTok: Tap "..." in the top right corner and choose "Open in browser".',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -170,6 +171,7 @@ const translations = {
     payWithPaypal: 'Mit PayPal bezahlen',
     optionalForPaypal: '(optional bei PayPal)',
     emailPlaceholderPaypal: 'name@beispiel.de (wird von PayPal übernommen)',
+    tiktokDownloadNotice: 'Falls der Download in TikTok nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“.',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -244,6 +246,7 @@ const translations = {
     payWithPaypal: 'Payer avec PayPal',
     optionalForPaypal: '(facultatif avec PayPal)',
     emailPlaceholderPaypal: 'nom@exemple.fr (géré par PayPal)',
+    tiktokDownloadNotice: 'Si le téléchargement ne démarre pas dans TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur ».',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -318,6 +321,7 @@ const translations = {
     payWithPaypal: 'Pagar con PayPal',
     optionalForPaypal: '(opcional con PayPal)',
     emailPlaceholderPaypal: 'nombre@ejemplo.es (gestionado por PayPal)',
+    tiktokDownloadNotice: 'Si la descarga no se inicia en TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador".',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -392,6 +396,7 @@ const translations = {
     payWithPaypal: 'Paga con PayPal',
     optionalForPaypal: '(facoltativo con PayPal)',
     emailPlaceholderPaypal: 'nome@esempio.it (gestito da PayPal)',
+    tiktokDownloadNotice: 'Se il download non si avvia in TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser".',
   }
 };
 
@@ -560,12 +565,29 @@ export default function PaddleModal({
       if (res.ok) {
         const data = await res.json();
         if (data.download_url) {
-          const link = document.createElement('a');
-          link.href = data.download_url;
-          link.download = '';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          const isTikTok = /TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent);
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+          if (isTikTok) {
+            if (isAndroid) {
+              const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
+              window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+            } else {
+              window.open(data.download_url, '_blank');
+            }
+          } else if (isAndroid || isIOS) {
+            // Facebook (FBAN/FBAV), Instagram, and native mobile browsers handle direct URL navigation cleanly.
+            // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
+            window.location.href = data.download_url;
+          } else {
+            const link = document.createElement('a');
+            link.href = data.download_url;
+            link.setAttribute('download', '');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
         } else {
           alert('Download link not received.');
         }
@@ -1588,6 +1610,15 @@ export default function PaddleModal({
                         {t.freeDownloadDesc}
                       </p>
                     </div>
+
+                    {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) && (
+                      <div className="w-full bg-amber-500/10 border border-amber-500/25 rounded-xl p-3 text-xs text-amber-300 flex items-start gap-2.5 my-1 text-left">
+                        <span className="text-sm leading-none mt-0.5">💡</span>
+                        <div className="flex-1 leading-snug">
+                          {t.tiktokDownloadNotice}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="w-full space-y-3">
                       <button
