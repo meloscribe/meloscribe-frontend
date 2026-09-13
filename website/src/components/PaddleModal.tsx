@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
+import { loadStripe } from '@stripe/stripe-js';
+import type { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -71,6 +73,8 @@ const translations = {
     videoSlowLabel: 'Video (Slow Practice)',
     midiOriginalLabel: 'MIDI (Original Speed)',
     midiSlowLabel: 'MIDI (Slow Practice)',
+    backToSelection: 'Back to selection',
+    loadingCheckout: 'Loading secure checkout...',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -122,6 +126,8 @@ const translations = {
     videoSlowLabel: 'Video (Langsam)',
     midiOriginalLabel: 'MIDI (Originaltempo)',
     midiSlowLabel: 'MIDI (Langsam)',
+    backToSelection: 'Zurück zur Auswahl',
+    loadingCheckout: 'Sicherer Checkout wird geladen...',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -173,6 +179,8 @@ const translations = {
     videoSlowLabel: 'Vidéo (Lente)',
     midiOriginalLabel: 'MIDI (Vitesse Normale)',
     midiSlowLabel: 'MIDI (Lent)',
+    backToSelection: 'Retour à la sélection',
+    loadingCheckout: 'Chargement du paiement sécurisé...',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -224,6 +232,8 @@ const translations = {
     videoSlowLabel: 'Video (Lento)',
     midiOriginalLabel: 'MIDI (Velocidad Normal)',
     midiSlowLabel: 'MIDI (Lento)',
+    backToSelection: 'Volver a la selección',
+    loadingCheckout: 'Cargando pago seguro...',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -275,6 +285,8 @@ const translations = {
     videoSlowLabel: 'Video (Lento)',
     midiOriginalLabel: 'MIDI (Velocità Normale)',
     midiSlowLabel: 'MIDI (Lento)',
+    backToSelection: 'Torna alla selezione',
+    loadingCheckout: 'Caricamento del pagamento sicuro...',
   }
 };
 
@@ -301,6 +313,42 @@ export default function PaddleModal({
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [downloadingType, setDownloadingType] = useState<string | null>(null);
+
+  const [checkoutStep, setCheckoutStep] = useState<'details' | 'embedded'>('details');
+  const [isEmbeddedLoading, setIsEmbeddedLoading] = useState(false);
+  const [embeddedError, setEmbeddedError] = useState<string | null>(null);
+  const checkoutInstanceRef = useRef<StripeEmbeddedCheckout | null>(null);
+
+  const isLocalhost = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' ||
+    new URLSearchParams(window.location.search).has('embedded')
+  );
+
+  const cleanupEmbeddedCheckout = () => {
+    if (checkoutInstanceRef.current) {
+      try {
+        checkoutInstanceRef.current.destroy();
+      } catch (e) {
+        console.warn("Failed to destroy checkout instance", e);
+      }
+      checkoutInstanceRef.current = null;
+    }
+    setCheckoutStep('details');
+    setIsEmbeddedLoading(false);
+    setEmbeddedError(null);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      cleanupEmbeddedCheckout();
+    }
+  }, [isOpen]);
+
+  const handleModalClose = () => {
+    cleanupEmbeddedCheckout();
+    onClose();
+  };
 
   const hasDualVersions = Boolean(hasEasy || difficulty === 'Original / Easy');
 
@@ -526,7 +574,7 @@ export default function PaddleModal({
   const activeLang = (['en', 'de', 'fr', 'es', 'it'].includes(language) ? language : 'en') as keyof typeof translations;
   const t = translations[activeLang];
 
-  const handleStripeCheckout = async () => {
+  const handleStripeCheckoutRedirect = async () => {
     setIsRedirecting(true);
     try {
       const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -567,6 +615,82 @@ export default function PaddleModal({
     setIsRedirecting(false);
   };
 
+  const handleBuyClick = async () => {
+    if (!isLocalhost) {
+      handleStripeCheckoutRedirect();
+      return;
+    }
+
+    setCheckoutStep('embedded');
+    setIsEmbeddedLoading(true);
+    setEmbeddedError(null);
+
+    try {
+      const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8787'
+        : 'https://api.meloscribe.dev';
+
+      const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          songId: currentSongId,
+          format: 'full_arrangement',
+          difficulty: selectedDifficulty,
+          priceId: currentPriceId,
+          language: language,
+          embedded: true
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error(await res.text() || 'Failed to create embedded checkout session');
+      }
+
+      const data = await res.json();
+      if (!data.clientSecret || !data.publishableKey) {
+        throw new Error('Invalid response from payment server');
+      }
+
+      const stripe = await loadStripe(data.publishableKey);
+      if (!stripe) {
+        throw new Error('Could not initialize Stripe SDK');
+      }
+
+      if (checkoutInstanceRef.current) {
+        try {
+          checkoutInstanceRef.current.destroy();
+        } catch (_) {}
+        checkoutInstanceRef.current = null;
+      }
+
+      const createFn = (stripe as any).createEmbeddedCheckoutPage || (stripe as any).initEmbeddedCheckout;
+      if (!createFn) {
+        throw new Error('Stripe Embedded Checkout method not found on Stripe instance');
+      }
+
+      const checkout = await createFn.call(stripe, {
+        clientSecret: data.clientSecret,
+      });
+
+      checkoutInstanceRef.current = checkout;
+
+      requestAnimationFrame(() => {
+        const mountPoint = document.getElementById('stripe-embedded-checkout');
+        if (mountPoint) {
+          checkout.mount('#stripe-embedded-checkout');
+        }
+        setIsEmbeddedLoading(false);
+      });
+    } catch (e: any) {
+      console.error("[Embedded Checkout Error]:", e);
+      setEmbeddedError(e.message || (language === 'de' ? 'Fehler beim Laden des Checkouts.' : 'Failed to load checkout.'));
+      setIsEmbeddedLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -597,6 +721,15 @@ export default function PaddleModal({
           width: 0 !important;
           height: 0 !important;
         }
+        #stripe-embedded-checkout {
+          width: 100% !important;
+          min-height: 440px !important;
+        }
+        #stripe-embedded-checkout iframe {
+          width: 100% !important;
+          border: none !important;
+          border-radius: 12px !important;
+        }
         .modal-backdrop-blur {
           backdrop-filter: blur(16px) !important;
           -webkit-backdrop-filter: blur(16px) !important;
@@ -622,11 +755,11 @@ export default function PaddleModal({
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/75 modal-backdrop-blur transition-opacity duration-300"
-        onClick={onClose}
+        onClick={handleModalClose}
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-xl md:max-w-4xl bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]">
+      <div className={`relative w-full max-w-xl ${checkoutStep === 'embedded' ? 'md:max-w-5xl' : 'md:max-w-4xl'} bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]`}>
         
         {/* Glow Orb in Modal */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
@@ -641,7 +774,7 @@ export default function PaddleModal({
             </h3>
           </div>
           <button 
-            onClick={onClose}
+            onClick={handleModalClose}
             className="p-2 rounded-lg bg-gray-100 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-500 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:border-neon-pink/50 dark:hover:shadow-neon-pink-subtle transition-all duration-300 focus:outline-none cursor-pointer"
             aria-label="Close modal"
           >
@@ -652,40 +785,42 @@ export default function PaddleModal({
         {/* Modal Body / Grid Layout */}
         <div className="p-4 md:p-6 overflow-y-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 flex-1">
           
-          {/* Mobile compact song header */}
-          <div className="md:hidden flex items-center justify-between bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-3 rounded-xl w-full">
-            <div 
-              onClick={() => videoUrl && setShowLightbox(true)}
-              className={`flex items-center gap-3 ${videoUrl ? 'cursor-pointer' : ''}`}
-            >
-              <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 dark:border-dark-500/30">
-                <img 
-                  src={coverSrc}
-                  alt={displayTitle}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const step = parseInt(e.currentTarget.dataset.step || '0', 10);
-                    if (step === 0) {
-                      e.currentTarget.dataset.step = '1';
-                      e.currentTarget.src = fallbackWideCover;
-                    } else if (step === 1) {
-                      e.currentTarget.dataset.step = '2';
-                      e.currentTarget.src = fallbackCleanCover;
-                    }
-                  }}
-                />
-                {videoUrl && (
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <Play className="w-4 h-4 text-neon-cyan fill-current ml-0.5" />
-                  </div>
-                )}
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{displayTitle}</h4>
-                <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
+          {/* Mobile compact song header (only visible when in details mode) */}
+          {checkoutStep !== 'embedded' && (
+            <div className="md:hidden flex items-center justify-between bg-gray-50 border border-gray-200/80 dark:bg-dark-800/60 dark:border-dark-500/40 p-3 rounded-xl w-full">
+              <div 
+                onClick={() => videoUrl && setShowLightbox(true)}
+                className={`flex items-center gap-3 ${videoUrl ? 'cursor-pointer' : ''}`}
+              >
+                <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 dark:border-dark-500/30">
+                  <img 
+                    src={coverSrc}
+                    alt={displayTitle}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const step = parseInt(e.currentTarget.dataset.step || '0', 10);
+                      if (step === 0) {
+                        e.currentTarget.dataset.step = '1';
+                        e.currentTarget.src = fallbackWideCover;
+                      } else if (step === 1) {
+                        e.currentTarget.dataset.step = '2';
+                        e.currentTarget.src = fallbackCleanCover;
+                      }
+                    }}
+                  />
+                  {videoUrl && (
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                      <Play className="w-4 h-4 text-neon-cyan fill-current ml-0.5" />
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{displayTitle}</h4>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{songArtist}</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Left Column: Song Details & Included features — hidden on mobile */}
           <div className="hidden md:flex md:col-span-5 space-y-4 md:space-y-6 flex-col justify-start">
@@ -801,159 +936,216 @@ export default function PaddleModal({
           </div>
 
           {/* Right Column: Secure Checkout Action */}
-          <div className="md:col-span-7 md:border-l border-gray-200 dark:border-dark-600/50 md:pl-8 flex flex-col justify-center">
-            <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-5 md:gap-6 py-4 md:py-8">
-              {/* Version Selector for Dual Version Songs */}
-              {hasDualVersions && (
-                <div className="w-full">
-                  <span className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-2 text-center uppercase tracking-wider">
-                    {t.selectDifficulty}
-                  </span>
-                  <div className="grid grid-cols-2 p-1 bg-gray-100 dark:bg-dark-800/90 rounded-xl border border-gray-200 dark:border-dark-600/60 shadow-inner">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedDifficulty('Original')}
-                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        !isSelectedEasy
-                          ? 'bg-white dark:bg-dark-700 text-neon-pink shadow-sm border border-gray-200 dark:border-neon-pink/40'
-                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                      }`}
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-neon-pink" />
-                      <span>{t.versionOriginal}</span>
-                    </button>
+          <div className={`md:col-span-7 md:border-l border-gray-200 dark:border-dark-600/50 md:pl-8 flex flex-col ${checkoutStep === 'embedded' ? 'justify-start' : 'justify-center'}`}>
+            {checkoutStep === 'embedded' ? (
+              <div className="w-full flex flex-col py-1">
+                {/* Embedded Top Navigation Bar */}
+                <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-dark-600/50">
+                  <button
+                    type="button"
+                    onClick={cleanupEmbeddedCheckout}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-neon-cyan dark:text-gray-400 dark:hover:text-neon-cyan transition-colors cursor-pointer py-1"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{t.backToSelection}</span>
+                  </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setSelectedDifficulty('Easy')}
-                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        isSelectedEasy
-                          ? 'bg-white dark:bg-dark-700 text-neon-cyan shadow-sm border border-gray-200 dark:border-neon-cyan/40'
-                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                      }`}
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-neon-cyan" />
-                      <span>{t.versionEasy}</span>
-                    </button>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-gray-100 dark:bg-dark-800 border border-gray-200 dark:border-dark-600/60 text-gray-700 dark:text-gray-300 shadow-sm">
+                      <ShieldCheck className="w-3.5 h-3.5 text-neon-cyan" />
+                      <span>{isSelectedEasy ? t.versionEasy : t.versionOriginal} • {currentPrice}</span>
+                    </span>
                   </div>
                 </div>
-              )}
 
-              {isFree ? (
-                <>
-                  <div className="text-center">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                      {t.freeDownloadTitle}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {t.freeDownloadDesc}
-                    </p>
+                {/* Stripe Mount Container */}
+                <div className="relative w-full mt-3 rounded-xl overflow-hidden bg-gray-50/50 dark:bg-dark-950/60 border border-gray-200 dark:border-dark-600/50 min-h-[460px] max-h-[580px] overflow-y-auto custom-scrollbar">
+                  {isEmbeddedLoading && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white/85 dark:bg-dark-900/85 backdrop-blur-sm z-20">
+                      <Loader2 className="w-8 h-8 text-neon-cyan animate-spin" />
+                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300">{t.loadingCheckout}</p>
+                    </div>
+                  )}
+
+                  {embeddedError && (
+                    <div className="p-6 text-center space-y-3">
+                      <p className="text-sm text-red-500 dark:text-red-400 font-medium">{embeddedError}</p>
+                      <div className="flex justify-center gap-3">
+                        <button
+                          type="button"
+                          onClick={handleBuyClick}
+                          className="px-4 py-2 rounded-lg text-xs font-semibold bg-neon-cyan/20 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/30 transition-all cursor-pointer"
+                        >
+                          {language === 'de' ? 'Erneut versuchen' : 'Retry'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={cleanupEmbeddedCheckout}
+                          className="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 transition-all cursor-pointer"
+                        >
+                          {t.backToSelection}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div id="stripe-embedded-checkout" className="w-full" />
+                </div>
+              </div>
+            ) : (
+              <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-5 md:gap-6 py-4 md:py-8">
+                {/* Version Selector for Dual Version Songs */}
+                {hasDualVersions && (
+                  <div className="w-full">
+                    <span className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-2 text-center uppercase tracking-wider">
+                      {t.selectDifficulty}
+                    </span>
+                    <div className="grid grid-cols-2 p-1 bg-gray-100 dark:bg-dark-800/90 rounded-xl border border-gray-200 dark:border-dark-600/60 shadow-inner">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDifficulty('Original')}
+                        className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                          !isSelectedEasy
+                            ? 'bg-white dark:bg-dark-700 text-neon-pink shadow-sm border border-gray-200 dark:border-neon-pink/40'
+                            : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                        }`}
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-neon-pink" />
+                        <span>{t.versionOriginal}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDifficulty('Easy')}
+                        className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                          isSelectedEasy
+                            ? 'bg-white dark:bg-dark-700 text-neon-cyan shadow-sm border border-gray-200 dark:border-neon-cyan/40'
+                            : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                        }`}
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-neon-cyan" />
+                        <span>{t.versionEasy}</span>
+                      </button>
+                    </div>
                   </div>
+                )}
 
-                  <div className="w-full space-y-3">
-                    <button
-                      onClick={() => handleFreeDownload('pdf')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-neon-cyan" />
-                        {t.pdfFreeLabel}
-                      </span>
-                      {downloadingType === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
+                {isFree ? (
+                  <>
+                    <div className="text-center">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                        {t.freeDownloadTitle}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {t.freeDownloadDesc}
+                      </p>
+                    </div>
 
-                    <button
-                      onClick={() => handleFreeDownload('video')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Tv className="w-4 h-4 text-neon-cyan" />
-                        {t.videoOriginalLabel}
-                      </span>
-                      {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleFreeDownload('video_slow')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Tv className="w-4 h-4 text-neon-cyan/80" />
-                        {t.videoSlowLabel}
-                      </span>
-                      {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleFreeDownload('midi')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Music className="w-4 h-4 text-neon-pink" />
-                        {t.midiOriginalLabel}
-                      </span>
-                      {downloadingType === 'midi' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleFreeDownload('midi_slow')}
-                      disabled={!!downloadingType}
-                      className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Music className="w-4 h-4 text-neon-pink/80" />
-                        {t.midiSlowLabel}
-                      </span>
-                      {downloadingType === 'midi_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Mobile Only: Compact Package Summary */}
-                  <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-gray-200 dark:border-dark-600/50 p-3 rounded-xl text-sm leading-relaxed">
-                    <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
-                      {t.packageIncludes}
-                    </p>
-                    <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {t.packageIncludesDesc}
-                    </p>
-                  </div>
-
-                  {/* Action Subtext */}
-                  <div className="text-center w-full px-2 my-1">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {t.checkoutSubtext}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={handleStripeCheckout}
-                    disabled={isRedirecting}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                  >
-                    {isRedirecting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>{t.redirectingStripe}</span>
-                      </>
-                    ) : (
-                      <>
-                        <ShieldCheck className="w-5 h-5" />
-                        <span>
-                          {isSelectedEasy ? t.buyEasyVersion : t.buyOriginalVersion}
-                          {currentPrice ? ` • ${currentPrice}` : ''}
+                    <div className="w-full space-y-3">
+                      <button
+                        onClick={() => handleFreeDownload('pdf')}
+                        disabled={!!downloadingType}
+                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-neon-cyan" />
+                          {t.pdfFreeLabel}
                         </span>
-                      </>
-                    )}
-                  </button>
-                </>
-              )}
-            </div>
+                        {downloadingType === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                      </button>
+
+                      <button
+                        onClick={() => handleFreeDownload('video')}
+                        disabled={!!downloadingType}
+                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Tv className="w-4 h-4 text-neon-cyan" />
+                          {t.videoOriginalLabel}
+                        </span>
+                        {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                      </button>
+
+                      <button
+                        onClick={() => handleFreeDownload('video_slow')}
+                        disabled={!!downloadingType}
+                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Tv className="w-4 h-4 text-neon-cyan/80" />
+                          {t.videoSlowLabel}
+                        </span>
+                        {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                      </button>
+
+                      <button
+                        onClick={() => handleFreeDownload('midi')}
+                        disabled={!!downloadingType}
+                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Music className="w-4 h-4 text-neon-pink" />
+                          {t.midiOriginalLabel}
+                        </span>
+                        {downloadingType === 'midi' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                      </button>
+
+                      <button
+                        onClick={() => handleFreeDownload('midi_slow')}
+                        disabled={!!downloadingType}
+                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Music className="w-4 h-4 text-neon-pink/80" />
+                          {t.midiSlowLabel}
+                        </span>
+                        {downloadingType === 'midi_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Mobile Only: Compact Package Summary */}
+                    <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-gray-200 dark:border-dark-600/50 p-3 rounded-xl text-sm leading-relaxed">
+                      <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
+                        {t.packageIncludes}
+                      </p>
+                      <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {t.packageIncludesDesc}
+                      </p>
+                    </div>
+
+                    {/* Action Subtext */}
+                    <div className="text-center w-full px-2 my-1">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {t.checkoutSubtext}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={handleBuyClick}
+                      disabled={isRedirecting || isEmbeddedLoading}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      {isRedirecting || isEmbeddedLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>{t.redirectingStripe}</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-5 h-5" />
+                          <span>
+                            {isSelectedEasy ? t.buyEasyVersion : t.buyOriginalVersion}
+                            {currentPrice ? ` • ${currentPrice}` : ''}
+                          </span>
+                        </>
+                      )}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
