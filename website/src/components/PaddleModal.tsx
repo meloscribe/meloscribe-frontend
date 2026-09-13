@@ -78,7 +78,7 @@ const translations = {
     orCardKlarna: 'or',
     contactInformation: 'Contact Information',
     paymentMethod: 'Payment Method',
-    payNow: 'Pay Securely',
+    payNow: 'Pay {price}',
     processingPayment: 'Processing payment...',
     pciCompliant: 'Instant download after purchase',
     loadingExpress: 'Loading Express Checkout...',
@@ -140,7 +140,7 @@ const translations = {
     orCardKlarna: 'oder',
     contactInformation: 'Kontaktinformationen',
     paymentMethod: 'Zahlungsmethode',
-    payNow: 'Jetzt sicher bezahlen',
+    payNow: 'Jetzt {price} bezahlen',
     processingPayment: 'Zahlung wird verarbeitet...',
     pciCompliant: 'Sofortiger Download nach Kauf',
     loadingExpress: 'Express Checkout wird geladen...',
@@ -202,7 +202,7 @@ const translations = {
     orCardKlarna: 'ou',
     contactInformation: 'Coordonnées',
     paymentMethod: 'Moyen de paiement',
-    payNow: 'Payer en toute sécurité',
+    payNow: 'Payer {price}',
     processingPayment: 'Traitement du paiement...',
     pciCompliant: 'Téléchargement instantané après l\'achat',
     loadingExpress: 'Chargement du paiement express...',
@@ -264,7 +264,7 @@ const translations = {
     orCardKlarna: 'o',
     contactInformation: 'Información de contacto',
     paymentMethod: 'Método de pago',
-    payNow: 'Pagar con seguridad',
+    payNow: 'Pagar {price}',
     processingPayment: 'Procesando el pago...',
     pciCompliant: 'Descarga instantánea tras la compra',
     loadingExpress: 'Cargando pago exprés...',
@@ -326,7 +326,7 @@ const translations = {
     orCardKlarna: 'o',
     contactInformation: 'Informazioni di contatto',
     paymentMethod: 'Metodo di pagamento',
-    payNow: 'Paga in sicurezza',
+    payNow: 'Paga {price}',
     processingPayment: 'Elaborazione del pagamento...',
     pciCompliant: 'Download immediato dopo l\'acquisto',
     loadingExpress: 'Caricamento pagamento rapido...',
@@ -873,6 +873,11 @@ export default function PaddleModal({
 
       const expressCheckout = elements.create('expressCheckout', {
         buttonHeight: 46,
+        layout: {
+          maxColumns: 2,
+          maxRows: 1,
+          overflow: 'never',
+        },
         paymentMethods: {
           link: 'never',
           klarna: 'never',
@@ -980,7 +985,7 @@ export default function PaddleModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto max-w-[100vw] animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 overflow-hidden max-w-[100vw] animate-in fade-in duration-300">
       <style dangerouslySetInnerHTML={{ __html: `
         .paddle-frame,
         .paddle-frame-inline,
@@ -1048,6 +1053,12 @@ export default function PaddleModal({
         .modal-backdrop-blur {
           backdrop-filter: blur(16px) !important;
           -webkit-backdrop-filter: blur(16px) !important;
+          transform: translateZ(0) !important;
+        }
+        .custom-modal-scroll {
+          -webkit-overflow-scrolling: touch !important;
+          overscroll-behavior: contain !important;
+          transform: translateZ(0) !important;
         }
         @keyframes screamPlayPulse {
           0% {
@@ -1069,7 +1080,7 @@ export default function PaddleModal({
       ` }} />
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/75 modal-backdrop-blur transition-opacity duration-300"
+        className="fixed inset-0 bg-black/80 modal-backdrop-blur transition-opacity duration-300 pointer-events-auto"
         onClick={handleModalClose}
       />
 
@@ -1077,8 +1088,8 @@ export default function PaddleModal({
       <div className={`relative w-full max-w-xl ${checkoutStep === 'embedded' ? 'md:max-w-5xl' : 'md:max-w-4xl'} mx-auto bg-white dark:bg-dark-900/95 border border-gray-200 dark:border-dark-600/50 rounded-2xl overflow-hidden shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[92vh]`}>
         
         {/* Glow Orb in Modal */}
-        <div className="absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-neon-pink/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden md:block absolute -top-24 -left-24 w-48 h-48 bg-neon-cyan/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden md:block absolute -bottom-24 -right-24 w-48 h-48 bg-neon-pink/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-dark-600/50 relative z-10">
@@ -1098,7 +1109,7 @@ export default function PaddleModal({
         </div>
 
         {/* Modal Body / Grid Layout */}
-        <div className="p-4 md:p-6 overflow-y-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 flex-1">
+        <div className="p-4 md:p-6 overflow-y-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 flex-1 custom-modal-scroll">
           
           {/* Mobile compact song header (only visible when in details mode) */}
           {checkoutStep !== 'embedded' && (
@@ -1366,14 +1377,13 @@ export default function PaddleModal({
                         ) : (
                           <>
                             <ShieldCheck className="w-5 h-5" />
-                            <span>{t.payNow} • {currentPrice}</span>
+                            <span>{t.payNow.replace('{price}', String(currentPrice))}</span>
                           </>
                         )}
                       </button>
 
                       {/* Trust Guarantee / PCI Compliance Footer */}
-                      <div className="pt-2 flex items-center justify-center gap-1.5 text-[11px] text-gray-400 text-center">
-                        <ShieldCheck className="w-3.5 h-3.5 text-neon-cyan flex-shrink-0" />
+                      <div className="pt-2 text-[11px] text-gray-400 text-center">
                         <span>{t.pciCompliant}</span>
                       </div>
                     </div>
