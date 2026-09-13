@@ -875,7 +875,7 @@ export default function PaddleModal({
         buttonHeight: 46,
         layout: {
           maxColumns: 2,
-          maxRows: 1,
+          maxRows: 0,
           overflow: 'never',
         },
         paymentMethods: {
@@ -914,6 +914,8 @@ export default function PaddleModal({
         },
         wallets: {
           link: 'never',
+          applePay: 'never',
+          googlePay: 'never',
         },
       });
       paymentElementRef.current = paymentElement;
