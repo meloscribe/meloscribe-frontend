@@ -336,7 +336,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           if (isTikTok) {
             if (isAndroid) {
               const cleanUrl = data.download_url.replace(/^https?:\/\//, '');
-              window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+              window.location.href = `intent://${cleanUrl}#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
               setShowTiktokModal(true);
             } else {
               window.open(data.download_url, '_blank');
