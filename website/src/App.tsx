@@ -634,31 +634,30 @@ function App() {
     }
     if (audioRef.current) {
       const audio = audioRef.current;
-      audio.oncanplay = null; // Clear any pending canplay callbacks
+      audio.oncanplay = null;
       
-      if (immediate) {
+      const cleanup = () => {
         audio.pause();
-        audio.src = ''; // Explicitly release HTTP connection resources
+        audio.removeAttribute('src');
         try {
           audio.load();
         } catch (e) {}
         setPlayingSongId(null);
+      };
+
+      if (immediate) {
+        cleanup();
       } else {
         const start = performance.now();
         const startVol = audio.volume;
         fadeIntervalRef.current = window.setInterval(() => {
           const elapsed = performance.now() - start;
-          const progress = Math.min(elapsed / 200, 1);
+          const progress = Math.min(elapsed / 150, 1);
           audio.volume = startVol * (1 - progress);
           if (progress >= 1) {
             clearInterval(fadeIntervalRef.current!);
             fadeIntervalRef.current = null;
-            audio.pause();
-            audio.src = '';
-            try {
-              audio.load();
-            } catch (e) {}
-            setPlayingSongId(null);
+            cleanup();
           }
         }, 16);
       }
@@ -667,7 +666,7 @@ function App() {
     }
   };
 
-  // Play audio preview with 300ms fade-in
+  // Play audio preview with 250ms fade-in
   const playAudio = (song: Song) => {
     if (isMuted) return;
 
@@ -682,11 +681,12 @@ function App() {
     const audioUrl = resolveAudioUrl(song);
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
 
-    // Check if the URL matches (taking into account fully qualified paths that the browser sets)
+    // Check if the URL matches
     const isUrlPreloaded = (audio.src === audioUrl || audio.src === window.location.origin + audioUrl);
     if (!isUrlPreloaded) {
       audio.pause();
       audio.src = audioUrl;
+      audio.preload = 'auto';
       try {
         audio.load();
       } catch (e) {}
@@ -698,7 +698,7 @@ function App() {
       // Guard: Don't start playing if user already left this card
       if (hoveredSongIdRef.current !== song.id) {
         audio.pause();
-        audio.src = '';
+        audio.removeAttribute('src');
         try {
           audio.load();
         } catch (e) {}
@@ -709,7 +709,7 @@ function App() {
       const targetVolume = 0.40;
       fadeIntervalRef.current = window.setInterval(() => {
         const elapsed = performance.now() - start;
-        const progress = Math.min(elapsed / 300, 1);
+        const progress = Math.min(elapsed / 250, 1);
         audio.volume = progress * targetVolume;
         if (progress >= 1) {
           clearInterval(fadeIntervalRef.current!);
@@ -718,40 +718,41 @@ function App() {
       }, 16);
     };
 
-    const doPlay = () => {
-      if (hoveredSongIdRef.current !== song.id) {
-        return;
-      }
-      
-      try {
-        if (Math.abs(audio.currentTime - previewStart) > 0.5) {
-          audio.currentTime = previewStart;
-        }
-      } catch (e) {}
+    if (hoveredSongIdRef.current !== song.id) {
+      return;
+    }
 
-      audio.play()
+    if (previewStart > 0) {
+      if (audio.readyState >= 1) {
+        try {
+          audio.currentTime = previewStart;
+        } catch (e) {}
+      } else {
+        audio.addEventListener('loadedmetadata', () => {
+          try {
+            audio.currentTime = previewStart;
+          } catch (e) {}
+        }, { once: true });
+      }
+    } else {
+      try {
+        audio.currentTime = 0;
+      } catch (e) {}
+    }
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
         .then(startFade)
         .catch((err) => {
-          console.warn('Audio preview autoplay failed or file missing:', err);
+          if (err.name !== 'AbortError') {
+            console.warn('Audio preview autoplay failed:', err);
+          }
         });
-    };
-
-    // If the audio is ready to play immediately, do so — otherwise wait for canplay
-    if (audio.readyState >= 3) { // HAVE_FUTURE_DATA or better
-      doPlay();
-    } else {
-      audio.oncanplay = () => {
-        audio.oncanplay = null;
-        // Guard: Don't play if user already left this card while waiting for audio to load
-        if (hoveredSongIdRef.current !== song.id) {
-          return;
-        }
-        doPlay();
-      };
     }
   };
 
-  // Card Mouse Hover handlers with 250ms debounce
+  // Card Mouse Hover handlers with 120ms debounce
   const handleCardMouseEnter = (song: Song) => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
     if (isMobile) return;
@@ -762,14 +763,13 @@ function App() {
       clearTimeout(debounceTimeoutRef.current);
     }
 
-    // Eagerly pre-warm / preload this song's audio stream immediately on hover (during the 250ms debounce)
+    // Eagerly pre-warm / preload this song's audio stream immediately on hover
     if (!isMuted) {
       const audio = getAudioElement();
       const audioUrl = resolveAudioUrl(song);
       
       const isUrlPreloaded = (audio.src === audioUrl || audio.src === window.location.origin + audioUrl);
       if (!isUrlPreloaded) {
-        // If it was playing/fading something else, cancel it immediately (hart) to free up the socket
         stopAudio(true);
         audio.src = audioUrl;
         audio.preload = 'auto';
@@ -781,7 +781,7 @@ function App() {
 
     debounceTimeoutRef.current = window.setTimeout(() => {
       playAudio(song);
-    }, 250);
+    }, 120);
   };
 
   const handleCardMouseLeave = () => {
