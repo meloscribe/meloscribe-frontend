@@ -711,16 +711,21 @@ function App() {
 
     const previewStart = song.previewStart ?? song.highlightStart ?? song.trailerStart ?? 0;
     if (previewStart > 0) {
-      if (audio.readyState >= 1) {
-        try {
-          audio.currentTime = previewStart;
-        } catch (e) {}
-      } else {
-        audio.addEventListener('loadedmetadata', () => {
+      const applySeek = () => {
+        if (audio.duration && previewStart < audio.duration) {
           try {
             audio.currentTime = previewStart;
           } catch (e) {}
-        }, { once: true });
+        } else {
+          try {
+            audio.currentTime = 0;
+          } catch (e) {}
+        }
+      };
+      if (audio.readyState >= 1) {
+        applySeek();
+      } else {
+        audio.addEventListener('loadedmetadata', applySeek, { once: true });
       }
     } else {
       try {
