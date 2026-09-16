@@ -1337,6 +1337,8 @@ export default function PaddleModal({
                   src={wideCoverSrc}
                   alt={displayTitle}
                   style={{ display: 'block' }}
+                  loading="eager"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
                   onError={(e) => {
                     const step = parseInt(e.currentTarget.dataset.step || '0', 10);
@@ -1767,13 +1769,13 @@ export default function PaddleModal({
             className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10 z-10 group/player flex items-center justify-center transition-transform duration-300"
             style={{ transform: showLightbox ? 'scale(1)' : 'scale(0.95)' }}
           >
-            {/* Eagerly preloaded video element */}
+            {/* Video element: only streams when lightbox is active to avoid choking modal network/cover image */}
             <video 
               ref={videoRef}
-              src={videoUrl}
+              src={showLightbox ? (videoUrl || undefined) : undefined}
               poster={wideCoverSrc}
               playsInline
-              preload="auto"
+              preload={showLightbox ? "auto" : "none"}
               controlsList="nodownload nofullscreen"
               disablePictureInPicture
               onContextMenu={(e) => e.preventDefault()}

@@ -20,6 +20,7 @@ dist-ssr/
 build/
 .next/
 out/
+scratch/
 
 # IDEs and editors
 .idea/
