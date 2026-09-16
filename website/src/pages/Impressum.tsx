@@ -32,7 +32,13 @@ export default function Impressum({ onBack, language }: ImpressumProps) {
             </span>
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            {language === 'de' ? 'Angaben gemäß § 5 TMG' : 'Information provided according to Sec. 5 German Telemedia Act (TMG)'}
+            {language === 'de' 
+              ? 'Angaben gemäß § 5 DDG' 
+              : language === 'es' 
+              ? 'Información conforme al art. 5 de la Ley de Servicios Digitales alemana (DDG)' 
+              : language === 'fr' 
+              ? 'Informations conformément à l\'art. 5 de la loi allemande sur les services numériques (DDG)' 
+              : 'Information provided according to Sec. 5 German Digital Services Act (DDG)'}
           </p>
         </div>
 
@@ -43,25 +49,21 @@ export default function Impressum({ onBack, language }: ImpressumProps) {
           </div>
 
           <div className="space-y-8 text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-            {/* PLACEHOLDER COMMENT: Legal details can be edited below */}
-            {/* ========================================================================= */}
-            {/* LEGAL DETAILS PLACEHOLDER - EDIT THIS SECTION WITH REAL OWNER DATA */}
-            {/* ========================================================================= */}
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
-                {language === 'de' ? 'Betreiber der Website' : 'Website Operator'}
+                {language === 'de' ? 'Betreiber der Website' : language === 'es' ? 'Operador del Sitio Web' : language === 'fr' ? 'Exploitant du Site' : 'Website Operator'}
               </h2>
               <div className="space-y-1">
                 <p className="font-medium text-gray-900 dark:text-white">Tobias Baumann</p>
                 <p>Wolfgelts 10</p>
                 <p>88353 Kißlegg</p>
-                <p>{language === 'de' ? 'Deutschland' : 'Germany'}</p>
+                <p>{language === 'de' ? 'Deutschland' : language === 'es' ? 'Alemania' : language === 'fr' ? 'Allemagne' : 'Germany'}</p>
               </div>
             </div>
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
-                {language === 'de' ? 'Kontakt' : 'Contact Information'}
+                {language === 'de' ? 'Kontakt' : language === 'es' ? 'Contacto' : language === 'fr' ? 'Contact' : 'Contact Information'}
               </h2>
               <div className="space-y-2">
                 <p className="flex items-center gap-2">
@@ -73,17 +75,68 @@ export default function Impressum({ onBack, language }: ImpressumProps) {
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
-                {language === 'de' ? 'Haftungsausschluss' : 'Disclaimer'}
+                {language === 'de' ? 'Umsatzsteuer' : language === 'es' ? 'Impuesto sobre el valor añadido' : language === 'fr' ? 'Taxe sur la valeur ajoutée' : 'VAT / Tax Information'}
+              </h2>
+              <p className="text-sm">
+                {language === 'de'
+                  ? 'Umsatzsteuer-Identifikationsnummer gemäß § 27 a UStG: Entfällt (Kleinunternehmerregelung gemäß § 19 UStG).'
+                  : language === 'es'
+                  ? 'NIF-IVA según art. 27 a UStG: No aplicable (régimen de pequeñas empresas según art. 19 UStG de la legislación alemana).'
+                  : language === 'fr'
+                  ? 'Numéro de TVA intracommunautaire selon l\'art. 27 a UStG: Non applicable (régime des petites entreprises selon l\'art. 19 UStG de la législation allemande).'
+                  : 'VAT identification number according to Sec. 27 a German VAT Act: Not applicable (small business regulation according to Sec. 19 German VAT Act).'}
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
+                {language === 'de' ? 'Redaktionell verantwortlich' : language === 'es' ? 'Responsable editorial' : language === 'fr' ? 'Responsable éditorial' : 'Editorial Responsibility'}
+              </h2>
+              <p className="text-sm">
+                {language === 'de' ? (
+                  <>Verantwortlich für redaktionelle Inhalte gemäß § 18 Abs. 2 MStV: Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Deutschland.</>
+                ) : (
+                  <>Responsible for editorial content according to Sec. 18 (2) German State Media Treaty (MStV): Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Germany.</>
+                )}
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
+                {language === 'de' ? 'Verbraucherstreitbeilegung' : language === 'es' ? 'Resolución de litigios de consumo' : language === 'fr' ? 'Règlement des litiges de consommation' : 'Consumer Dispute Resolution'}
+              </h2>
+              <p className="text-sm">
+                {language === 'de'
+                  ? 'Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.'
+                  : language === 'es'
+                  ? 'La Comisión Europea ofrece una plataforma para la resolución de litigios en línea (OS): https://ec.europa.eu/consumers/odr/. No estamos obligados ni dispuestos a participar en procedimientos de resolución de conflictos ante una junta arbitral de consumo.'
+                  : language === 'fr'
+                  ? 'La Commission européenne fournit une plateforme de règlement des litiges en ligne (OS): https://ec.europa.eu/consumers/odr/. Nous ne sommes ni disposés ni obligés de participer à des procédures de règlement des litiges devant un conseil d\'arbitrage des consommateurs.'
+                  : 'The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. We are neither willing nor obligated to participate in dispute resolution proceedings before a consumer arbitration board.'}
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
+                {language === 'de' ? 'Haftungsausschluss' : language === 'es' ? 'Descargo de responsabilidad' : language === 'fr' ? 'Clause de non-responsabilité' : 'Disclaimer'}
               </h2>
               <div className="space-y-4 text-sm text-gray-500 dark:text-gray-400">
                 <p>
                   {language === 'de' 
                     ? 'Haftung für Inhalte: Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.' 
+                    : language === 'es'
+                    ? 'Responsabilidad por los contenidos: Los contenidos de nuestras páginas se han elaborado con el máximo esmero. Sin embargo, no podemos garantizar la exactitud, exhaustividad ni actualidad de los mismos.'
+                    : language === 'fr'
+                    ? 'Responsabilité pour les contenus: Le contenu de nos pages a été créé avec le plus grand soin. Cependant, nous ne pouvons garantir l\'exactitude, l\'exhaustivité ou l\'actualité des contenus.'
                     : 'Liability for Contents: The contents of our pages were created with great care. However, we cannot assume any liability for the correctness, completeness and up-to-dateness of the contents.'}
                 </p>
                 <p>
                   {language === 'de'
                     ? 'Haftung für Links: Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.'
+                    : language === 'es'
+                    ? 'Responsabilidad por enlaces: Nuestra oferta contiene enlaces a sitios web externos de terceros sobre cuyos contenidos no tenemos ninguna influencia. Por tanto, no podemos asumir responsabilidad por dichos contenidos externos.'
+                    : language === 'fr'
+                    ? 'Responsabilité des liens: Notre offre contient des liens vers des sites web externes de tiers sur les contenus desquels nous n\'avons aucune influence. C\'est pourquoi nous déclinons toute responsabilité quant à ces contenus tiers.'
                     : 'Liability for Links: Our offer contains links to external websites of third parties, on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents.'}
                 </p>
               </div>

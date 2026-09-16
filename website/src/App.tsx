@@ -40,13 +40,16 @@ const getLocalizedDifficulty = (diff: string | undefined, tObj: any): string => 
 
 
 const resolveAudioUrl = (song: Song): string => {
+  if (song.audioPreviewUrl) {
+    return song.audioPreviewUrl;
+  }
+  const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
   const h = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
   const isLocal = h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h.startsWith('10.') || h.startsWith('172.');
   const apiBaseUrl = isLocal
     ? `http://${h}:8787`
     : 'https://api.meloscribe.dev';
 
-  const cleanTitle = song.title.replace(" (Easy Version)", "").replace(" (Easy)", "").trim();
   return `${apiBaseUrl}/api/public/audio-stream?song_name=${encodeURIComponent(cleanTitle)}`;
 };
 

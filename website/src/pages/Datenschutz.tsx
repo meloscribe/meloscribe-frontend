@@ -133,18 +133,98 @@ export default function Datenschutz({ onBack, language }: DatenschutzProps) {
 
             <div>
               <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
-                {language === 'de' ? '5. Ihre Rechte' : '5. Your Rights'}
+                {language === 'de' ? '5. Transaktionaler E-Mail-Versand (Resend)' : language === 'es' ? '5. Envío de correos electrónicos (Resend)' : language === 'fr' ? '5. Envoi d\'e-mails transactionnels (Resend)' : '5. Transactional Email Delivery (Resend)'}
               </h2>
               <p>
                 {language === 'de' ? (
                   <>
-                    Sie haben nach der DSGVO jederzeit das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO) Ihrer bei uns gespeicherten personenbezogenen Daten. 
-                    Bitte wenden Sie sich bei Fragen hierzu an die oben genannte E-Mail-Adresse der verantwortlichen Stelle.
+                    Für den zuverlässigen Versand von Bestellbestätigungen, Rechnungsdaten, Download-Zugängen sowie Anmeldebestätigungen (Double-Opt-In) nutzen wir den Dienst <strong>Resend</strong> (Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). 
+                    Hierbei wird Ihre E-Mail-Adresse sowie der Inhalt der Benachrichtigung an die Server von Resend in den USA übermittelt.
+                    <br /><br />
+                    Die Rechtsgrundlage für die Verarbeitung ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung zur Auslieferung gekaufter Produkte) bzw. <strong>Art. 6 Abs. 1 lit. a DSGVO</strong> (Einwilligung bei Newsletter-Anmeldung). 
+                    Die Datenübertragung in die USA ist durch die Standardvertragsklauseln (SCCs) der EU-Kommission sowie das EU-U.S. Data Privacy Framework (DPF) datenschutzrechtlich abgesichert.
+                  </>
+                ) : language === 'es' ? (
+                  <>
+                    Para el envío de confirmaciones de compra, enlaces de descarga y notificaciones de suscripción, utilizamos <strong>Resend</strong> (Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, EE. UU.). 
+                    Su dirección de correo electrónico y los datos del pedido se transmiten a los servidores de Resend.
+                    <br /><br />
+                    La base legal es el <strong>art. 6, ap. 1, letra b del RGPD</strong> (ejecución contractual) y el <strong>art. 6, ap. 1, letra a del RGPD</strong> (consentimiento). La transferencia a EE. UU. está respaldada por las Cláusulas Contractuales Tipo (SCC) de la UE y el marco de privacidad de datos UE-EE. UU. (DPF).
+                  </>
+                ) : language === 'fr' ? (
+                  <>
+                    Pour l'envoi de confirmations de commande, de liens de téléchargement et d'e-mails d'inscription, nous utilisons <strong>Resend</strong> (Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, États-Unis). 
+                    Votre adresse e-mail et les données de commande sont transmises aux serveurs de Resend.
+                    <br /><br />
+                    La base juridique est l'<strong>art. 6, par. 1, point b du RGPD</strong> (exécution d'un contrat) et l'<strong>art. 6, par. 1, point a du RGPD</strong> (consentement). Le transfert vers les États-Unis est encadré par les clauses contractuelles types (CCT) de la Commission européenne et le cadre de protection des données UE-États-Unis (DPF).
                   </>
                 ) : (
                   <>
-                    Under the GDPR, you have the right to access (Art. 15 GDPR), rectify (Art. 16 GDPR), erase (Art. 17 GDPR), and restrict the processing (Art. 18 GDPR) of your personal data stored by us. 
-                    To exercise these rights, please contact the Data Controller at the email address listed above.
+                    To send purchase confirmations, order delivery links, and double opt-in subscription emails, we use <strong>Resend</strong> (Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). 
+                    Your email address and transaction data are processed via Resend's infrastructure in the United States.
+                    <br /><br />
+                    The legal basis is <strong>Art. 6(1)(b) GDPR</strong> (performance of a contract) and <strong>Art. 6(1)(a) GDPR</strong> (consent). Data transfers to the United States are secured through Standard Contractual Clauses (SCCs) and the EU-U.S. Data Privacy Framework (DPF).
+                  </>
+                )}
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-cyan pl-3">
+                {language === 'de' ? '6. Content Delivery Network & Cloud-Speicher (Cloudflare)' : language === 'es' ? '6. Red de entrega de contenido y almacenamiento (Cloudflare)' : language === 'fr' ? '6. Réseau de diffusion de contenu et stockage (Cloudflare)' : '6. Content Delivery Network & Cloud Storage (Cloudflare)'}
+              </h2>
+              <p>
+                {language === 'de' ? (
+                  <>
+                    Wir nutzen Dienste der <strong>Cloudflare, Inc.</strong> (101 Townsend St., San Francisco, CA 94107, USA). Cloudflare fungiert als Sicherheits-Reverse-Proxy, Web Application Firewall (WAF) und globales Content Delivery Network (CDN) sowie als Objektspeicher (Cloudflare R2) für die Bereitstellung digitaler Notendateien.
+                    <br /><br />
+                    Beim Zugriff auf unsere Webseite und beim Abruf von Dateien werden Anfragen über das globale Servernetz von Cloudflare geroutet. Hierbei können IP-Adressen und Telemetriedaten zur Gefahrenabwehr vorübergehend verarbeitet werden.
+                    <br /><br />
+                    Die Rechtsgrundlage ist <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> (unser berechtigtes Interesse an Ausfallsicherheit, Schutz vor DDoS-Angriffen und schneller weltweiter Auslieferung) sowie <strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Vertragserfüllung). Die Datenübermittlung in Drittstaaten ist durch Standardvertragsklauseln der EU-Kommission abgesichert.
+                  </>
+                ) : language === 'es' ? (
+                  <>
+                    Utilizamos servicios de <strong>Cloudflare, Inc.</strong> (101 Townsend St., San Francisco, CA 94107, EE. UU.) como red de distribución de contenidos (CDN), cortafuegos de aplicaciones web y almacenamiento seguro en la nube (Cloudflare R2) para descargas digitales.
+                    <br /><br />
+                    La base legal es el <strong>art. 6, ap. 1, letra f del RGPD</strong> (interés legítimo en seguridad y rendimiento) y el <strong>art. 6, ap. 1, letra b del RGPD</strong>. Las transferencias a EE. UU. se amparan en las Cláusulas Contractuales Tipo de la UE.
+                  </>
+                ) : language === 'fr' ? (
+                  <>
+                    Nous utilisons les services de <strong>Cloudflare, Inc.</strong> (101 Townsend St., San Francisco, CA 94107, États-Unis) pour la sécurité réseau, la distribution de contenu (CDN) et l'hébergement sécurisé des partitions numériques (Cloudflare R2).
+                    <br /><br />
+                    La base juridique est l'<strong>art. 6, par. 1, point f du RGPD</strong> (intérêt légitime pour la sécurité et la disponibilité) et l'<strong>art. 6, par. 1, point b du RGPD</strong>. Les transferts vers les États-Unis sont couverts par les clauses contractuelles types de l'UE.
+                  </>
+                ) : (
+                  <>
+                    We use the services of <strong>Cloudflare, Inc.</strong> (101 Townsend St., San Francisco, CA 94107, USA) for security, Web Application Firewall (WAF), global Content Delivery Network (CDN), and Cloudflare R2 object storage for digital sheet music assets.
+                    <br /><br />
+                    Requests are routed through Cloudflare's worldwide network to protect against cyber attacks and ensure high delivery speeds. The legal basis is <strong>Art. 6(1)(f) GDPR</strong> (legitimate interest in high availability and platform security) and <strong>Art. 6(1)(b) GDPR</strong> (contract performance). Transfers to the USA are safeguarded by Standard Contractual Clauses.
+                  </>
+                )}
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 border-l-2 border-neon-pink pl-3">
+                {language === 'de' ? '7. Ihre Rechte' : language === 'es' ? '7. Sus Derechos' : language === 'fr' ? '7. Vos Droits' : '7. Your Rights'}
+              </h2>
+              <p>
+                {language === 'de' ? (
+                  <>
+                    Sie haben nach der DSGVO jederzeit das Recht auf unentgeltliche Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21 DSGVO) Ihrer bei uns gespeicherten personenbezogenen Daten. 
+                    Bitte wenden Sie sich bei Fragen hierzu an <a href="mailto:info@meloscribe.dev" className="text-neon-pink hover:underline"><strong>info@meloscribe.dev</strong></a>.
+                  </>
+                ) : language === 'es' ? (
+                  <>
+                    Según el RGPD, tiene derecho de acceso (art. 15), rectificación (art. 16), supresión (art. 17), limitación del tratamiento (art. 18), portabilidad (art. 20) y oposición (art. 21) de sus datos personales. Para ejercer estos derechos, contáctenos en <a href="mailto:info@meloscribe.dev" className="text-neon-pink hover:underline"><strong>info@meloscribe.dev</strong></a>.
+                  </>
+                ) : language === 'fr' ? (
+                  <>
+                    Conformément au RGPD, vous disposez d'un droit d'accès (art. 15), de rectification (art. 16), d'effacement (art. 17), de limitation du traitement (art. 18), de portabilité (art. 20) et d'opposition (art. 21) concernant vos données personnelles. Pour exercer ces droits, contactez-nous à <a href="mailto:info@meloscribe.dev" className="text-neon-pink hover:underline"><strong>info@meloscribe.dev</strong></a>.
+                  </>
+                ) : (
+                  <>
+                    Under the GDPR, you have the right to access (Art. 15 GDPR), rectify (Art. 16 GDPR), erase (Art. 17 GDPR), restrict processing (Art. 18 GDPR), data portability (Art. 20 GDPR), and object (Art. 21 GDPR) to the processing of your personal data. To exercise these rights, please contact us at <a href="mailto:info@meloscribe.dev" className="text-neon-pink hover:underline"><strong>info@meloscribe.dev</strong></a>.
                   </>
                 )}
               </p>
