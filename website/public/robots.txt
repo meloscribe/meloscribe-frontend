@@ -1,4 +1,4 @@
-# robots.txt for meloscribe.dev
+# robots.txt for meloscribesheets.com
 User-agent: *
 Allow: /
 Allow: /suggestions
@@ -9,4 +9,4 @@ Disallow: /order/
 Disallow: /success/
 Disallow: /api/
 
-Sitemap: https://meloscribe.dev/sitemap.xml
+Sitemap: https://meloscribesheets.com/sitemap.xml

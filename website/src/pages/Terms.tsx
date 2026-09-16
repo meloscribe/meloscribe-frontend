@@ -49,8 +49,8 @@ export default function Terms({ onBack, language }: TermsProps) {
               </h2>
               <p className="text-sm">
                 {language === 'de' 
-                  ? 'Diese Nutzungsbedingungen regeln die Nutzung der Website meloscribe.dev und den Erwerb von digitalen Produkten (wie Klavierarrangements, Notenblätter und MIDI-Dateien). Betreiber der Website ist Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Deutschland.' 
-                  : 'These Terms of Service govern the use of the website meloscribe.dev and the purchase of digital products (such as piano arrangements, sheet music, and MIDI files). The website operator is Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Germany.'}
+                  ? 'Diese Nutzungsbedingungen regeln die Nutzung der Website meloscribesheets.com und den Erwerb von digitalen Produkten (wie Klavierarrangements, Notenblätter und MIDI-Dateien). Betreiber der Website ist Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Deutschland.' 
+                  : 'These Terms of Service govern the use of the website meloscribesheets.com and the purchase of digital products (such as piano arrangements, sheet music, and MIDI files). The website operator is Tobias Baumann, Wolfgelts 10, 88353 Kißlegg, Germany.'}
               </p>
             </div>
 
@@ -60,8 +60,8 @@ export default function Terms({ onBack, language }: TermsProps) {
               </h2>
               <p className="text-sm">
                 {language === 'de'
-                  ? 'Die Zahlungsabwicklung für Käufe auf meloscribe.dev erfolgt sicher über unseren Zahlungsdienstleister Stripe. Sämtliche Transaktions- und Zahlungsdaten werden direkt über verschlüsselte, PCI-DSS-zertifizierte Verbindungen verarbeitet. Mit der Durchführung einer Zahlung stimmst du den Nutzungsbedingungen von meloscribe sowie der Zahlungsabwicklung über Stripe zu.'
-                  : 'Payment processing for purchases on meloscribe.dev is conducted securely via our payment provider Stripe. All transaction and payment data are handled directly through encrypted, PCI-DSS certified connections. By completing a payment, you agree to these Terms of Service and payment processing via Stripe.'}
+                  ? 'Die Zahlungsabwicklung für Käufe auf meloscribesheets.com erfolgt sicher über unseren Zahlungsdienstleister Stripe. Sämtliche Transaktions- und Zahlungsdaten werden direkt über verschlüsselte, PCI-DSS-zertifizierte Verbindungen verarbeitet. Mit der Durchführung einer Zahlung stimmst du den Nutzungsbedingungen von meloscribe sowie der Zahlungsabwicklung über Stripe zu.'
+                  : 'Payment processing for purchases on meloscribesheets.com is conducted securely via our payment provider Stripe. All transaction and payment data are handled directly through encrypted, PCI-DSS certified connections. By completing a payment, you agree to these Terms of Service and payment processing via Stripe.'}
               </p>
             </div>
 
@@ -82,8 +82,8 @@ export default function Terms({ onBack, language }: TermsProps) {
               </h2>
               <p className="text-sm">
                 {language === 'de'
-                  ? 'Sämtliche Klavierarrangements und Design-Assets auf meloscribe.dev sind urheberrechtlich geschützt. Die Rechte an den Arrangements liegen bei meloscribe. Das Eigentum an den zugrundeliegenden Songs verbleibt bei den jeweiligen Rechteinhabern.'
-                  : 'All piano arrangements and design assets on meloscribe.dev are protected by copyright. The rights to the arrangements belong to meloscribe. Ownership of the underlying musical works remains with the respective copyright holders.'}
+                  ? 'Sämtliche Klavierarrangements und Design-Assets auf meloscribesheets.com sind urheberrechtlich geschützt. Die Rechte an den Arrangements liegen bei meloscribe. Das Eigentum an den zugrundeliegenden Songs verbleibt bei den jeweiligen Rechteinhabern.'
+                  : 'All piano arrangements and design assets on meloscribesheets.com are protected by copyright. The rights to the arrangements belong to meloscribe. Ownership of the underlying musical works remains with the respective copyright holders.'}
               </p>
             </div>
 

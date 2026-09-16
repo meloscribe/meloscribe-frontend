@@ -2,7 +2,7 @@
 
 Modern piano arrangement catalog and digital sheet music platform built with React, TypeScript, and Tailwind CSS.
 
-- **Production URL:** https://www.meloscribe.dev
+- **Production URL:** https://www.meloscribesheets.com (Redirect von meloscribe.dev)
 - **Backend API:** https://api.meloscribe.dev
 - **Deployment:** Vercel (automatic continuous deployment from `main` branch)
 

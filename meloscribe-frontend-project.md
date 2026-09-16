@@ -4,7 +4,7 @@ Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). 
 
 **GitHub repo:** https://github.com/meloscribe/meloscribe-frontend (public)
 **Hosted on:** Vercel (auto-deploy on push to `main`)
-**Live URL:** https://www.meloscribe.dev
+**Live URL:** https://www.meloscribesheets.com (Redirect von meloscribe.dev)
 
 ---
 
@@ -131,6 +131,12 @@ npm run dev
 - [x] Stripe Checkout Accordion Default-Collapsed State:
   - In `PaddleModal.tsx` `paymentElement.collapse()` upon `ready` (and tick fallback) implemented to prevent Card option from auto-expanding on mount.
   - All payment methods (Card, iDEAL, EPS) start in clean, compact collapsed rows with no pre-selected radio buttons, focusing attention on Express Checkout (PayPal / Google Pay).
+
+- [x] Domain Migration auf `meloscribesheets.com`:
+  - `index.html`: Canonical-Link, OpenGraph-Tags (`og:url`, `og:image`, `og:image:secure_url`), Twitter-Cards (`twitter:url`, `twitter:image`) und Hreflang-Tags (`en`, `de`, `x-default`) auf `https://www.meloscribesheets.com` migriert.
+  - `sitemap.xml` und `robots.txt` auf `https://www.meloscribesheets.com/` aktualisiert.
+  - `Terms.tsx`: Sämtliche rechtlichen Verweise in den Nutzungsbedingungen auf `meloscribesheets.com` aktualisiert.
+  - `vercel.json`: Explizite permanente Host-Redirects (308) von `meloscribe.dev` und `www.meloscribe.dev` auf `https://www.meloscribesheets.com/$1` hinzugefügt, sodass sämtliche bestehenden Order-Links (`/order/:hash`) nahtlos weiterfunktionieren.
 
 ## Active Blockers / Next Steps
 
