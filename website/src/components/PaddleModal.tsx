@@ -857,13 +857,6 @@ export default function PaddleModal({
     return promise;
   };
 
-  useEffect(() => {
-    if (isOpen && !isFree && currentSongId) {
-      prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId).catch((e) => {
-        console.warn("[Prefetch Session Error]:", e);
-      });
-    }
-  }, [isOpen, selectedDifficulty, currentSongId, currentPriceId, isFree, language]);
 
   const handleBuyClick = async () => {
     setCheckoutStep('embedded');
