@@ -1729,6 +1729,8 @@ function App() {
           videoPreviewUrl={selectedSong.videoPreviewUrl}
           price={selectedSong.price}
           coverImage={selectedSong.coverImage}
+          isArrangeMe={!globalPaymentsDisabled && !selectedSong.paymentsDisabled && Boolean(selectedSong.arrangemeUrl) && (selectedSong.isArrangeMe ?? true)}
+          arrangemeUrl={selectedSong.arrangemeUrl}
         />
       )}
 

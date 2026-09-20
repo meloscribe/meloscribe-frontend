@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, Info } from 'lucide-react';
+import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, ArrowUpRight, Info, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
 
@@ -20,6 +20,44 @@ interface PaddleModalProps {
   videoPreviewUrl?: string;
   price?: string | number;
   coverImage?: string;
+  isArrangeMe?: boolean;
+  arrangemeUrl?: string;
+}
+
+const COMMON_DOMAIN_TYPOS: Record<string, string> = {
+  'gmai.com': 'gmail.com',
+  'gamil.com': 'gmail.com',
+  'gmial.com': 'gmail.com',
+  'gmaill.com': 'gmail.com',
+  'gmaik.com': 'gmail.com',
+  'gmal.com': 'gmail.com',
+  'gmaild.com': 'gmail.com',
+  'gmeil.com': 'gmail.com',
+  'hotmial.com': 'hotmail.com',
+  'hotmaill.com': 'hotmail.com',
+  'hotmil.com': 'hotmail.com',
+  'hotmai.com': 'hotmail.com',
+  'outlok.com': 'outlook.com',
+  'outloo.com': 'outlook.com',
+  'outlock.com': 'outlook.com',
+  'yaoo.com': 'yahoo.com',
+  'yaho.com': 'yahoo.com',
+  'yahooo.com': 'yahoo.com',
+  'iclod.com': 'icloud.com',
+  'icoud.com': 'icloud.com',
+  'protonmai.com': 'protonmail.com',
+};
+
+function getDomainSuggestion(email: string): string | null {
+  const parts = email.trim().toLowerCase().split('@');
+  if (parts.length !== 2) return null;
+  const [user, domain] = parts;
+  if (!domain || !user) return null;
+  
+  if (COMMON_DOMAIN_TYPOS[domain] && COMMON_DOMAIN_TYPOS[domain] !== domain) {
+    return `${user}@${COMMON_DOMAIN_TYPOS[domain]}`;
+  }
+  return null;
 }
 
 const translations = {
@@ -46,8 +84,18 @@ const translations = {
     fullArrangementDesc: 'This learning package contains the complete arrangement of the song from start to finish.',
     packageIncludes: 'Package Includes:',
     packageIncludesDesc: 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials',
-    freeDownloadTitle: 'Free Download',
-    freeDownloadDesc: 'Choose the format you want to download immediately for free.',
+    freeDownloadTitle: 'Get Free Sheet Music',
+    freeDownloadDesc: 'Enter your email to receive the complete package (PDF Sheet Music, MIDI Files, 2K Practice Videos) directly in your inbox.',
+    freeDownloadEmailPlaceholder: 'your.email@example.com',
+    freeDownloadSubmit: 'Send Download Link',
+    freeDownloadSending: 'Sending download link...',
+    freeDownloadSuccessTitle: 'Check your inbox!',
+    freeDownloadSuccessDesc: 'We sent your confirmation and download link to {email}. Please check your inbox (and spam folder) to access your files.',
+    freeDownloadConsent: 'I agree to receive the download link and occasional piano arrangement updates. You can unsubscribe anytime with one click.',
+    freeDownloadTypoSuggestion: 'Did you mean {suggestion}?',
+    freeDownloadInvalidEmail: 'Please enter a valid email address.',
+    freeDownloadConsentRequired: 'Please agree to receive the download link to continue.',
+    freeDownloadDone: 'Done',
     paySecurely: 'Pay Securely',
     redirectingStripe: 'Opening secure checkout...',
     checkoutSubtext: 'All files will be available for instant download immediately after payment.',
@@ -99,6 +147,9 @@ const translations = {
     tiktokDownloadNotice: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
     inAppDownloadNotice: 'If downloads do not start in the in-app browser: Tap "..." in the top right corner and choose "Open in browser" (Chrome / Safari).',
     tapHere: 'Tap here (...) and open browser',
+    getOnArrangeMe: 'Get on Sheet Music Direct',
+    getOnArrangeMeDesc: 'Purchase and download the official sheet music (PDF) directly via Sheet Music Direct / Sheet Music Plus.',
+    packageIncludesArrangeMe: 'Official Piano Sheet Music (PDF)',
   },
   de: {
     checkoutGate: 'Sicherer Checkout',
@@ -123,8 +174,18 @@ const translations = {
     fullArrangementDesc: 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.',
     packageIncludes: 'Inbegriffen im Paket:',
     packageIncludesDesc: 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD-Video-Tutorials',
-    freeDownloadTitle: 'Kostenloser Download',
-    freeDownloadDesc: 'Wähle das gewünschte Format zum sofortigen, kostenlosen Herunterladen.',
+    freeDownloadTitle: 'Kostenlose Noten erhalten',
+    freeDownloadDesc: 'Gib deine E-Mail-Adresse ein, um das komplette Paket (PDF-Noten, MIDI-Dateien, 2K-Übungsvideos) direkt in dein Postfach zu erhalten.',
+    freeDownloadEmailPlaceholder: 'deine.email@beispiel.de',
+    freeDownloadSubmit: 'Download-Link zusenden',
+    freeDownloadSending: 'Download-Link wird gesendet...',
+    freeDownloadSuccessTitle: 'Prüfe dein Postfach!',
+    freeDownloadSuccessDesc: 'Wir haben deinen Bestätigungs- und Download-Link an {email} gesendet. Bitte prüfe deinen Posteingang (und Spam-Ordner), um auf deine Dateien zuzugreifen.',
+    freeDownloadConsent: 'Ich stimme zu, den Download-Link und gelegentliche Updates zu neuen Klavier-Arrangements zu erhalten. Eine Abmeldung ist jederzeit mit einem Klick möglich.',
+    freeDownloadTypoSuggestion: 'Meintest du {suggestion}?',
+    freeDownloadInvalidEmail: 'Bitte gib eine gültige E-Mail-Adresse ein.',
+    freeDownloadConsentRequired: 'Bitte stimme dem Erhalt des Download-Links zu, um fortzufahren.',
+    freeDownloadDone: 'Fertig',
     paySecurely: 'Jetzt sicher bezahlen',
     redirectingStripe: 'Öffne sicheren Checkout...',
     checkoutSubtext: 'Alle Dateien stehen direkt nach der Zahlung zum sofortigen Download bereit.',
@@ -176,6 +237,9 @@ const translations = {
     tiktokDownloadNotice: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
     inAppDownloadNotice: 'Falls der Download im App-Browser nicht startet: Tippe oben rechts auf „...“ und wähle „Im Browser öffnen“ (Chrome / Safari).',
     tapHere: 'Hier tippen (...) und im Browser öffnen',
+    getOnArrangeMe: 'Auf Sheet Music Direct kaufen',
+    getOnArrangeMeDesc: 'Erwirb und lade die offiziellen Noten (PDF) direkt über Sheet Music Direct / Sheet Music Plus herunter.',
+    packageIncludesArrangeMe: 'Offizielle Klaviernoten (PDF)',
   },
   fr: {
     checkoutGate: 'Paiement Sécurisé',
@@ -200,8 +264,18 @@ const translations = {
     fullArrangementDesc: 'Ce pack d\'apprentissage contient l\'arrangement complet de la chanson du début à la fin.',
     packageIncludes: 'Inclus dans le pack :',
     packageIncludesDesc: 'Partitions de piano (PDF) + Fichiers MIDI (Normal/Lent) + Tutoriels vidéo HD',
-    freeDownloadTitle: 'Téléchargement Gratuit',
-    freeDownloadDesc: 'Choisissez le format que vous souhaitez télécharger immédiatement et gratuitement.',
+    freeDownloadTitle: 'Obtenir la partition gratuite',
+    freeDownloadDesc: 'Entrez votre adresse e-mail pour recevoir le pack complet (Partitions PDF, Fichiers MIDI, Vidéos 2K) directement dans votre boîte de réception.',
+    freeDownloadEmailPlaceholder: 'votre.email@exemple.fr',
+    freeDownloadSubmit: 'Envoyer le lien de téléchargement',
+    freeDownloadSending: 'Envoi du lien en cours...',
+    freeDownloadSuccessTitle: 'Vérifiez votre boîte de réception !',
+    freeDownloadSuccessDesc: 'Nous avons envoyé votre confirmation et lien de téléchargement à {email}. Veuillez vérifier votre boîte de réception (et vos spams) pour accéder à vos fichiers.',
+    freeDownloadConsent: 'J\'accepte de recevoir le lien de téléchargement et des informations occasionnelles sur les arrangements de piano. Vous pouvez vous désabonner à tout moment en un clic.',
+    freeDownloadTypoSuggestion: 'Vouliez-vous dire {suggestion} ?',
+    freeDownloadInvalidEmail: 'Veuillez saisir une adresse e-mail valide.',
+    freeDownloadConsentRequired: 'Veuillez accepter de recevoir le lien de téléchargement pour continuer.',
+    freeDownloadDone: 'Terminé',
     paySecurely: 'Payer en toute sécurité',
     redirectingStripe: 'Redirection vers le paiement sécurisé...',
     checkoutSubtext: 'Tous les fichiers seront disponibles en téléchargement instantané immédiatement après le paiement.',
@@ -253,6 +327,9 @@ const translations = {
     tiktokDownloadNotice: 'Les téléchargements ne fonctionnent pas directement dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
     inAppDownloadNotice: 'Si le téléchargement ne démarre pas : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
     tapHere: 'Appuyez ici (...) et ouvrez dans le navigateur',
+    getOnArrangeMe: 'Acheter sur Sheet Music Direct',
+    getOnArrangeMeDesc: 'Achetez et téléchargez la partition officielle (PDF) directement sur Sheet Music Direct / Sheet Music Plus.',
+    packageIncludesArrangeMe: 'Partition de piano officielle (PDF)',
   },
   es: {
     checkoutGate: 'Pago Seguro',
@@ -277,8 +354,18 @@ const translations = {
     fullArrangementDesc: 'Este paquete de aprendizaje contiene el arreglo completo de la canción de principio a fin.',
     packageIncludes: 'Incluido en el paquete:',
     packageIncludesDesc: 'Partituras de piano (PDF) + Archivos MIDI (Normal/Lento) + Tutoriales en video HD',
-    freeDownloadTitle: 'Descarga Gratuita',
-    freeDownloadDesc: 'Elige el formato que deseas descargar inmediatamente de forma gratuita.',
+    freeDownloadTitle: 'Obtén partituras gratis',
+    freeDownloadDesc: 'Introduce tu correo electrónico para recibir el paquete completo (Partituras PDF, Archivos MIDI, Videos 2K) directamente en tu bandeja de entrada.',
+    freeDownloadEmailPlaceholder: 'tu.correo@ejemplo.es',
+    freeDownloadSubmit: 'Enviar enlace de descarga',
+    freeDownloadSending: 'Enviando enlace de descarga...',
+    freeDownloadSuccessTitle: '¡Revisa tu bandeja de entrada!',
+    freeDownloadSuccessDesc: 'Hemos enviado tu confirmación y enlace de descarga a {email}. Revisa tu bandeja de entrada (y la carpeta de spam) para acceder a tus archivos.',
+    freeDownloadConsent: 'Acepto recibir el enlace de descarga y actualizaciones ocasionales sobre arreglos de piano. Puedes darte de baja en cualquier momento con un solo clic.',
+    freeDownloadTypoSuggestion: '¿Quisiste decir {suggestion}?',
+    freeDownloadInvalidEmail: 'Por favor ingresa un correo electrónico válido.',
+    freeDownloadConsentRequired: 'Por favor acepta recibir el enlace de descarga para continuar.',
+    freeDownloadDone: 'Listo',
     paySecurely: 'Pagar de forma segura',
     redirectingStripe: 'Redirigiendo al pago seguro...',
     checkoutSubtext: 'Todos los archivos estarán disponibles para descarga instantánea inmediatamente después del pago.',
@@ -330,6 +417,9 @@ const translations = {
     tiktokDownloadNotice: 'Las descargas no funcionan directamente en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     inAppDownloadNotice: 'Si la descarga no se inicia: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     tapHere: 'Toca aquí (...) y abre en el navegador',
+    getOnArrangeMe: 'Comprar en Sheet Music Direct',
+    getOnArrangeMeDesc: 'Compra y descarga la partitura oficial (PDF) directamente a través de Sheet Music Direct / Sheet Music Plus.',
+    packageIncludesArrangeMe: 'Partitura de piano oficial (PDF)',
   },
   it: {
     checkoutGate: 'Pagamento Sicuro',
@@ -354,8 +444,18 @@ const translations = {
     fullArrangementDesc: 'Questo pacchetto di apprendimento contiene l\'arrangiamento completo della canzone dall\'inizio alla fine.',
     packageIncludes: 'Incluso nel pacchetto:',
     packageIncludesDesc: 'Spartiti per pianoforte (PDF) + File MIDI (Normale/Lento) + Video tutorial HD',
-    freeDownloadTitle: 'Download Gratuito',
-    freeDownloadDesc: 'Scegli il formato che desideri scaricare immediatamente gratuitamente.',
+    freeDownloadTitle: 'Ricevi lo spartito gratis',
+    freeDownloadDesc: 'Inserisci la tua email per ricevere il pacchetto completo (Spartiti PDF, File MIDI, Video 2K) direttamente nella tua casella di posta.',
+    freeDownloadEmailPlaceholder: 'tua.email@esempio.it',
+    freeDownloadSubmit: 'Invia link di download',
+    freeDownloadSending: 'Invio link in corso...',
+    freeDownloadSuccessTitle: 'Controlla la tua casella di posta!',
+    freeDownloadSuccessDesc: 'Abbiamo inviato la conferma e il link di download a {email}. Controlla la tua casella di posta (e la cartella spam) per accedere ai tuoi file.',
+    freeDownloadConsent: 'Accetto di ricevere il link di download e aggiornamenti occasionali sugli arrangiamenti per pianoforte. Puoi disiscriverti in qualsiasi momento con un clic.',
+    freeDownloadTypoSuggestion: 'Intendevi {suggestion}?',
+    freeDownloadInvalidEmail: 'Inserisci un indirizzo email valido.',
+    freeDownloadConsentRequired: 'Accetta di ricevere il link di download per continuare.',
+    freeDownloadDone: 'Fatto',
     paySecurely: 'Paga in sicurezza',
     redirectingStripe: 'Reindirizzamento al pagamento sicuro...',
     checkoutSubtext: 'Tutti i file saranno disponibili per il download istantaneo subito dopo il pagamento.',
@@ -407,6 +507,9 @@ const translations = {
     tiktokDownloadNotice: 'I download non funzionano direttamente nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     inAppDownloadNotice: 'Se il download non si avvia: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     tapHere: 'Tocca qui (...) e apri nel browser',
+    getOnArrangeMe: 'Acquista su Sheet Music Direct',
+    getOnArrangeMeDesc: 'Acquista e scarica lo spartito ufficiale (PDF) direttamente tramite Sheet Music Direct / Sheet Music Plus.',
+    packageIncludesArrangeMe: 'Spartito per pianoforte ufficiale (PDF)',
   }
 };
 
@@ -426,7 +529,9 @@ export default function PaddleModal({
   easySongId,
   videoPreviewUrl, 
   price, 
-  coverImage 
+  coverImage,
+  isArrangeMe = false,
+  arrangemeUrl
 }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -446,6 +551,14 @@ export default function PaddleModal({
   const [expressReady, setExpressReady] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+
+  // Free song email-gating states
+  const [freeEmail, setFreeEmail] = useState('');
+  const [freeEmailConsent, setFreeEmailConsent] = useState(true);
+  const [freeEmailLoading, setFreeEmailLoading] = useState(false);
+  const [freeEmailSubmitted, setFreeEmailSubmitted] = useState(false);
+  const [freeEmailError, setFreeEmailError] = useState<string | null>(null);
+  const [typoSuggestion, setTypoSuggestion] = useState<string | null>(null);
 
   const stripeRef = useRef<Stripe | null>(null);
   const elementsRef = useRef<StripeElements | null>(null);
@@ -508,6 +621,12 @@ export default function PaddleModal({
   useEffect(() => {
     if (!isOpen) {
       cleanupEmbeddedCheckout();
+      setFreeEmail('');
+      setFreeEmailConsent(true);
+      setFreeEmailLoading(false);
+      setFreeEmailSubmitted(false);
+      setFreeEmailError(null);
+      setTypoSuggestion(null);
     }
   }, [isOpen]);
 
@@ -567,46 +686,54 @@ export default function PaddleModal({
   const priceStr = String(currentPrice || '').trim().toLowerCase();
   const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
 
-  const handleFreeDownload = async (type: string) => {
-    setDownloadingType(type);
+  const handleFreeEmailSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const emailToSubmit = (typoSuggestion && typoSuggestion === freeEmail ? typoSuggestion : freeEmail).trim().toLowerCase();
+    
+    if (!emailToSubmit) {
+      setFreeEmailError(t.freeDownloadInvalidEmail);
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailToSubmit)) {
+      setFreeEmailError(t.freeDownloadInvalidEmail);
+      return;
+    }
+
+    if (!freeEmailConsent) {
+      setFreeEmailError(t.freeDownloadConsentRequired);
+      return;
+    }
+
+    setFreeEmailLoading(true);
+    setFreeEmailError(null);
+
     try {
       const apiBaseUrl = getApiBaseUrl();
-      const targetUrl = `${apiBaseUrl}/api/public/download?song_id=${encodeURIComponent(currentSongId)}&type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(selectedDifficulty)}`;
-      const res = await fetch(targetUrl);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.download_url) {
-          const isTikTok = /TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent);
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const res = await fetch(`${apiBaseUrl}/api/notify/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailToSubmit,
+          song_id: currentSongId,
+          song_title: displayTitle,
+          difficulty: selectedDifficulty,
+          locale: language || 'en'
+        })
+      });
 
-          if (isTikTok) {
-            setShowTiktokModal(true);
-            return;
-          } else if (isAndroid || isIOS) {
-            // Facebook (FBAN/FBAV), Instagram, and native mobile browsers handle direct URL navigation cleanly.
-            // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
-            window.location.href = data.download_url;
-          } else {
-            const link = document.createElement('a');
-            link.href = data.download_url;
-            link.setAttribute('download', '');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }
-        } else {
-          alert('Download link not received.');
-        }
+      const data = await res.json();
+      if (res.ok) {
+        setFreeEmailSubmitted(true);
       } else {
-        const errData = await res.json().catch(() => ({}));
-        alert(errData.error || 'Failed to request download link.');
+        setFreeEmailError(data.error || t.freeDownloadInvalidEmail);
       }
-    } catch (e) {
-      console.error(e);
-      alert('Network error requesting download link.');
+    } catch (err) {
+      console.error(err);
+      setFreeEmailError('Network error. Please try again.');
     } finally {
-      setDownloadingType(null);
+      setFreeEmailLoading(false);
     }
   };
 
@@ -1400,33 +1527,37 @@ export default function PaddleModal({
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="w-5 h-5 rounded-full bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <Music className="w-3.5 h-3.5 text-neon-pink" />
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {t.midiTitle}
-                    </span>
-                    <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {t.midiDesc}
-                    </p>
-                  </div>
-                </div>
+                {!isArrangeMe && (
+                  <>
+                    <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                      <div className="w-5 h-5 rounded-full bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <Music className="w-3.5 h-3.5 text-neon-pink" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {t.midiTitle}
+                        </span>
+                        <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                          {t.midiDesc}
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <Tv className="w-3.5 h-3.5 text-neon-cyan" />
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {t.videoTitle}
-                    </span>
-                    <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
-                      {t.videoDesc}
-                    </p>
-                  </div>
-                </div>
+                    <div className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                      <div className="w-5 h-5 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <Tv className="w-3.5 h-3.5 text-neon-cyan" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {t.videoTitle}
+                        </span>
+                        <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
+                          {t.videoDesc}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -1608,86 +1739,177 @@ export default function PaddleModal({
                 )}
 
                 {isFree ? (
-                  <>
-                    <div className="text-center">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                        {t.freeDownloadTitle}
+                  freeEmailSubmitted ? (
+                    <div className="w-full flex flex-col items-center text-center py-6 px-2 animate-in fade-in zoom-in-95 duration-300">
+                      <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5 shadow-lg shadow-emerald-500/10">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                        {t.freeDownloadSuccessTitle}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {t.freeDownloadDesc}
+                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-sm mb-6">
+                        {t.freeDownloadSuccessDesc.replace('{email}', freeEmail)}
+                      </p>
+                      
+                      <div className="w-full bg-dark-800/40 border border-dark-600/40 rounded-xl p-3.5 mb-6 text-xs text-gray-400 flex items-center justify-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-neon-cyan shrink-0" />
+                        <span>Delivery-only via inbox • Direct downloads disabled</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleModalClose}
+                        className="w-full py-3 px-6 rounded-xl font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/60 transition-all cursor-pointer text-sm"
+                      >
+                        {t.freeDownloadDone}
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleFreeEmailSubmit} className="w-full space-y-4">
+                      <div className="text-center">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                          {t.freeDownloadTitle}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                          {t.freeDownloadDesc}
+                        </p>
+                      </div>
+
+                      {/* Package contents badge */}
+                      <div className="w-full bg-gray-50 dark:bg-dark-800/40 border border-neon-cyan/20 p-3 rounded-xl text-xs flex items-center justify-center gap-4 text-gray-600 dark:text-gray-300">
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <FileText className="w-3.5 h-3.5 text-neon-cyan" /> PDF Sheet
+                        </span>
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <Music className="w-3.5 h-3.5 text-neon-pink" /> 2x MIDI
+                        </span>
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <Tv className="w-3.5 h-3.5 text-neon-cyan" /> 2x HD Video
+                        </span>
+                      </div>
+
+                      {/* Email input */}
+                      <div className="space-y-1.5 text-left">
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                          {t.contactInformation}
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="email"
+                            required
+                            value={freeEmail}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setFreeEmail(val);
+                              setFreeEmailError(null);
+                              const suggestion = getDomainSuggestion(val);
+                              setTypoSuggestion(suggestion);
+                            }}
+                            placeholder={t.freeDownloadEmailPlaceholder}
+                            className="w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-dark-800/80 border border-gray-200 dark:border-dark-600/60 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan text-sm transition-all"
+                          />
+                        </div>
+
+                        {/* Typo suggestion banner */}
+                        {typoSuggestion && (
+                          <div className="text-xs bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded-lg p-2.5 flex items-center justify-between gap-2 mt-1.5 animate-in fade-in duration-200">
+                            <span>
+                              {t.freeDownloadTypoSuggestion.replace('{suggestion}', typoSuggestion)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFreeEmail(typoSuggestion);
+                                setTypoSuggestion(null);
+                              }}
+                              className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-semibold rounded text-[11px] transition-colors cursor-pointer shrink-0"
+                            >
+                              Yes, fix it
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* GDPR Consent Checkbox */}
+                      <div className="text-left">
+                        <label className="flex items-start gap-2.5 cursor-pointer text-xs text-gray-500 dark:text-gray-400 leading-snug">
+                          <input
+                            type="checkbox"
+                            checked={freeEmailConsent}
+                            onChange={(e) => setFreeEmailConsent(e.target.checked)}
+                            className="mt-0.5 rounded border-gray-300 dark:border-dark-600 text-neon-cyan focus:ring-neon-cyan/40 cursor-pointer"
+                          />
+                          <span>{t.freeDownloadConsent}</span>
+                        </label>
+                      </div>
+
+                      {/* Error message */}
+                      {freeEmailError && (
+                        <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl p-3 text-xs flex items-center gap-2 text-left animate-in fade-in duration-200">
+                          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                          <span>{freeEmailError}</span>
+                        </div>
+                      )}
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={freeEmailLoading || !freeEmail.trim()}
+                        className="w-full py-3.5 px-6 rounded-xl font-bold bg-neon-cyan hover:bg-neon-cyan/90 text-dark-950 flex items-center justify-center gap-2 transition-all shadow-lg shadow-neon-cyan/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-2"
+                      >
+                        {freeEmailLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>{t.freeDownloadSending}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Mail className="w-4 h-4" />
+                            <span>{t.freeDownloadSubmit}</span>
+                          </>
+                        )}
+                      </button>
+
+                      <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-400 dark:text-gray-500 pt-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-neon-cyan" />
+                        <span>Instant Inbox Delivery • No Direct File Download</span>
+                      </div>
+                    </form>
+                  )
+                ) : isArrangeMe ? (
+                  <>
+                    {/* Mobile Only: Compact Package Summary for ArrangeMe */}
+                    <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-purple-500/30 p-3 rounded-xl text-sm leading-relaxed">
+                      <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
+                        {t.packageIncludes}
+                      </p>
+                      <p className="text-[11px] text-purple-400 font-medium leading-relaxed">
+                        {t.packageIncludesArrangeMe}
                       </p>
                     </div>
 
-                    {/TikTok|ByteLocale|ByteFullApp|Instagram|FBAN|FBAV/i.test(navigator.userAgent) && (
-                      <div className="w-full bg-amber-500/10 border border-amber-500/25 rounded-xl p-3 text-xs text-amber-300 flex items-start gap-2.5 my-1 text-left">
-                        <span className="text-sm leading-none mt-0.5">💡</span>
-                        <div className="flex-1 leading-snug">
-                          {/TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent) ? t.tiktokDownloadNotice : t.inAppDownloadNotice}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="w-full space-y-3">
-                      <button
-                        onClick={() => handleFreeDownload('pdf')}
-                        disabled={!!downloadingType}
-                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        <span className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-neon-cyan" />
-                          {t.pdfFreeLabel}
-                        </span>
-                        {downloadingType === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                      </button>
-
-                      <button
-                        onClick={() => handleFreeDownload('video')}
-                        disabled={!!downloadingType}
-                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Tv className="w-4 h-4 text-neon-cyan" />
-                          {t.videoOriginalLabel}
-                        </span>
-                        {downloadingType === 'video' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                      </button>
-
-                      <button
-                        onClick={() => handleFreeDownload('video_slow')}
-                        disabled={!!downloadingType}
-                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-cyan/15 hover:border-neon-cyan transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Tv className="w-4 h-4 text-neon-cyan/80" />
-                          {t.videoSlowLabel}
-                        </span>
-                        {downloadingType === 'video_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                      </button>
-
-                      <button
-                        onClick={() => handleFreeDownload('midi')}
-                        disabled={!!downloadingType}
-                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Music className="w-4 h-4 text-neon-pink" />
-                          {t.midiOriginalLabel}
-                        </span>
-                        {downloadingType === 'midi' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                      </button>
-
-                      <button
-                        onClick={() => handleFreeDownload('midi_slow')}
-                        disabled={!!downloadingType}
-                        className="w-full flex items-center justify-between py-3 px-4 rounded-xl font-semibold bg-gray-50 dark:bg-dark-800/40 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600/50 hover:bg-neon-pink/15 hover:border-neon-pink transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Music className="w-4 h-4 text-neon-pink/80" />
-                          {t.midiSlowLabel}
-                        </span>
-                        {downloadingType === 'midi_slow' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-gray-400" />}
-                      </button>
+                    {/* Action Subtext */}
+                    <div className="text-center w-full px-2 my-1">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {t.getOnArrangeMeDesc}
+                      </p>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (arrangemeUrl) {
+                          window.open(arrangemeUrl, '_blank', 'noopener,noreferrer');
+                        }
+                      }}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] active:scale-[0.98] transition-all duration-300 cursor-pointer text-sm"
+                    >
+                      <span>{t.getOnArrangeMe}</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </button>
                   </>
                 ) : (
                   <>
