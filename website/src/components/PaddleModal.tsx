@@ -84,10 +84,14 @@ const translations = {
     fullArrangementDesc: 'This learning package contains the complete arrangement of the song from start to finish.',
     packageIncludes: 'Package Includes:',
     packageIncludesDesc: 'Piano Sheets (PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials',
+    fairTradeTitle: 'Fair Trade: Free Sheet Music',
+    fairTradeDesc: 'You get the complete arrangement bundle (PDF Sheet Music, 2x MIDI, 2x HD Videos) 100% free. In exchange, you agree to receive email notifications when new arrangements drop. Unsubscribe anytime with 1 click.',
+    fairTradeSubmit: 'Get Free Sheet Music & Join Drops',
+    fairTradeNotice: 'By requesting the free download, you agree to receive occasional arrangement updates. Unsubscribe anytime with 1 click.',
     freeDownloadTitle: 'Get Free Sheet Music',
     freeDownloadDesc: 'Enter your email to receive the complete package (PDF Sheet Music, MIDI Files, 2K Practice Videos) directly in your inbox.',
     freeDownloadEmailPlaceholder: 'your.email@example.com',
-    freeDownloadSubmit: 'Send Download Link',
+    freeDownloadSubmit: 'Get Free Sheet Music & Join Drops',
     freeDownloadSending: 'Sending download link...',
     freeDownloadSuccessTitle: 'Check your inbox!',
     freeDownloadSuccessDesc: 'We sent your confirmation and download link to {email}. Please check your inbox (and spam folder) to access your files.',
@@ -174,10 +178,14 @@ const translations = {
     fullArrangementDesc: 'Dieses Lernpaket beinhaltet das vollständige Arrangement des Songs von Anfang bis Ende.',
     packageIncludes: 'Inbegriffen im Paket:',
     packageIncludesDesc: 'Klaviernoten (PDF) + MIDI-Dateien (Normal/Langsam) + HD-Video-Tutorials',
+    fairTradeTitle: 'Fairer Deal: Kostenlose Noten',
+    fairTradeDesc: 'Du erhältst das komplette Arrangement-Paket (PDF-Noten, 2x MIDI, 2x HD-Videos) 100% kostenlos. Im Gegenzug darf ich dich per E-Mail informieren, wenn neue Arrangements erscheinen. Jederzeit mit 1 Klick abbestellbar.',
+    fairTradeSubmit: 'Noten kostenlos anfordern',
+    fairTradeNotice: 'Mit dem Absenden stimmst du zu, gelegentliche Benachrichtigungen zu neuen Klaviernoten zu erhalten. Jederzeit mit 1 Klick abbestellbar.',
     freeDownloadTitle: 'Kostenlose Noten erhalten',
     freeDownloadDesc: 'Gib deine E-Mail-Adresse ein, um das komplette Paket (PDF-Noten, MIDI-Dateien, 2K-Übungsvideos) direkt in dein Postfach zu erhalten.',
     freeDownloadEmailPlaceholder: 'deine.email@beispiel.de',
-    freeDownloadSubmit: 'Download-Link zusenden',
+    freeDownloadSubmit: 'Noten kostenlos anfordern',
     freeDownloadSending: 'Download-Link wird gesendet...',
     freeDownloadSuccessTitle: 'Prüfe dein Postfach!',
     freeDownloadSuccessDesc: 'Wir haben deinen Bestätigungs- und Download-Link an {email} gesendet. Bitte prüfe deinen Posteingang (und Spam-Ordner), um auf deine Dateien zuzugreifen.',
@@ -264,10 +272,14 @@ const translations = {
     fullArrangementDesc: 'Ce pack d\'apprentissage contient l\'arrangement complet de la chanson du début à la fin.',
     packageIncludes: 'Inclus dans le pack :',
     packageIncludesDesc: 'Partitions de piano (PDF) + Fichiers MIDI (Normal/Lent) + Tutoriels vidéo HD',
+    fairTradeTitle: 'Deal Équitable : Partitions Gratuites',
+    fairTradeDesc: 'Vous recevez l\'ensemble complet (Partitions PDF, 2x MIDI, 2x Vidéos HD) 100% gratuitement. En échange, vous acceptez d\'être informé par e-mail lors de nouvelles sorties. Désinscription possible à tout moment en 1 clic.',
+    fairTradeSubmit: 'Obtenir la partition gratuite',
+    fairTradeNotice: 'En téléchargeant, vous acceptez de recevoir des notifications pour les nouveaux arrangements. Désinscription en 1 clic.',
     freeDownloadTitle: 'Obtenir la partition gratuite',
     freeDownloadDesc: 'Entrez votre adresse e-mail pour recevoir le pack complet (Partitions PDF, Fichiers MIDI, Vidéos 2K) directement dans votre boîte de réception.',
     freeDownloadEmailPlaceholder: 'votre.email@exemple.fr',
-    freeDownloadSubmit: 'Envoyer le lien de téléchargement',
+    freeDownloadSubmit: 'Obtenir la partition gratuite',
     freeDownloadSending: 'Envoi du lien en cours...',
     freeDownloadSuccessTitle: 'Vérifiez votre boîte de réception !',
     freeDownloadSuccessDesc: 'Nous avons envoyé votre confirmation et lien de téléchargement à {email}. Veuillez vérifier votre boîte de réception (et vos spams) pour accéder à vos fichiers.',
@@ -354,10 +366,14 @@ const translations = {
     fullArrangementDesc: 'Este paquete de aprendizaje contiene el arreglo completo de la canción de principio a fin.',
     packageIncludes: 'Incluido en el paquete:',
     packageIncludesDesc: 'Partituras de piano (PDF) + Archivos MIDI (Normal/Lento) + Tutoriales en video HD',
+    fairTradeTitle: 'Trato Justo: Partituras Gratis',
+    fairTradeDesc: 'Obtienes el paquete completo (Partituras PDF, 2x MIDI, 2x Videos HD) 100% gratis. A cambio, aceptas recibir notificaciones por correo cuando salgan nuevos arreglos. Cancela cuando quieras con 1 clic.',
+    fairTradeSubmit: 'Obtén partituras gratis',
+    fairTradeNotice: 'Al solicitar la descarga, aceptas recibir notificaciones de nuevos arreglos. Cancela en 1 clic.',
     freeDownloadTitle: 'Obtén partituras gratis',
     freeDownloadDesc: 'Introduce tu correo electrónico para recibir el paquete completo (Partituras PDF, Archivos MIDI, Videos 2K) directamente en tu bandeja de entrada.',
     freeDownloadEmailPlaceholder: 'tu.correo@ejemplo.es',
-    freeDownloadSubmit: 'Enviar enlace de descarga',
+    freeDownloadSubmit: 'Obtén partituras gratis',
     freeDownloadSending: 'Enviando enlace de descarga...',
     freeDownloadSuccessTitle: '¡Revisa tu bandeja de entrada!',
     freeDownloadSuccessDesc: 'Hemos enviado tu confirmación y enlace de descarga a {email}. Revisa tu bandeja de entrada (y la carpeta de spam) para acceder a tus archivos.',
@@ -444,10 +460,14 @@ const translations = {
     fullArrangementDesc: 'Questo pacchetto di apprendimento contiene l\'arrangiamento completo della canzone dall\'inizio alla fine.',
     packageIncludes: 'Incluso nel pacchetto:',
     packageIncludesDesc: 'Spartiti per pianoforte (PDF) + File MIDI (Normale/Lento) + Video tutorial HD',
+    fairTradeTitle: 'Accordo Equo: Spartito Gratis',
+    fairTradeDesc: 'Ricevi il pacchetto completo (Spartito PDF, 2x MIDI, 2x Video HD) 100% gratis. In cambio, accetti di ricevere email quando escono nuovi arrangiamenti. Disiscriviti quando vuoi con 1 clic.',
+    fairTradeSubmit: 'Ricevi lo spartito gratis',
+    fairTradeNotice: 'Richiedendo il download accetti di ricevere notifiche per nuovi arrangiamenti. Disiscriviti con 1 clic.',
     freeDownloadTitle: 'Ricevi lo spartito gratis',
     freeDownloadDesc: 'Inserisci la tua email per ricevere il pacchetto completo (Spartiti PDF, File MIDI, Video 2K) direttamente nella tua casella di posta.',
     freeDownloadEmailPlaceholder: 'tua.email@esempio.it',
-    freeDownloadSubmit: 'Invia link di download',
+    freeDownloadSubmit: 'Ricevi lo spartito gratis',
     freeDownloadSending: 'Invio link in corso...',
     freeDownloadSuccessTitle: 'Controlla la tua casella di posta!',
     freeDownloadSuccessDesc: 'Abbiamo inviato la conferma e il link di download a {email}. Controlla la tua casella di posta (e la cartella spam) per accedere ai tuoi file.',
@@ -698,11 +718,6 @@ export default function PaddleModal({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailToSubmit)) {
       setFreeEmailError(t.freeDownloadInvalidEmail);
-      return;
-    }
-
-    if (!freeEmailConsent) {
-      setFreeEmailError(t.freeDownloadConsentRequired);
       return;
     }
 
@@ -1701,7 +1716,7 @@ export default function PaddleModal({
                 </div>
               </div>
             ) : (
-              <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-5 md:gap-6 py-4 md:py-8">
+              <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-3 md:gap-6 py-1 md:py-8">
                 {/* Version Selector for Dual Version Songs */}
                 {hasDualVersions && (
                   <div className="w-full">
@@ -1741,7 +1756,7 @@ export default function PaddleModal({
                 {isFree ? (
                   freeEmailSubmitted ? (
                     <div className="w-full flex flex-col items-center text-center py-6 px-2 animate-in fade-in zoom-in-95 duration-300">
-                      <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5 shadow-lg shadow-emerald-500/10">
+                      <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/10">
                         <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
@@ -1750,11 +1765,6 @@ export default function PaddleModal({
                       <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-sm mb-6">
                         {t.freeDownloadSuccessDesc.replace('{email}', freeEmail)}
                       </p>
-                      
-                      <div className="w-full bg-dark-800/40 border border-dark-600/40 rounded-xl p-3.5 mb-6 text-xs text-gray-400 flex items-center justify-center gap-2">
-                        <ShieldCheck className="w-4 h-4 text-neon-cyan shrink-0" />
-                        <span>Delivery-only via inbox • Direct downloads disabled</span>
-                      </div>
 
                       <button
                         type="button"
@@ -1765,27 +1775,14 @@ export default function PaddleModal({
                       </button>
                     </div>
                   ) : (
-                    <form onSubmit={handleFreeEmailSubmit} className="w-full space-y-4">
+                    <form onSubmit={handleFreeEmailSubmit} className="w-full space-y-3.5">
                       <div className="text-center">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                          {t.freeDownloadTitle}
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1.5">
+                          {t.fairTradeTitle}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                          {t.freeDownloadDesc}
+                        <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm mx-auto">
+                          {t.fairTradeDesc}
                         </p>
-                      </div>
-
-                      {/* Package contents badge */}
-                      <div className="w-full bg-gray-50 dark:bg-dark-800/40 border border-neon-cyan/20 p-3 rounded-xl text-xs flex items-center justify-center gap-4 text-gray-600 dark:text-gray-300">
-                        <span className="flex items-center gap-1.5 font-medium">
-                          <FileText className="w-3.5 h-3.5 text-neon-cyan" /> PDF Sheet
-                        </span>
-                        <span className="flex items-center gap-1.5 font-medium">
-                          <Music className="w-3.5 h-3.5 text-neon-pink" /> 2x MIDI
-                        </span>
-                        <span className="flex items-center gap-1.5 font-medium">
-                          <Tv className="w-3.5 h-3.5 text-neon-cyan" /> 2x HD Video
-                        </span>
                       </div>
 
                       {/* Email input */}
@@ -1833,19 +1830,6 @@ export default function PaddleModal({
                         )}
                       </div>
 
-                      {/* GDPR Consent Checkbox */}
-                      <div className="text-left">
-                        <label className="flex items-start gap-2.5 cursor-pointer text-xs text-gray-500 dark:text-gray-400 leading-snug">
-                          <input
-                            type="checkbox"
-                            checked={freeEmailConsent}
-                            onChange={(e) => setFreeEmailConsent(e.target.checked)}
-                            className="mt-0.5 rounded border-gray-300 dark:border-dark-600 text-neon-cyan focus:ring-neon-cyan/40 cursor-pointer"
-                          />
-                          <span>{t.freeDownloadConsent}</span>
-                        </label>
-                      </div>
-
                       {/* Error message */}
                       {freeEmailError && (
                         <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl p-3 text-xs flex items-center gap-2 text-left animate-in fade-in duration-200">
@@ -1858,7 +1842,7 @@ export default function PaddleModal({
                       <button
                         type="submit"
                         disabled={freeEmailLoading || !freeEmail.trim()}
-                        className="w-full py-3.5 px-6 rounded-xl font-bold bg-neon-cyan hover:bg-neon-cyan/90 text-dark-950 flex items-center justify-center gap-2 transition-all shadow-lg shadow-neon-cyan/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-2"
+                        className="w-full py-3.5 px-6 rounded-xl font-bold bg-neon-cyan hover:bg-neon-cyan/90 text-dark-950 flex items-center justify-center gap-2 transition-all shadow-lg shadow-neon-cyan/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-1"
                       >
                         {freeEmailLoading ? (
                           <>
@@ -1868,15 +1852,15 @@ export default function PaddleModal({
                         ) : (
                           <>
                             <Mail className="w-4 h-4" />
-                            <span>{t.freeDownloadSubmit}</span>
+                            <span>{t.fairTradeSubmit}</span>
                           </>
                         )}
                       </button>
 
-                      <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-400 dark:text-gray-500 pt-1">
-                        <ShieldCheck className="w-3.5 h-3.5 text-neon-cyan" />
-                        <span>Instant Inbox Delivery • No Direct File Download</span>
-                      </div>
+                      {/* Fair Trade Notice */}
+                      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center pt-1 leading-snug">
+                        {t.fairTradeNotice}
+                      </p>
                     </form>
                   )
                 ) : isArrangeMe ? (
