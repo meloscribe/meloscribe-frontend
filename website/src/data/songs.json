@@ -135,7 +135,7 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Sonne.mp3",
     "kofiId": "prod_dummy123",
-    "paymentsDisabled": true,
+    "paymentsDisabled": false,
     "isArrangeMe": false,
     "trending": false,
     "easyPrice": "6",
