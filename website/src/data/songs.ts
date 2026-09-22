@@ -29,6 +29,8 @@ export interface Song {
   pinned?: boolean;
   arrangemeUrl?: string;
   isArrangeMe?: boolean;
+  trending?: boolean;
+  isTrending?: boolean;
 }
 
 export const songs = (songsData as Song[]).filter(s => s.id !== 'global_settings');

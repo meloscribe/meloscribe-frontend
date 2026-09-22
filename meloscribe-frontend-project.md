@@ -137,6 +137,14 @@ npm run dev
   - `sitemap.xml` und `robots.txt` auf `https://www.meloscribesheets.com/` aktualisiert.
   - `Terms.tsx`: Sämtliche rechtlichen Verweise in den Nutzungsbedingungen auf `meloscribesheets.com` aktualisiert.
   - `vercel.json`: Explizite permanente Host-Redirects (308) von `meloscribe.dev` und `www.meloscribe.dev` auf `https://www.meloscribesheets.com/$1` hinzugefügt, sodass sämtliche bestehenden Order-Links (`/order/:hash`) nahtlos weiterfunktionieren.
+- [x] In This Shirt Widescreen Cover Sync & Video Preview Asset Fix:
+  - Aktualisierte `In This Shirt_wide.jpg` (und Varianten) aus `C:\Dev\meloscribe\Covers` in `website/public/covers/` synchronisiert und nach Git gepusht (`b0ce8ee`).
+  - Video-Preview Modal (`PaddleModal.tsx`) lädt nun das aktuelle Widescreen-Vorschaubild statt des alten Templates.
+- [x] Dynamische Trending-Erkennung & Badge-Logik:
+  - `Song`-Interface in `songs.ts` um `trending?: boolean` und `isTrending?: boolean` erweitert.
+  - `App.tsx`: Featured-Grid filtert Songs nun primär nach echtem `song.trending === true` und zeigt das Flame-Badge ("Trending") sowohl auf der Homepage als auch im Notenkatalog (`/sheets`) nur noch datengetrieben an.
+  - `songs.json`: Datengetriebene Top-3 initial hinterlegt (*River Flows in You*, *Carol of the Bells*, *Golden Brown*).
+
 
 ## Active Blockers / Next Steps
 

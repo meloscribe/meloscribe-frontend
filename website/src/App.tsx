@@ -1215,8 +1215,15 @@ function App() {
               {/* Dynamic Song Grid: 2 cards side-by-side on mobile, 3 cards on desktop */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                 {(() => {
-                  // Dynamic Top 3 (desktop) / Top 2 (mobile): automatically selected from top-performing catalog items
-                  const featuredSongs = allSongs.filter(song => !song.hidden).slice(0, 3);
+                  // Dynamic Top 3 (desktop) / Top 2 (mobile): automatically selected from top-performing catalog items (sales + views)
+                  const featuredSongs = (() => {
+                    const trending = allSongs.filter(song => !song.hidden && song.trending);
+                    if (trending.length >= 3) {
+                      return trending.slice(0, 3);
+                    }
+                    const remaining = allSongs.filter(song => !song.hidden && !song.trending);
+                    return [...trending, ...remaining].slice(0, 3);
+                  })();
                   return featuredSongs.map((song, idx) => {
                     const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
                     const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
@@ -1274,12 +1281,14 @@ function App() {
                         </div>
                         
                         {/* Floating Trending Badge on Featured Cards */}
-                        <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-10 pointer-events-none">
-                          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] sm:text-[9.5px] font-semibold bg-rose-500/20 border border-rose-500/40 text-rose-300 backdrop-blur-md shadow-sm">
-                            <Flame className="w-2.5 h-2.5 text-rose-400 fill-current" />
-                            <span>{t.trending}</span>
-                          </span>
-                        </div>
+                        {song.trending && (
+                          <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-10 pointer-events-none">
+                            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] sm:text-[9.5px] font-semibold bg-rose-500/20 border border-rose-500/40 text-rose-300 backdrop-blur-md shadow-sm">
+                              <Flame className="w-2.5 h-2.5 text-rose-400 fill-current" />
+                              <span>{t.trending}</span>
+                            </span>
+                          </div>
+                        )}
 
                         {/* Audio Visualizer Overlay */}
                         <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
@@ -1534,6 +1543,16 @@ function App() {
                             {getLocalizedDifficulty(song.difficulty, t)}
                           </span>
                         </div>
+
+                        {/* Floating Trending Badge */}
+                        {song.trending && (
+                          <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-10 pointer-events-none">
+                            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] sm:text-[9.5px] font-semibold bg-rose-500/20 border border-rose-500/40 text-rose-300 backdrop-blur-md shadow-sm">
+                              <Flame className="w-2.5 h-2.5 text-rose-400 fill-current" />
+                              <span>{t.trending}</span>
+                            </span>
+                          </div>
+                        )}
 
                         {/* Audio Visualizer Overlay */}
                         <div className={`audio-visualizer-overlay ${playingSongId === song.id ? 'active' : ''}`}>
