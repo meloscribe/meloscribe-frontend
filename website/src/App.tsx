@@ -1342,7 +1342,7 @@ function App() {
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : isArrangeMe
-                              ? 'bg-purple-600/20 dark:bg-purple-900/30 border border-purple-500/50 text-purple-600 dark:text-purple-300 hover:bg-purple-600/30 hover:border-purple-400 cursor-pointer active:scale-[0.98]'
+                              ? 'bg-neon-cyan/15 dark:bg-neon-cyan/10 border border-neon-cyan/50 text-cyan-600 dark:text-neon-cyan hover:bg-neon-cyan/25 hover:border-neon-cyan shadow-neon-cyan-subtle cursor-pointer active:scale-[0.98]'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
@@ -1354,7 +1354,7 @@ function App() {
                           ) : isArrangeMe ? (
                             <>
                               <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
-                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
+                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
                           ) : (
                             <>
@@ -1632,7 +1632,7 @@ function App() {
                             isPaymentsDisabled
                               ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : isArrangeMe
-                              ? 'bg-purple-600/20 dark:bg-purple-900/30 border border-purple-500/50 text-purple-600 dark:text-purple-300 hover:bg-purple-600/30 hover:border-purple-400 cursor-pointer active:scale-[0.98]'
+                              ? 'bg-neon-cyan/15 dark:bg-neon-cyan/10 border border-neon-cyan/50 text-cyan-600 dark:text-neon-cyan hover:bg-neon-cyan/25 hover:border-neon-cyan shadow-neon-cyan-subtle cursor-pointer active:scale-[0.98]'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
@@ -1644,7 +1644,7 @@ function App() {
                           ) : isArrangeMe ? (
                             <>
                               <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
-                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-purple-500 dark:text-purple-300 flex-shrink-0" />
+                              <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
                           ) : (
                             <>

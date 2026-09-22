@@ -1874,11 +1874,11 @@ export default function PaddleModal({
                 ) : isArrangeMe ? (
                   <>
                     {/* Mobile Only: Compact Package Summary for ArrangeMe */}
-                    <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-purple-500/30 p-3 rounded-xl text-sm leading-relaxed">
+                    <div className="md:hidden w-full text-center bg-gray-50 dark:bg-dark-800/40 border border-neon-cyan/30 p-3 rounded-xl text-sm leading-relaxed">
                       <p className="font-semibold text-gray-900 dark:text-white text-xs mb-1.5 uppercase tracking-wider">
                         {t.packageIncludes}
                       </p>
-                      <p className="text-[11px] text-purple-400 font-medium leading-relaxed">
+                      <p className="text-[11px] text-neon-cyan font-medium leading-relaxed">
                         {t.packageIncludesArrangeMe}
                       </p>
                     </div>
@@ -1898,10 +1898,10 @@ export default function PaddleModal({
                           window.open(targetUrl, '_blank', 'noopener,noreferrer');
                         }
                       }}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] active:scale-[0.98] transition-all duration-300 cursor-pointer text-sm"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold bg-neon-cyan hover:bg-neon-cyan-light text-dark-950 shadow-[0_0_20px_rgba(0,245,255,0.4)] hover:shadow-[0_0_30px_rgba(0,245,255,0.6)] active:scale-[0.98] transition-all duration-300 cursor-pointer text-sm"
                     >
                       <span>{t.getOnArrangeMe}</span>
-                      <ArrowUpRight className="w-4 h-4" />
+                      <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                     </button>
                   </>
                 ) : (
