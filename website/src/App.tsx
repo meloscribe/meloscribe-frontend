@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Music, ShoppingBag, Play, Youtube, Globe, ChevronDown, Instagram, Sun, Moon, Sparkles, Volume2, VolumeX, Download, ArrowUpRight, Flame } from 'lucide-react';
 import { songs, Song, globalPaymentsDisabled } from './data/songs';
@@ -111,6 +111,10 @@ const translations = {
     diffAll: 'All',
     diffOriginal: 'Original',
     diffEasy: 'Easy',
+    sortBy: 'Sort:',
+    sortLatest: 'Latest',
+    sortTrending: 'Trending',
+    sortAZ: 'A–Z',
   },
   de: {
     brand: 'meloscribe',
@@ -164,10 +168,14 @@ const translations = {
     navSuggestions: 'Wunschliste',
     muteAudio: 'Audio-Vorschau stummschalten',
     unmuteAudio: 'Audio-Vorschau aktivieren',
-    trending: 'Beliebt',
+    trending: 'Trending',
     diffAll: 'Alle',
     diffOriginal: 'Original',
     diffEasy: 'Easy',
+    sortBy: 'Sortierung:',
+    sortLatest: 'Neueste',
+    sortTrending: 'Trending',
+    sortAZ: 'A–Z',
   },
   fr: {
     brand: 'meloscribe',
@@ -225,6 +233,10 @@ const translations = {
     diffAll: 'Tous',
     diffOriginal: 'Original',
     diffEasy: 'Facile',
+    sortBy: 'Trier :',
+    sortLatest: 'Récents',
+    sortTrending: 'Tendances',
+    sortAZ: 'A–Z',
   },
   es: {
     brand: 'meloscribe',
@@ -282,6 +294,10 @@ const translations = {
     diffAll: 'Todos',
     diffOriginal: 'Original',
     diffEasy: 'Fácil',
+    sortBy: 'Ordenar:',
+    sortLatest: 'Más recientes',
+    sortTrending: 'Tendencias',
+    sortAZ: 'A–Z',
   },
   it: {
     brand: 'meloscribe',
@@ -339,6 +355,10 @@ const translations = {
     diffAll: 'Tutti',
     diffOriginal: 'Originale',
     diffEasy: 'Facile',
+    sortBy: 'Ordina:',
+    sortLatest: 'Più recenti',
+    sortTrending: 'Di tendenza',
+    sortAZ: 'A–Z',
   },
 };
 
@@ -934,6 +954,8 @@ function App() {
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
+  type SortOption = 'latest' | 'trending' | 'az';
+  const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [showFilters, setShowFilters] = useState(window.innerWidth >= 768);
 
   // Toast notifications state
@@ -950,18 +972,32 @@ function App() {
     }
   }, [toast]);
 
-  const filteredSongs = allSongs.filter((song) => {
-    if (song.hidden) return false;
-    
-    const matchesSearch = smartSearchMatch(song.title, song.artist, searchQuery);
+  const filteredSongs = useMemo(() => {
+    const list = allSongs.filter((song) => {
+      if (song.hidden) return false;
       
-    const matchesDifficulty = 
-      difficultyFilter === 'All' || 
-      (difficultyFilter === 'Original' && (song.difficulty === 'Original' || song.difficulty === 'Original / Easy' || song.hasOriginal)) ||
-      (difficultyFilter === 'Easy' && (song.difficulty === 'Easy' || song.difficulty === 'Original / Easy' || song.hasEasy));
-      
-    return matchesSearch && matchesDifficulty;
-  });
+      const matchesSearch = smartSearchMatch(song.title, song.artist, searchQuery);
+        
+      const matchesDifficulty = 
+        difficultyFilter === 'All' || 
+        (difficultyFilter === 'Original' && (song.difficulty === 'Original' || song.difficulty === 'Original / Easy' || song.hasOriginal)) ||
+        (difficultyFilter === 'Easy' && (song.difficulty === 'Easy' || song.difficulty === 'Original / Easy' || song.hasEasy));
+        
+      return matchesSearch && matchesDifficulty;
+    });
+
+    if (sortBy === 'trending') {
+      return [...list].sort((a, b) => {
+        if (a.trending && !b.trending) return -1;
+        if (!a.trending && b.trending) return 1;
+        return 0;
+      });
+    } else if (sortBy === 'az') {
+      return [...list].sort((a, b) => a.title.localeCompare(b.title));
+    }
+    // Default: 'latest' (catalog array order)
+    return list;
+  }, [allSongs, searchQuery, difficultyFilter, sortBy]);
 
 
 
@@ -1213,27 +1249,21 @@ function App() {
               </div>
 
               {/* Dynamic Song Grid: 2 cards side-by-side on mobile, 3 cards on desktop */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
-                {(() => {
-                  // Dynamic Top 3 (desktop) / Top 2 (mobile): automatically selected from top-performing catalog items (sales + views)
-                  const featuredSongs = (() => {
-                    const trending = allSongs.filter(song => !song.hidden && song.trending);
-                    if (trending.length >= 3) {
-                      return trending.slice(0, 3);
-                    }
-                    const remaining = allSongs.filter(song => !song.hidden && !song.trending);
-                    return [...trending, ...remaining].slice(0, 3);
-                  })();
-                  return featuredSongs.map((song, idx) => {
-                    const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
-                    const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
-                    return (
-                      <div
-                        key={song.id}
-                        className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} flex flex-col ${idx === 2 ? 'hidden md:flex' : 'flex'}`}
-                        onMouseEnter={() => handleCardMouseEnter(song)}
-                        onMouseLeave={handleCardMouseLeave}
-                      >
+              {(() => {
+                // Only genuinely trending songs are featured in this section
+                const featuredSongs = allSongs.filter(song => !song.hidden && song.trending).slice(0, 3);
+                return (
+                  <div className={`grid gap-3 sm:gap-6 ${featuredSongs.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-2 md:grid-cols-3'}`}>
+                    {featuredSongs.map((song, idx) => {
+                      const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
+                      const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
+                      return (
+                        <div
+                          key={song.id}
+                          className={`sheet-card sheet-card-${song.theme || (song.difficulty === 'Original' ? 'warm' : 'cold')} flex flex-col ${featuredSongs.length >= 3 && idx === 2 ? 'hidden md:flex' : 'flex'}`}
+                          onMouseEnter={() => handleCardMouseEnter(song)}
+                          onMouseLeave={handleCardMouseLeave}
+                        >
                       {/* Header visual - image or gradient background */}
                       <div 
                         onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
@@ -1335,10 +1365,11 @@ function App() {
                         </button>
                       </div>
                     </div>
-                    );
-                  });
-                })()}
+                  );
+                })}
               </div>
+            );
+          })()}
 
               <div className="text-center mt-12">
                 <button 
@@ -1459,6 +1490,31 @@ function App() {
 
               {/* Filters Container */}
               <div className={`${showFilters ? 'flex' : 'hidden'} flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-end animate-in slide-in-from-top-2 duration-200`}>
+                {/* Sort Filter */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t.sortBy}</span>
+                  <div className="flex bg-white dark:bg-dark-900/60 p-1 rounded-lg border border-gray-200 dark:border-dark-500/50">
+                    {[
+                      { id: 'latest', label: t.sortLatest },
+                      { id: 'trending', label: t.sortTrending },
+                      { id: 'az', label: t.sortAZ }
+                    ].map(({ id, label }) => (
+                      <button
+                        key={id}
+                        onClick={() => setSortBy(id as SortOption)}
+                        className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 cursor-pointer flex items-center gap-1 ${
+                          sortBy === id
+                            ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-transparent'
+                        }`}
+                      >
+                        {id === 'trending' && <Flame className="w-2.5 h-2.5 text-rose-400 fill-current" />}
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Difficulty Filter */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                   <span className="text-sm text-gray-500 dark:text-gray-400">{t.difficulty}</span>

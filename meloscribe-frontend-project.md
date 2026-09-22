@@ -143,7 +143,12 @@ npm run dev
 - [x] Dynamische Trending-Erkennung & Badge-Logik:
   - `Song`-Interface in `songs.ts` um `trending?: boolean` und `isTrending?: boolean` erweitert.
   - `App.tsx`: Featured-Grid filtert Songs nun primär nach echtem `song.trending === true` und zeigt das Flame-Badge ("Trending") sowohl auf der Homepage als auch im Notenkatalog (`/sheets`) nur noch datengetrieben an.
-  - `songs.json`: Datengetriebene Top-3 initial hinterlegt (*River Flows in You*, *Carol of the Bells*, *Golden Brown*).
+  - `songs.json`: Datengetriebene Top-Hits hinterlegt (*River Flows in You*, *Sweetest Rain*).
+- [x] Katalog-Sortierung (Neueste, Trending, A–Z) & Homepage-Grid Fix:
+  - Sortier-Pills (`latest`, `trending`, `az`) mit Flame-Icon und vollständiger Lokalisierung (`en`, `de`, `fr`, `es`, `it`) integriert.
+  - Responsives Layout: Auf Desktop horizontal neben dem Schwierigkeitsgrad-Filter platziert; auf Mobilgeräten im ausklappbaren Filtermenü untergebracht.
+  - Homepage Trending Arrangements: Nicht-trendende Songs (wie *In This Shirt*) werden nicht mehr als Lückenfüller angezeigt. Das Grid zentriert sich bei 2 Hits harmonisch (`grid-cols-2 max-w-4xl mx-auto`), und jede Karte trägt konsistent das Trending-Badge.
+
 
 
 ## Active Blockers / Next Steps
