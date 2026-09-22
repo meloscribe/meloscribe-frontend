@@ -57,8 +57,6 @@ function getSimilarityScore(a: string, b: string): number {
 export default function Suggestions({ onBack, language, showToast }: SuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [openSuggestions, setOpenSuggestions] = useState<Suggestion[]>([]);
-  const [completedSuggestions, setCompletedSuggestions] = useState<Suggestion[]>([]);
-  const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [votedIds, setVotedIds] = useState<Record<string, boolean>>({});
@@ -214,7 +212,6 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
     const data = await fetchSuggestions();
     
     const openList: Suggestion[] = [];
-    const completedList: Suggestion[] = [];
 
     data.forEach(sug => {
       const sugTitle = normalizeString(sug.title);
@@ -239,15 +236,12 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
         return false;
       });
 
-      if (sug.status === 'completed' || catalogMatch) {
-        completedList.push({ ...sug, status: 'completed' });
-      } else {
+      if (sug.status !== 'completed' && !catalogMatch) {
         openList.push(sug);
       }
     });
 
     setOpenSuggestions(openList);
-    setCompletedSuggestions(completedList);
     setSuggestions(openList);
     setLoading(false);
   };
@@ -270,7 +264,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
   const handleUpvote = async (id: string, currentVotes: number, songTitle: string) => {
     if (votedIds[id]) {
       // Unvote logic
-      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, votes: Math.max(0, s.votes - 1) } : s).sort((a, b) => b.votes - a.votes));
+      const updater = (prev: Suggestion[]) =>
+        prev.map(s => (s.id === id ? { ...s, votes: Math.max(0, s.votes - 1) } : s)).sort((a, b) => b.votes - a.votes);
+      setSuggestions(updater);
+      setOpenSuggestions(updater);
       setVotedIds(prev => {
         const next = { ...prev };
         delete next[id];
@@ -286,7 +283,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       }
     } else {
       // Upvote logic
-      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, votes: s.votes + 1 } : s).sort((a, b) => b.votes - a.votes));
+      const updater = (prev: Suggestion[]) =>
+        prev.map(s => (s.id === id ? { ...s, votes: s.votes + 1 } : s)).sort((a, b) => b.votes - a.votes);
+      setSuggestions(updater);
+      setOpenSuggestions(updater);
       setVotedIds(prev => ({ ...prev, [id]: true }));
       localStorage.setItem(`meloscribe_voted_${id}`, 'true');
 
@@ -319,10 +319,10 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       if (song.hidden) return false;
       const pubTitle = normalizeString(song.title);
       const pubArtist = normalizeString(song.artist);
-      const titleMatches = pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
-      const artistMatches = !normInputArtist || pubArtist === normInputArtist || pubArtist.includes(normInputArtist) || normInputArtist.includes(pubArtist);
-      
-      if (titleMatches && artistMatches) {
+      const titleMatch = pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
+      const artistMatch = !normInputArtist || pubArtist === normInputArtist || pubArtist.includes(normInputArtist) || normInputArtist.includes(pubArtist);
+
+      if (titleMatch && artistMatch) {
         if (isReworkRequest) return false;
         if (isFullRequest && song.format !== 'full_arrangement') return false;
         if (isEasyRequest && !song.hasEasy) return false;
@@ -333,19 +333,15 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
     if (isAlreadyPublished) {
       showToast(t.alreadyPublished);
-      setTitle('');
-      setArtist('');
       setSubmitting(false);
       return;
     }
 
-    // 1. Check for duplicates in current list using fuzzy scoring
+    // 1. Fuzzy Check against existing suggestions for smart upvote
     let matchFound: Suggestion | null = null;
-
-    for (const sug of suggestions) {
-      const simTitle = getSimilarityScore(title, sug.title);
-      const simArtist = getSimilarityScore(artist, sug.artist);
-
+    for (const sug of openSuggestions) {
+      const simTitle = getSimilarityScore(normInputTitle, sug.title);
+      const simArtist = getSimilarityScore(normInputArtist, sug.artist);
       const distTitle = getLevenshteinDistance(normInputTitle, normalizeString(sug.title));
       const distArtist = getLevenshteinDistance(normInputArtist, normalizeString(sug.artist));
 
@@ -389,8 +385,7 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
       setVotedIds(prev => ({ ...prev, [newSug.id]: true }));
 
       // Reload suggestions list
-      const updatedList = await fetchSuggestions();
-      setSuggestions(updatedList);
+      await loadData();
 
       setTitle('');
       setArtist('');
@@ -466,51 +461,25 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
 
         {/* Leaderboard Table/List */}
         <div className="glass-card p-6 sm:p-8 rounded-2xl border border-gray-200/80 bg-white/70 backdrop-blur-md dark:border-dark-500/50 dark:bg-dark-800/80">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200/50 dark:border-dark-600/50">
-            <div className="flex items-center gap-3">
-              <h3 className="text-lg font-display font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Music className="w-5 h-5 text-neon-pink" />
-                <span>{t.leaderboard}</span>
-              </h3>
-              <div className="flex items-center rounded-lg bg-gray-100 dark:bg-dark-900/60 p-1 border border-gray-200/60 dark:border-dark-700/50 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('open')}
-                  className={`px-3 py-1 rounded-md transition-all font-medium cursor-pointer ${
-                    activeTab === 'open'
-                      ? 'bg-neon-cyan/20 text-neon-cyan font-semibold shadow-sm'
-                      : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                >
-                  {t.requestsTab} ({openSuggestions.length})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('completed')}
-                  className={`px-3 py-1 rounded-md transition-all font-medium cursor-pointer ${
-                    activeTab === 'completed'
-                      ? 'bg-emerald-500/20 text-emerald-400 font-semibold shadow-sm'
-                      : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                >
-                  {t.completedTab} ({completedSuggestions.length})
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200/50 dark:border-dark-600/50">
+            <h3 className="text-lg font-display font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <Music className="w-5 h-5 text-neon-pink" />
+              <span>{t.leaderboard}</span>
+            </h3>
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {activeTab === 'open' ? openSuggestions.length : completedSuggestions.length} {t.requestsLabel}
+              {openSuggestions.length} {t.requestsLabel}
             </span>
           </div>
 
           {loading ? (
             <div className="text-center py-12 text-gray-500">{t.loading}</div>
-          ) : (activeTab === 'open' ? openSuggestions : completedSuggestions).length === 0 ? (
+          ) : openSuggestions.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
-              {activeTab === 'open' ? t.noSuggestions : t.noCompleted}
+              {t.noSuggestions}
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              {(activeTab === 'open' ? openSuggestions : completedSuggestions).map((sug, idx) => {
+              {openSuggestions.map((sug, idx) => {
                 const hasVoted = votedIds[sug.id];
                 return (
                   <div
@@ -534,29 +503,19 @@ export default function Suggestions({ onBack, language, showToast }: Suggestions
                       </div>
                     </div>
 
-                    {/* Action: Upvote Arrow Button or Completed Badge */}
-                    {activeTab === 'completed' ? (
-                      <button
-                        onClick={onBack}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all font-semibold text-xs cursor-pointer"
-                        title="Available in Catalog - View Sheet Music"
-                      >
-                        <span>✓ {t.availableInCatalog}</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleUpvote(sug.id, sug.votes, sug.title)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 cursor-pointer ${
-                          hasVoted 
-                            ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle'
-                            : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle'
-                        }`}
-                        title={hasVoted ? 'Already voted' : 'Upvote song request'}
-                      >
-                        <ChevronUp className={`w-4 h-4 sm:w-5 h-5 ${!hasVoted ? 'animate-bounce' : ''}`} />
-                        <span>{sug.votes}</span>
-                      </button>
-                    )}
+                    {/* Action: Upvote Arrow Button */}
+                    <button
+                      onClick={() => handleUpvote(sug.id, sug.votes, sug.title)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold text-xs sm:text-sm transition-all duration-300 cursor-pointer ${
+                        hasVoted 
+                          ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan-subtle'
+                          : 'bg-transparent border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/15 hover:border-neon-cyan hover:shadow-neon-cyan-subtle'
+                      }`}
+                      title={hasVoted ? 'Already voted' : 'Upvote song request'}
+                    >
+                      <ChevronUp className={`w-4 h-4 sm:w-5 h-5 ${!hasVoted ? 'animate-bounce' : ''}`} />
+                      <span>{sug.votes}</span>
+                    </button>
                   </div>
                 );
               })}
