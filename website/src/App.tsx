@@ -955,7 +955,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
   type SortOption = 'latest' | 'trending' | 'az';
-  const [sortBy, setSortBy] = useState<SortOption>('latest');
+  const [sortBy, setSortBy] = useState<SortOption>('trending');
   const [showFilters, setShowFilters] = useState(window.innerWidth >= 768);
 
   // Toast notifications state
