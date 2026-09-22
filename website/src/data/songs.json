@@ -147,7 +147,11 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Je te laisserai des mots.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false
+    "trending": false,
+    "easyPrice": "6",
+    "easyStripePriceId": "",
+    "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2120828/Product.aspx",
+    "isArrangeMe": false
   },
   {
     "id": "4",
