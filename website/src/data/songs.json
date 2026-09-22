@@ -136,7 +136,7 @@
     "audioPreviewUrl": "/audio-previews/Sonne.mp3",
     "kofiId": "prod_dummy123",
     "paymentsDisabled": false,
-    "isArrangeMe": false,
+    "isArrangeMe": true,
     "trending": false,
     "easyPrice": "6",
     "easyStripePriceId": "",
