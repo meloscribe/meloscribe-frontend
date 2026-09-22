@@ -1069,10 +1069,14 @@ function App() {
   };
 
   const handleDownloadClick = (song: Song, preferredDifficulty?: 'Original' | 'Easy') => {
-    const isArrangeMe = Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
-    if (isArrangeMe && song.arrangemeUrl) {
-      window.open(song.arrangemeUrl, '_blank', 'noopener,noreferrer');
-      return;
+    const isArrangeMe = Boolean(song.arrangemeUrl || song.arrangemeEasyUrl) && (song.isArrangeMe ?? true);
+    const hasDual = Boolean(song.hasEasy || song.difficulty === 'Original / Easy' || (song.arrangemeUrl && song.arrangemeEasyUrl));
+    if (isArrangeMe && !hasDual) {
+      const url = (preferredDifficulty === 'Easy' && song.arrangemeEasyUrl) ? song.arrangemeEasyUrl : (song.arrangemeUrl || song.arrangemeEasyUrl);
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        return;
+      }
     }
     setModalInitialDifficulty(preferredDifficulty);
     setSelectedSong(song);
@@ -1256,7 +1260,7 @@ function App() {
                   <div className={`grid gap-3 sm:gap-6 ${featuredSongs.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-2 md:grid-cols-3'}`}>
                     {featuredSongs.map((song, idx) => {
                       const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
-                      const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
+                      const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl || song.arrangemeEasyUrl) && (song.isArrangeMe ?? true);
                       return (
                         <div
                           key={song.id}
@@ -1547,7 +1551,7 @@ function App() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {filteredSongs.map((song) => {
                   const isPaymentsDisabled = globalPaymentsDisabled || song.paymentsDisabled;
-                  const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl) && (song.isArrangeMe ?? true);
+                  const isArrangeMe = !isPaymentsDisabled && Boolean(song.arrangemeUrl || song.arrangemeEasyUrl) && (song.isArrangeMe ?? true);
                   return (
                     <div
                       key={song.id}
@@ -1804,8 +1808,9 @@ function App() {
           videoPreviewUrl={selectedSong.videoPreviewUrl}
           price={selectedSong.price}
           coverImage={selectedSong.coverImage}
-          isArrangeMe={!globalPaymentsDisabled && !selectedSong.paymentsDisabled && Boolean(selectedSong.arrangemeUrl) && (selectedSong.isArrangeMe ?? true)}
+          isArrangeMe={!globalPaymentsDisabled && !selectedSong.paymentsDisabled && Boolean(selectedSong.arrangemeUrl || selectedSong.arrangemeEasyUrl) && (selectedSong.isArrangeMe ?? true)}
           arrangemeUrl={selectedSong.arrangemeUrl}
+          arrangemeEasyUrl={selectedSong.arrangemeEasyUrl}
         />
       )}
 

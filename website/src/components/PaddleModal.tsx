@@ -22,6 +22,7 @@ interface PaddleModalProps {
   coverImage?: string;
   isArrangeMe?: boolean;
   arrangemeUrl?: string;
+  arrangemeEasyUrl?: string;
 }
 
 const COMMON_DOMAIN_TYPOS: Record<string, string> = {
@@ -556,7 +557,8 @@ export default function PaddleModal({
   price, 
   coverImage,
   isArrangeMe = false,
-  arrangemeUrl
+  arrangemeUrl,
+  arrangemeEasyUrl
 }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -1891,8 +1893,9 @@ export default function PaddleModal({
                     <button
                       type="button"
                       onClick={() => {
-                        if (arrangemeUrl) {
-                          window.open(arrangemeUrl, '_blank', 'noopener,noreferrer');
+                        const targetUrl = (isSelectedEasy && arrangemeEasyUrl) ? arrangemeEasyUrl : (arrangemeUrl || arrangemeEasyUrl);
+                        if (targetUrl) {
+                          window.open(targetUrl, '_blank', 'noopener,noreferrer');
                         }
                       }}
                       className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] active:scale-[0.98] transition-all duration-300 cursor-pointer text-sm"

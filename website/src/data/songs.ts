@@ -28,6 +28,7 @@ export interface Song {
   theme?: string;
   pinned?: boolean;
   arrangemeUrl?: string;
+  arrangemeEasyUrl?: string;
   isArrangeMe?: boolean;
   trending?: boolean;
   isTrending?: boolean;
