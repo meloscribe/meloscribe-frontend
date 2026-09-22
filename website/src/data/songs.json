@@ -273,7 +273,7 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "paymentsDisabled": true,
+    "paymentsDisabled": false,
     "isArrangeMe": false
   },
   {
