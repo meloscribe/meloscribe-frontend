@@ -137,7 +137,11 @@
     "kofiId": "prod_dummy123",
     "paymentsDisabled": true,
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "easyPrice": "6",
+    "easyStripePriceId": "",
+    "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2172480/Product.aspx",
+    "arrangemeEasyUrl": ""
   },
   {
     "id": "3",
