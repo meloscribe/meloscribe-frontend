@@ -56,7 +56,8 @@
     "trending": true,
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2094707/Product.aspx",
     "arrangemeEasyUrl": "https://www.sheetmusicdirect.com/se/ID_No/2126060/Product.aspx",
-    "isArrangeMe": false
+    "isArrangeMe": true,
+    "paymentsDisabled": false
   },
   {
     "id": "5",
