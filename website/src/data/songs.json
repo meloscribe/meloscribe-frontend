@@ -272,7 +272,9 @@
     "audioPreviewUrl": "/audio-previews/No Surprises.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "paymentsDisabled": true,
+    "isArrangeMe": false
   },
   {
     "id": "17",
