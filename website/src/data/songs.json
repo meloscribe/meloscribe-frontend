@@ -1,5 +1,20 @@
 [
   {
+    "id": "9",
+    "title": "In This Shirt",
+    "artist": "The Irrepressibles",
+    "difficulty": "Original",
+    "price": "6 €",
+    "coverImage": "/covers/In This Shirt_clean.jpg",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "stripePriceId": "price_1UISU8Q4cuBqoYoXtmC1mCZZ",
+    "theme": "warm",
+    "format": "full_arrangement",
+    "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
+    "kofiId": "price_1UISU8Q4cuBqoYoXtmC1mCZZ",
+    "hasOriginal": true
+  },
+  {
     "id": "58",
     "title": "River Flows in You",
     "artist": "Yiruma",
@@ -151,20 +166,6 @@
     "theme": "cold",
     "format": "full_arrangement",
     "audioPreviewUrl": "/audio-previews/We Wish You a Merry Xmas.mp3"
-  },
-  {
-    "id": "9",
-    "title": "In This Shirt",
-    "artist": "The Irrepressibles",
-    "difficulty": "Original",
-    "price": "4 €",
-    "coverImage": "/covers/In This Shirt_clean.jpg",
-    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
-    "stripePriceId": "pri_01kwap7wtwpnprpwpbtmrddzh3",
-    "theme": "warm",
-    "format": "full_arrangement",
-    "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
-    "kofiId": "prod_dummy123"
   },
   {
     "id": "10",
