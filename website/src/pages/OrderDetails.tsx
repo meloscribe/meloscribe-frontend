@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Archive, Mail, AlertCircle, Info, Tv } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight } from 'lucide-react';
+import { onOutboundClick } from '../lib/outboundTracker';
 
 interface OrderDetailsProps {
   onBack: () => void;
@@ -64,6 +65,9 @@ const translations = {
     inAppNoticeTitle: '💡 In-App Browser Notice',
     inAppNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
     tapHere: 'Tap here (...) and open browser',
+    practiceNoticeTitle: 'Stuck on this arrangement?',
+    practiceNoticeDesc: 'Learn it measure by measure with visual hands, ear-training methods, and our recommended studio setup.',
+    practiceNoticeLink: 'Studio & Learning Stack',
   },
   de: {
     title: 'Dein Lernpaket',
@@ -113,6 +117,9 @@ const translations = {
     inAppNoticeTitle: '💡 Hinweis für In-App-Browser',
     inAppNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
     tapHere: 'Hier tippen (...) und im Browser öffnen',
+    practiceNoticeTitle: 'Kommst du beim Üben nicht weiter?',
+    practiceNoticeDesc: 'Lerne Takt für Takt mit visuellen Händen, Gehör-Übungsmethoden und unserem Studio-Setup.',
+    practiceNoticeLink: 'Studio & Lern-Stack',
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -162,6 +169,9 @@ const translations = {
     inAppNoticeTitle: '💡 Remarque pour le navigateur intégré',
     inAppNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
     tapHere: 'Appuyez ici (...) et ouvrez dans le navigateur',
+    practiceNoticeTitle: 'Bloqué sur cet arrangement ?',
+    practiceNoticeDesc: 'Apprenez mesure par mesure avec des mains visuelles, des méthodes à l\'oreille et notre matériel studio.',
+    practiceNoticeLink: 'Studio & Outils de pratique',
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -211,6 +221,9 @@ const translations = {
     inAppNoticeTitle: '💡 Aviso para el navegador integrado',
     inAppNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
     tapHere: 'Toca aquí (...) y abre en el navegador',
+    practiceNoticeTitle: '¿Atascado en este arreglo?',
+    practiceNoticeDesc: 'Aprende compás por compás con manos visuales, práctica de oído y nuestro setup de estudio.',
+    practiceNoticeLink: 'Studio y Herramientas',
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -260,6 +273,9 @@ const translations = {
     inAppNoticeTitle: '💡 Avviso per il browser in-app',
     inAppNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
     tapHere: 'Tocca qui (...) e apri nel browser',
+    practiceNoticeTitle: 'Bloccato su questo arrangiamento?',
+    practiceNoticeDesc: 'Impara battuta per battuta con mani visive, metodi a orecchio e la nostra attrezzatura studio.',
+    practiceNoticeLink: 'Studio e Strumenti',
   }
 };
 
@@ -578,6 +594,33 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 )}
                 <span>{t.pdfBtnText}</span>
               </button>
+            </div>
+
+            {/* Compact Support & Practice Studio Note */}
+            <div className="p-3.5 sm:p-4 rounded-xl border border-neon-cyan/25 bg-white/70 dark:bg-dark-900/50 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 my-4">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="p-2 rounded-lg bg-neon-cyan/10 text-neon-cyan flex-shrink-0 mt-0.5 sm:mt-0">
+                  <Sparkles className="w-4 h-4 animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-xs sm:text-sm text-gray-900 dark:text-white">
+                    {t.practiceNoticeTitle}
+                  </h4>
+                  <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 leading-relaxed">
+                    {t.practiceNoticeDesc}
+                  </p>
+                </div>
+              </div>
+              <a
+                href="/studio"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => onOutboundClick('studio_link', 'download_page')}
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap bg-white/[0.05] dark:bg-white/[0.04] border border-gray-300/60 dark:border-white/10 text-gray-900 dark:text-white hover:border-neon-cyan/60 hover:bg-neon-cyan/10 hover:shadow-neon-cyan-subtle hover:text-neon-cyan dark:hover:text-neon-cyan transition-all duration-200 cursor-pointer self-start sm:self-auto flex-shrink-0 group"
+              >
+                <span>{t.practiceNoticeLink}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
             </div>
 
             {/* Download Video (Original) */}

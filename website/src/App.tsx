@@ -12,6 +12,7 @@ import Refunds from './pages/Refunds';
 import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 import OrderDetails from './pages/OrderDetails';
+import Studio from './pages/Studio';
 
 // Format auto-detection helper removed: all items are Full Arrangements
 
@@ -105,6 +106,7 @@ const translations = {
     taglineSubtitle: 'Arranged by ear. Played by you.',
     navSheets: 'Sheets',
     navSuggestions: 'Suggestions',
+    navStudio: 'Studio',
     muteAudio: 'Mute Audio Preview',
     unmuteAudio: 'Unmute Audio Preview',
     trending: 'Trending',
@@ -166,6 +168,7 @@ const translations = {
     taglineSubtitle: 'Arranged by ear. Played by you.',
     navSheets: 'Noten',
     navSuggestions: 'Wunschliste',
+    navStudio: 'Studio',
     muteAudio: 'Audio-Vorschau stummschalten',
     unmuteAudio: 'Audio-Vorschau aktivieren',
     trending: 'Trending',
@@ -227,6 +230,7 @@ const translations = {
     taglineSubtitle: 'Arranged by ear. Played by you.',
     navSheets: 'Partitions',
     navSuggestions: 'Suggestions',
+    navStudio: 'Studio',
     muteAudio: 'Couper l\'aperçu audio',
     unmuteAudio: 'Activer l\'aperçu audio',
     trending: 'Tendance',
@@ -288,6 +292,7 @@ const translations = {
     taglineSubtitle: 'Arranged by ear. Played by you.',
     navSheets: 'Partituras',
     navSuggestions: 'Sugerencias',
+    navStudio: 'Studio',
     muteAudio: 'Silenciar vista previa de audio',
     unmuteAudio: 'Activar vista previa de audio',
     trending: 'Tendencia',
@@ -349,6 +354,7 @@ const translations = {
     taglineSubtitle: 'Arranged by ear. Played by you.',
     navSheets: 'Spartiti',
     navSuggestions: 'Suggerimenti',
+    navStudio: 'Studio',
     muteAudio: 'Disattiva l\'anteprima audio',
     unmuteAudio: 'Attiva l\'anteprima audio',
     trending: 'Popolare',
@@ -548,8 +554,8 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 
 function App() {
   const { i18n } = useTranslation();
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isScrollingActive, setIsScrollingActive] = useState(false);
+  const scrollTrackRef = useRef<HTMLDivElement>(null);
+  const scrollThumbRef = useRef<HTMLDivElement>(null);
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -603,19 +609,19 @@ function App() {
     fetchDynamicSongs();
   }, []);
 
-  // Pre-warm the top songs on idle so hover playback is truly instant (0ms latency)
+  // Pre-warm audio conservatively to avoid saturating browser network connections
   useEffect(() => {
     if (isMuted) return;
     const timer = window.setTimeout(() => {
-      allSongs.slice(0, 8).forEach(song => {
+      allSongs.slice(0, 3).forEach(song => {
         if (!audioPoolRef.current.has(song.id)) {
           const audio = new Audio();
           audio.src = resolveAudioUrl(song);
-          audio.preload = 'auto';
+          audio.preload = 'none';
           audioPoolRef.current.set(song.id, audio);
         }
       });
-    }, 1200);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [allSongs, isMuted]);
 
@@ -821,10 +827,12 @@ function App() {
     stopAudio();
   };
 
-  // Stop audio immediately when window loses focus or user scrolls
+  // Stop audio immediately when window loses focus or user scrolls while hovering
   useEffect(() => {
     const handleCancelAudio = () => {
-      handleCardMouseLeave();
+      if (hoveredSongIdRef.current) {
+        handleCardMouseLeave();
+      }
     };
     window.addEventListener('blur', handleCancelAudio);
     window.addEventListener('scroll', handleCancelAudio, { passive: true });
@@ -901,17 +909,27 @@ function App() {
 
     // Audio preloading loop removed to prevent browser connection pool exhaustion (limit of 6 connections/domain).
 
-    // Premium Ghost Scrollbar: tracks scroll progress percentage and sets active state for fade animation
+    // Premium Ghost Scrollbar: direct DOM updates inside requestAnimationFrame to prevent re-rendering App
     let scrollTimeout: number;
+    let rAF: number | null = null;
     const handleScrollProgress = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        setScrollProgress(window.scrollY / totalHeight);
-      }
-      setIsScrollingActive(true);
+      if (rAF) cancelAnimationFrame(rAF);
+      rAF = requestAnimationFrame(() => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0 && scrollThumbRef.current && scrollTrackRef.current) {
+          const progress = Math.min(Math.max(window.scrollY / totalHeight, 0), 1);
+          const color = `rgb(${Math.round(255 * progress)}, ${Math.round(245 - 200 * progress)}, ${Math.round(255 - 109 * progress)})`;
+          scrollThumbRef.current.style.transform = `translateY(${(window.innerHeight - 69) * progress}px)`;
+          scrollThumbRef.current.style.background = `linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${color} 15%, ${color} 85%, rgba(0,0,0,0) 100%)`;
+          scrollThumbRef.current.style.boxShadow = `0 0 5px ${color}`;
+          scrollTrackRef.current.style.opacity = '0.65';
+        }
+      });
       clearTimeout(scrollTimeout);
       scrollTimeout = window.setTimeout(() => {
-        setIsScrollingActive(false);
+        if (scrollTrackRef.current) {
+          scrollTrackRef.current.style.opacity = '0';
+        }
       }, 1000);
     };
 
@@ -919,6 +937,7 @@ function App() {
     return () => {
       window.removeEventListener('scroll', handleScrollProgress);
       clearTimeout(scrollTimeout);
+      if (rAF) cancelAnimationFrame(rAF);
     };
   }, [allSongs]);
 
@@ -1050,10 +1069,16 @@ function App() {
   useEffect(() => {
     if (selectedSong) {
       document.title = `${selectedSong.title} — meloscribe`;
+    } else if (currentPath === '/studio') {
+      document.title = 'Studio & Learning Stack — meloscribe';
+    } else if (currentPath === '/sheets') {
+      document.title = 'Sheet Music Catalog — meloscribe';
+    } else if (currentPath === '/suggestions') {
+      document.title = 'Song Suggestions — meloscribe';
     } else {
       document.title = 'meloscribe';
     }
-  }, [selectedSong]);
+  }, [selectedSong, currentPath]);
 
   const navigate = (path: string) => {
     if (path === currentPath) return;
@@ -1082,8 +1107,6 @@ function App() {
     setSelectedSong(song);
     setIsKofiModalOpen(true);
   };
-
-  const scrollbarColor = `rgb(${Math.round(255 * scrollProgress)}, ${Math.round(245 - 200 * scrollProgress)}, ${Math.round(255 - 109 * scrollProgress)})`;
 
   return (
 
@@ -1134,6 +1157,17 @@ function App() {
                   }`}
                 >
                   {t.navSuggestions}
+                </a>
+                <a 
+                  href="/studio" 
+                  onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
+                  className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
+                    currentPath === '/studio'
+                      ? 'text-neon-cyan'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                >
+                  {t.navStudio || 'Studio'}
                 </a>
               </nav>
             </div>
@@ -1697,6 +1731,8 @@ function App() {
             )}
           </div>
         </section>
+      ) : currentPath === '/studio' ? (
+        <Studio onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/imprint' ? (
         <Impressum onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/privacy' ? (
@@ -1742,6 +1778,13 @@ function App() {
                 &copy; {new Date().getFullYear()} {t.brand}. {t.copyright}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-x-6">
+                <a 
+                  href="/studio" 
+                  onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
+                  className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
+                >
+                  {t.navStudio || 'Studio'}
+                </a>
                 <a 
                   href="/suggestions" 
                   onClick={(e) => { e.preventDefault(); navigate('/suggestions'); }}
@@ -1822,20 +1865,20 @@ function App() {
         </div>
       )}
 
-      {/* Premium Ghost Scrollbar (Desktop only to prevent mobile URL bar layout jumps) */}
+      {/* Premium Ghost Scrollbar (Direct DOM ref, zero re-renders) */}
       <div 
-        className={`fixed right-1 top-3 bottom-3 w-[3px] z-[9999] pointer-events-none hidden md:block transition-opacity duration-300 ${
-          isScrollingActive ? 'opacity-65' : 'opacity-0'
-        }`}
+        ref={scrollTrackRef}
+        className="fixed right-1 top-3 bottom-3 w-[3px] z-[9999] pointer-events-none hidden md:block opacity-0 transition-opacity duration-300"
       >
         <div 
+          ref={scrollThumbRef}
           className="w-full rounded-full"
           style={{
             height: '45px',
-            transform: `translateY(${(window.innerHeight - 69) * scrollProgress}px)`,
+            transform: 'translateY(0px)',
             willChange: 'transform',
-            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${scrollbarColor} 15%, ${scrollbarColor} 85%, rgba(0,0,0,0) 100%)`,
-            boxShadow: `0 0 5px ${scrollbarColor}`
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgb(0, 245, 146) 15%, rgb(0, 245, 146) 85%, rgba(0,0,0,0) 100%)',
+            boxShadow: '0 0 5px rgb(0, 245, 146)'
           }}
         />
       </div>

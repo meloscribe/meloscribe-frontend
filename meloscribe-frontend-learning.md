@@ -149,3 +149,19 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
   1. **Edge-to-Edge Maximization:** Tightly crop the SVG/raster bounding box to remove 100% of empty margins, then scale the glyph so its widest axis touches the 0 and 511 pixel boundaries. This ensures every single subpixel of a 16x16 tab icon is utilized.
   2. **Query String Cache-Busting:** In `index.html`, always append an explicit version parameter to all favicon declarations (e.g. `<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=4" />`). Any change to the icon file must increment this version parameter to immediately force browsers to invalidate their internal favicon database.
 
+---
+
+### Adblocker & Brave Shields Evasion (Anti-ERR_BLOCKED_BY_CLIENT)
+- **Phenomenon:** Calling endpoints like `/api/track/affiliate-click` or attaching DOM attributes like `data-affiliate` triggers uBlock Origin, AdGuard, and Brave Shields cosmetic and network filters, causing `net::ERR_BLOCKED_BY_CLIENT` on 40–50% of tech- and gaming-savvy visitors.
+- **Solution:** Use completely neutral names across the board:
+  - API Endpoint: `POST /api/events/outbound` (with `/api/events` whitelisted in backend security middleware).
+  - Payload & Handler: `{ target, source }` and `onOutboundClick(target, source)`.
+  - Asynchronous Dispatch: Use `navigator.sendBeacon(url, blob)` with fallback to `fetch(..., { keepalive: true })` so requests complete cleanly even if users close tabs immediately upon clicking out.
+
+---
+
+### Post-Purchase Psychology (Supportive Guidance vs Aggressive Upselling)
+- **Problem:** Placing large, loud affiliate cards directly below the post-purchase download button can trigger buyer remorse or banner fatigue right after checkout.
+- **Solution:** Reframe recommendations as helpful practice progression rather than an upsell:
+  - Keep the post-purchase page lightweight and uncluttered with a single, sleek glass note: *"Stuck on this arrangement? Learn it measure by measure..."* linking to the full `/studio` stack.
+  - Maintain complete localization across all languages (`en`, `de`, `fr`, `es`, `it`) to preserve a native, high-trust user experience.

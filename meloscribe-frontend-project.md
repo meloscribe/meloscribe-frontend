@@ -151,6 +151,15 @@ npm run dev
 
 
 
+- [x] Studio & Practice Recommendation Ecosystem:
+  - Zentrales Datenmodell `website/src/data/affiliates.ts` für die 4 Säulen (Pianoforall mit aktivem Hoplink, Skoove mit aktivem Partnerlink, flowkey, Thomann) angelegt.
+  - Neuer Hauptnavigations-Reiter `Studio` (`/studio`) in der Navbar, im Footer und im SPA-Routing von `App.tsx` integriert (inkl. Lokalisierung über alle 5 Sprachen).
+  - Kuratierte `/studio`-Seite (`Studio.tsx`) mit Hero-Bereich, Learning Stack (Pianoforall, flowkey, Skoove), Thomann-Hardwareempfehlungen (Digital Piano, Kopfhörer, Zubehör) und rechtlicher Transparenz-Offenlegung implementiert.
+  - Visuelles Polishing der Studio-Seite: 6 hochauflösende 16:9-Previewbilder generiert und integriert, einheitliche Dark-Glass-Buttons, psychologisch optimierte, reibungsarme CTAs (*"Explore Pianoforall →"*, *"Try flowkey for Free →"*, *"Explore Skoove →"*, *"View on Thomann →"*).
+  - Adblock & Brave Shields sicheres Tracking: Neutraler Dispatcher `outboundTracker.ts` (`onOutboundClick`) via `POST /api/events/outbound` mit `navigator.sendBeacon` und `keepalive: true`. Keine Werbe-Keywords (`data-affiliate` etc.) im DOM, wodurch `ERR_BLOCKED_BY_CLIENT` komplett vermieden wird.
+  - Post-Purchase Support auf `OrderDetails.tsx`: Schlanke, dezente Glass-Notiz direkt unter dem Download-Button (*"Stuck on this arrangement?"*), die Kunden nicht mit Abo-Werbung überrumpelt, sondern diskret und hilfreich auf den `/studio`-Stack verlinkt. Vollständig lokalisiert in `en`, `de`, `fr`, `es`, `it`.
+  - Vollständiger Produktions-Build (`npm run build`) und End-to-End-Browser-Verifikation im Localhost-Dev-Server erfolgreich abgeschlossen.
+
 ## Active Blockers / Next Steps
 
 - Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout mit dynamischer Währungsumrechnung. Vercel-Deployment ist live.
