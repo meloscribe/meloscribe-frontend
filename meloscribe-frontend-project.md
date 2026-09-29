@@ -168,8 +168,9 @@ npm run dev
   - Sofortige Conversion bei Katalog-Treffer: Zeigt eine positive Benachrichtigung (*"Great news! '{title}' is already available on Meloscribe."*), öffnet das Noten-Modal direkt und blendet ein interaktives Aktions-Banner ein, anstatt eine Sackgassen-Fehlermeldung zu werfen.
   - Vollständige 5-Sprachen-Lokalisierung (`en`, `de`, `fr`, `es`, `it`).
   - `.no-scrollbar` CSS-Utility in `index.css` ergänzt für sauberes, nahtloses horizontales Swipen auf iOS und Android ohne sichtbare Scrollbalken.
-- [x] 1-Click Order Download Rating System (👍 / 👎):
-  - Elegante, zentrierte Floating-Glass-Capsule am Ende der Download-Karte (`OrderDetails.tsx`) – rein die beiden Daumen-Icons (👍 / 👎) im Cyan/Magenta-Farbschema ohne Leseaufwand, wodurch der Songtitel unberührt und edel bleibt.
+- [x] 1-Click Order Download Rating System (MeloThumbs):
+  - Eigene Cyber-Daumen-Icons (`MeloThumbUp` / `MeloThumbDown`) im unverwechselbaren Meloscribe-Stil mit Synthwave-Equalizer-Cuff, Knuckle-Circuit-Lines und energetischem Glow-Kern.
+  - Luminous Gradient-Border Capsule (`from-neon-cyan/40 via-white/10 to-neon-pink/40`) am Ende der Download-Karte (`OrderDetails.tsx`), wodurch der Songtitel unberührt und edel bleibt.
   - Vollständige Lokalisierung in allen 5 Sprachen (DE, EN, FR, ES, IT), `localStorage`-Persistierung und subtiler 2-Sekunden-Toast zur Bestätigung.
   - Backend-Anbindung via `POST /api/order/rating` auf Oracle VM (`152.70.23.171`) mit Validierung von `rating` (`up` / `down`) und SQLite-Spalten `rating` & `rated_at` in `purchases`.
   - Admin-Analytics in `WebsiteTab.jsx`: Satisfaction-Score KPI-Card, Daumen-Statistik (👍 / 👎) und Feedback-Verteilung pro Song.
