@@ -177,6 +177,10 @@ npm run dev
   - Den überflüssigen "Follow Us"-Button im Hero-Bereich durch einen direkten "Suggest a Song"-Shortcut (`/suggestions`) ersetzt.
   - Konsistentes Neon-Design mit Sparkles-Icon (`Sparkles` in `text-neon-cyan`), nahtloses Client-Routing via SPA-Navigator.
   - Vollständige 5-Sprachen-Lokalisierung (`en`: 'Suggest a Song', `de`: 'Song vorschlagen', `fr`: 'Suggérer un morceau', `es`: 'Sugerir una canción', `it`: 'Suggerisci un brano').
+- [x] Suggestions Recently Arranged Desktop Scroll Controls:
+  - Horizontaler Wheel-Event-Listener (`deltaY` → `scrollLeft` Konvertierung), wodurch das Mausrad auf Desktop-Mäusen die Leiste nahtlos horizontal scrollt, ohne dass der Nutzer Shift gedrückt halten muss.
+  - Desktop-Pfeiltasten (`ChevronLeft` / `ChevronRight`) in der Titelleiste mit fließender `smooth`-Animation und dynamischer Deaktivierung (`disabled`) an den Enden.
+  - Desktop Drag-to-Scroll mit Mauszeiger (`cursor-grab` / `active:cursor-grabbing`) und Drag-Schutz (verhindert ungewollten Klick beim Ziehen).
 
 ## Active Blockers / Next Steps
 
