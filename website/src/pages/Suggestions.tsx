@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronUp, Music, Sparkles, Check, ArrowUpRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, ChevronUp, Music, Sparkles, Check, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchSuggestions, insertSuggestion, incrementVote, decrementVote, Suggestion } from '../lib/supabaseClient';
 import songsData from '../data/songs.json';
 
@@ -123,6 +123,15 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [votedIds, setVotedIds] = useState<Record<string, boolean>>({});
+
+  // Strip scrolling states & refs
+  const stripRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const isMouseDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const hasDraggedRef = useRef(false);
 
   // Input states
   const [title, setTitle] = useState('');
@@ -351,6 +360,87 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
     setVotedIds(keys);
   }, []);
 
+  const updateScrollButtons = () => {
+    const el = stripRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft < maxScroll - 2);
+  };
+
+  useEffect(() => {
+    const el = stripRef.current;
+    if (!el) return;
+
+    updateScrollButtons();
+    el.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons, { passive: true });
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.shiftKey || Math.abs(e.deltaY) < 1) return;
+
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) return;
+
+      const isScrollingRight = e.deltaY > 0;
+      const hasRoomRight = el.scrollLeft < maxScroll - 2;
+      const hasRoomLeft = el.scrollLeft > 2;
+
+      if ((isScrollingRight && hasRoomRight) || (!isScrollingRight && hasRoomLeft)) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+        updateScrollButtons();
+      }
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, [completedList]);
+
+  const scrollStrip = (direction: 'left' | 'right') => {
+    if (stripRef.current) {
+      const scrollAmount = 320;
+      stripRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+      setTimeout(updateScrollButtons, 350);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const el = stripRef.current;
+    if (!el) return;
+    isMouseDownRef.current = true;
+    hasDraggedRef.current = false;
+    startXRef.current = e.pageX - el.offsetLeft;
+    scrollLeftRef.current = el.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownRef.current || !stripRef.current) return;
+    const el = stripRef.current;
+    const x = e.pageX - el.offsetLeft;
+    const walk = x - startXRef.current;
+    if (Math.abs(walk) > 5) {
+      hasDraggedRef.current = true;
+    }
+    el.scrollLeft = scrollLeftRef.current - walk;
+    updateScrollButtons();
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isMouseDownRef.current = false;
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 50);
+  };
+
   const handleUpvote = async (id: string, currentVotes: number, songTitle: string) => {
     if (votedIds[id]) {
       // Unvote logic
@@ -575,18 +665,50 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
         {/* Horizontal Swipe-Strip for Completed/Arranged Community Songs */}
         {completedList.length > 0 && (
           <div className="mb-8 animate-in fade-in duration-300">
-            <div className="flex items-center gap-2 mb-2.5 px-1">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                {t.completedStripTitle}
-              </span>
+            <div className="flex items-center justify-between gap-2 mb-2.5 px-1">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  {t.completedStripTitle}
+                </span>
+              </div>
+              <div className="hidden sm:flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => scrollStrip('left')}
+                  disabled={!canScrollLeft}
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-emerald-400 text-gray-600 dark:text-gray-300 hover:text-emerald-400 transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
+                  title="Scroll left"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollStrip('right')}
+                  disabled={!canScrollRight}
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-emerald-400 text-gray-600 dark:text-gray-300 hover:text-emerald-400 transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
+                  title="Scroll right"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1 px-0.5 scroll-smooth">
+            <div 
+              ref={stripRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUpOrLeave}
+              onMouseLeave={handleMouseUpOrLeave}
+              className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1 px-0.5 cursor-grab active:cursor-grabbing select-none"
+            >
               {completedList.map(item => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => {
+                    if (hasDraggedRef.current) return;
                     if (item.song && onSelectSong) {
                       onSelectSong(item.song);
                     }
