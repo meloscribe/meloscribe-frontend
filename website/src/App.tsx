@@ -1851,7 +1851,8 @@ function App() {
           videoPreviewUrl={selectedSong.videoPreviewUrl}
           price={selectedSong.price}
           coverImage={selectedSong.coverImage}
-          isArrangeMe={!globalPaymentsDisabled && !selectedSong.paymentsDisabled && Boolean(selectedSong.arrangemeUrl || selectedSong.arrangemeEasyUrl) && (selectedSong.isArrangeMe ?? true)}
+          isArrangeMe={Boolean(selectedSong.arrangemeUrl || selectedSong.arrangemeEasyUrl) && (selectedSong.isArrangeMe ?? true)}
+          paymentsDisabled={(globalPaymentsDisabled || Boolean(selectedSong.paymentsDisabled)) && !(Boolean(selectedSong.arrangemeUrl || selectedSong.arrangemeEasyUrl) && (selectedSong.isArrangeMe ?? true))}
           arrangemeUrl={selectedSong.arrangemeUrl}
           arrangemeEasyUrl={selectedSong.arrangemeEasyUrl}
         />

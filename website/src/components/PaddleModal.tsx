@@ -23,6 +23,7 @@ interface PaddleModalProps {
   isArrangeMe?: boolean;
   arrangemeUrl?: string;
   arrangemeEasyUrl?: string;
+  paymentsDisabled?: boolean;
 }
 
 const COMMON_DOMAIN_TYPOS: Record<string, string> = {
@@ -102,6 +103,13 @@ const translations = {
     freeDownloadInvalidEmail: 'Please enter a valid email address.',
     freeDownloadConsentRequired: 'Please agree to receive the download link to continue.',
     freeDownloadDone: 'Done',
+    freeDownloadSpamAlertTitle: 'Important: Check your Spam Folder!',
+    freeDownloadSpamAlertDesc: 'Automated confirmation emails often land in Spam or Promotions. Please check there and mark as "Not Spam" to receive your files and future sheets.',
+    freeDownloadSpamTip: 'Tip: If not in your inbox within 1–2 min, check your spam/junk folder.',
+    currentlyDisabled: 'Currently Unavailable',
+    currentlyDisabledDesc: 'This piano arrangement is temporarily unavailable for direct purchase due to licensing approvals. You can listen to the audio preview above, or suggest it on our wishlist to be prioritized!',
+    suggestThisSong: 'Suggest on Wishlist',
+    browseOtherSheets: 'Browse Available Sheets',
     paySecurely: 'Pay Securely',
     redirectingStripe: 'Opening secure checkout...',
     checkoutSubtext: 'All files will be available for instant download immediately after payment.',
@@ -197,6 +205,13 @@ const translations = {
     freeDownloadInvalidEmail: 'Bitte gib eine gültige E-Mail-Adresse ein.',
     freeDownloadConsentRequired: 'Bitte stimme dem Erhalt des Download-Links zu, um fortzufahren.',
     freeDownloadDone: 'Fertig',
+    freeDownloadSpamAlertTitle: 'Wichtig: Prüfe deinen Spam-Ordner!',
+    freeDownloadSpamAlertDesc: 'Bestätigungs-Mails landen oft im Spam- oder Werbe-Ordner. Bitte schau dort nach und markiere unsere Mail als „Kein Spam“, um deine Noten und zukünftige Arrangements sicher zu erhalten.',
+    freeDownloadSpamTip: 'Tipp: Falls nicht innerhalb von 1–2 Min. im Postfach, bitte Spam-Ordner prüfen.',
+    currentlyDisabled: 'Derzeit nicht verfügbar',
+    currentlyDisabledDesc: 'Dieses Klavier-Arrangement ist derzeit aufgrund von Lizenzierungen nicht direkt kaufbar. Du kannst dir oben die Audio-Vorschau anhören oder den Song auf unserer Wunschliste vorschlagen!',
+    suggestThisSong: 'Auf Wunschliste vorschlagen',
+    browseOtherSheets: 'Verfügbare Noten ansehen',
     paySecurely: 'Jetzt sicher bezahlen',
     redirectingStripe: 'Öffne sicheren Checkout...',
     checkoutSubtext: 'Alle Dateien stehen direkt nach der Zahlung zum sofortigen Download bereit.',
@@ -292,6 +307,13 @@ const translations = {
     freeDownloadInvalidEmail: 'Veuillez saisir une adresse e-mail valide.',
     freeDownloadConsentRequired: 'Veuillez accepter de recevoir le lien de téléchargement pour continuer.',
     freeDownloadDone: 'Terminé',
+    freeDownloadSpamAlertTitle: 'Important : Vérifiez votre dossier Spams !',
+    freeDownloadSpamAlertDesc: 'Les e-mails de confirmation atterrissent souvent dans les spams ou promotions. Ouvrez vos spams et marquez notre e-mail comme "Non spam" pour recevoir vos fichiers et futures partitions.',
+    freeDownloadSpamTip: 'Astuce : Si rien après 1–2 min, vérifiez votre dossier de spams.',
+    currentlyDisabled: 'Actuellement indisponible',
+    currentlyDisabledDesc: 'Cet arrangement pour piano est temporairement indisponible à l\'achat en raison de licences. Vous pouvez écouter l\'aperçu audio ci-dessus ou le suggérer sur notre page de suggestions !',
+    suggestThisSong: 'Suggérer sur la liste',
+    browseOtherSheets: 'Voir les partitions disponibles',
     paySecurely: 'Payer en toute sécurité',
     redirectingStripe: 'Redirection vers le paiement sécurisé...',
     checkoutSubtext: 'Tous les fichiers seront disponibles en téléchargement instantané immédiatement après le paiement.',
@@ -387,6 +409,13 @@ const translations = {
     freeDownloadInvalidEmail: 'Por favor ingresa un correo electrónico válido.',
     freeDownloadConsentRequired: 'Por favor acepta recibir el enlace de descarga para continuar.',
     freeDownloadDone: 'Listo',
+    freeDownloadSpamAlertTitle: '¡Importante: Revisa tu carpeta de spam!',
+    freeDownloadSpamAlertDesc: 'Los correos de confirmación a menudo van a la carpeta de spam o promociones. Abre tu carpeta de spam y marca nuestro correo como "No es spam" para recibir tus partituras.',
+    freeDownloadSpamTip: 'Consejo: Si no llega en 1–2 min, revisa tu carpeta de spam o no deseados.',
+    currentlyDisabled: 'Actualmente no disponible',
+    currentlyDisabledDesc: 'Este arreglo de piano no está disponible temporalmente para su compra directa debido a licencias. ¡Puedes escuchar la vista previa de audio arriba o sugerirlo en nuestra página!',
+    suggestThisSong: 'Sugerir en la lista',
+    browseOtherSheets: 'Ver partituras disponibles',
     paySecurely: 'Pagar de forma segura',
     redirectingStripe: 'Redirigiendo al pago seguro...',
     checkoutSubtext: 'Todos los archivos estarán disponibles para descarga instantánea inmediatamente después del pago.',
@@ -482,6 +511,13 @@ const translations = {
     freeDownloadInvalidEmail: 'Inserisci un indirizzo email valido.',
     freeDownloadConsentRequired: 'Accetta di ricevere il link di download per continuare.',
     freeDownloadDone: 'Fatto',
+    freeDownloadSpamAlertTitle: 'Importante: Controlla la cartella Spam!',
+    freeDownloadSpamAlertDesc: 'Le email di conferma spesso finiscono nello Spam o in Promozioni. Controlla e contrassegna la nostra email come "Non spam" per ricevere i file e i futuri spartiti.',
+    freeDownloadSpamTip: 'Suggerimento: se non arriva entro 1–2 min, controlla la cartella spam.',
+    currentlyDisabled: 'Attualmente non disponibile',
+    currentlyDisabledDesc: 'Questo arrangiamento per pianoforte non è attualmente disponibile per l\'acquisto a causa delle licenze. Puoi ascoltare l\'anteprima audio sopra o richiederlo nella nostra pagina dei suggerimenti!',
+    suggestThisSong: 'Suggerisci nella lista',
+    browseOtherSheets: 'Sfoglia spartiti disponibili',
     paySecurely: 'Paga in sicurezza',
     redirectingStripe: 'Reindirizzamento al pagamento sicuro...',
     checkoutSubtext: 'Tutti i file saranno disponibili per il download istantaneo subito dopo il pagamento.',
@@ -558,7 +594,8 @@ export default function PaddleModal({
   coverImage,
   isArrangeMe = false,
   arrangemeUrl,
-  arrangemeEasyUrl
+  arrangemeEasyUrl,
+  paymentsDisabled = false
 }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -932,6 +969,7 @@ export default function PaddleModal({
   const t = translations[activeLang];
 
   const handleStripeCheckoutRedirect = async () => {
+    if (paymentsDisabled) return;
     setIsRedirecting(true);
     try {
       const apiBaseUrl = getApiBaseUrl();
@@ -968,6 +1006,7 @@ export default function PaddleModal({
   };
 
   const prefetchCheckoutSession = async (diff: string, sId: string, pId?: string) => {
+    if (paymentsDisabled) return null;
     const cacheKey = `${sId}_${diff}_${pId || ''}_${language}`;
     if (sessionCacheRef.current[cacheKey]) {
       return sessionCacheRef.current[cacheKey];
@@ -1008,6 +1047,7 @@ export default function PaddleModal({
 
 
   const handleBuyClick = async () => {
+    if (paymentsDisabled) return;
     setCheckoutStep('embedded');
     setIsEmbeddedLoading(true);
     setEmbeddedError(null);
@@ -1762,16 +1802,31 @@ export default function PaddleModal({
 
                 {isFree ? (
                   freeEmailSubmitted ? (
-                    <div className="w-full flex flex-col items-center text-center py-6 px-2 animate-in fade-in zoom-in-95 duration-300">
-                      <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/10">
-                        <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                    <div className="w-full flex flex-col items-center text-center py-5 px-2 animate-in fade-in zoom-in-95 duration-300">
+                      <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3 shadow-lg shadow-emerald-500/10">
+                        <CheckCircle2 className="w-7 h-7 text-emerald-400" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                         {t.freeDownloadSuccessTitle}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-sm mb-6">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-sm mb-4">
                         {t.freeDownloadSuccessDesc.replace('{email}', freeEmail)}
                       </p>
+
+                      {/* Prominent High-Visibility Spam Warning Alert Box */}
+                      <div className="w-full max-w-sm bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-orange-500/15 border border-amber-500/40 rounded-xl p-3.5 mb-5 text-left shadow-lg shadow-amber-500/5">
+                        <div className="flex items-start gap-2.5">
+                          <Mail className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                          <div className="space-y-1">
+                            <p className="text-xs font-bold text-amber-300 tracking-wide uppercase">
+                              {t.freeDownloadSpamAlertTitle}
+                            </p>
+                            <p className="text-[12px] text-amber-200/90 leading-relaxed">
+                              {t.freeDownloadSpamAlertDesc}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
 
                       <button
                         type="button"
@@ -1865,10 +1920,15 @@ export default function PaddleModal({
                         )}
                       </button>
 
-                      {/* Subtle Micro-Disclaimer */}
-                      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center pt-1.5 leading-snug">
-                        {t.freeDownloadNotice}
-                      </p>
+                      {/* Subtle Micro-Disclaimer + Spam Tip */}
+                      <div className="space-y-1 text-center pt-1.5">
+                        <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-snug">
+                          {t.freeDownloadNotice}
+                        </p>
+                        <p className="text-[11px] text-amber-400/80 dark:text-amber-300/80 leading-snug font-medium">
+                          {t.freeDownloadSpamTip}
+                        </p>
+                      </div>
                     </form>
                   )
                 ) : isArrangeMe ? (
@@ -1904,6 +1964,38 @@ export default function PaddleModal({
                       <ArrowUpRight className="w-4 h-4 stroke-[2]" />
                     </button>
                   </>
+                ) : paymentsDisabled ? (
+                  <div className="w-full flex flex-col items-center text-center py-4 px-2 animate-in fade-in duration-300">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-3 shadow-lg shadow-amber-500/10">
+                      <AlertCircle className="w-7 h-7 text-amber-400" />
+                    </div>
+                    <span className="inline-block text-[11px] font-bold tracking-widest text-amber-400 uppercase drop-shadow-[0_0_8px_rgba(251,191,36,0.4)] mb-1">
+                      {displayTitle}
+                    </span>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {t.currentlyDisabled}
+                    </h3>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm mb-6">
+                      {t.currentlyDisabledDesc}
+                    </p>
+
+                    <div className="w-full space-y-2.5">
+                      <a
+                        href="/suggestions"
+                        className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 text-white border border-neon-cyan/30 transition-all text-sm cursor-pointer shadow-sm"
+                      >
+                        <Sparkles className="w-4 h-4 text-neon-cyan" />
+                        <span>{t.suggestThisSong}</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={handleModalClose}
+                        className="w-full py-2.5 px-4 rounded-xl font-medium bg-gray-100 hover:bg-gray-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-dark-600/60 transition-all text-xs cursor-pointer"
+                      >
+                        {t.browseOtherSheets}
+                      </button>
+                    </div>
+                  </div>
                 ) : (
                   <>
                     {/* Mobile Only: Compact Package Summary */}
