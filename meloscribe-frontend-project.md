@@ -160,6 +160,15 @@ npm run dev
   - Post-Purchase Support auf `OrderDetails.tsx`: Schlanke, dezente Glass-Notiz direkt unter dem Download-Button (*"Stuck on this arrangement?"*), die Kunden nicht mit Abo-Werbung überrumpelt, sondern diskret und hilfreich auf den `/studio`-Stack verlinkt. Vollständig lokalisiert in `en`, `de`, `fr`, `es`, `it`.
   - Vollständiger Produktions-Build (`npm run build`) und End-to-End-Browser-Verifikation im Localhost-Dev-Server erfolgreich abgeschlossen.
 
+- [x] Suggestions Page Mobile Swipe-Strip & Catalog Fuzzy Duplication Guard:
+  - Horizontaler Swipe-Strip (`overflow-x-auto no-scrollbar`) für umgesetzte Community-Wünsche direkt zwischen Vorschlags-Box und Leaderboard platziert.
+  - Flache Dark-Glass-Pills (`h-9`, `backdrop-blur-md`, emerald border, checkmark icon, song title, external arrow icon) für kürzlich arrangierte Songs (*In This Shirt*, *Golden Brown*, *River Flows in You*, etc.).
+  - Direkter Checkout-Funnel: Tap auf eine Song-Pill öffnet ohne Umwege das interaktive Noten-Modal (`PaddleModal.tsx`) mit Audio-Player und Kauf-Option.
+  - Intelligenter Duplikat-Schutz mit Levenshtein- und Ähnlichkeits-Fuzzy-Matching (`findMatchingCatalogSong`) gegen existierende Katalog-Songs in `songs.json` (fängt Tippfehler wie z. B. *"Experiance"* oder *"In The Shirt"* ab).
+  - Sofortige Conversion bei Katalog-Treffer: Zeigt eine positive Benachrichtigung (*"Great news! '{title}' is already available on Meloscribe."*), öffnet das Noten-Modal direkt und blendet ein interaktives Aktions-Banner ein, anstatt eine Sackgassen-Fehlermeldung zu werfen.
+  - Vollständige 5-Sprachen-Lokalisierung (`en`, `de`, `fr`, `es`, `it`).
+  - `.no-scrollbar` CSS-Utility in `index.css` ergänzt für sauberes, nahtloses horizontales Swipen auf iOS und Android ohne sichtbare Scrollbalken.
+
 ## Active Blockers / Next Steps
 
 - Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout mit dynamischer Währungsumrechnung. Vercel-Deployment ist live.

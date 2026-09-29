@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { onOutboundClick } from '../lib/outboundTracker';
 
 interface OrderDetailsProps {
@@ -14,6 +14,7 @@ interface OrderInfo {
   email: string;
   download_count: number;
   created_at?: string;
+  rating?: string | null;
 }
 
 const translations = {
@@ -68,6 +69,11 @@ const translations = {
     practiceNoticeTitle: 'Stuck on this arrangement?',
     practiceNoticeDesc: 'Learn it measure by measure with visual hands, ear-training methods, and our recommended studio setup.',
     practiceNoticeLink: 'Studio & Learning Stack',
+    ratingTitle: 'How was this arrangement?',
+    ratingSubtitle: 'Quick 1-click rating — helps us know if the sheet music & files met your expectations.',
+    ratingUp: 'Love it',
+    ratingDown: 'Needs work',
+    ratingThankYou: 'Thank you for your feedback!',
   },
   de: {
     title: 'Dein Lernpaket',
@@ -120,6 +126,11 @@ const translations = {
     practiceNoticeTitle: 'Kommst du beim Üben nicht weiter?',
     practiceNoticeDesc: 'Lerne Takt für Takt mit visuellen Händen, Gehör-Übungsmethoden und unserem Studio-Setup.',
     practiceNoticeLink: 'Studio & Lern-Stack',
+    ratingTitle: 'Wie gefällt dir das Arrangement?',
+    ratingSubtitle: 'Schnelle 1-Klick Bewertung – hilft uns zu sehen, ob die Noten & Dateien deinen Erwartungen entsprechen.',
+    ratingUp: 'Top / Gefällt mir',
+    ratingDown: 'Verbesserungswürdig',
+    ratingThankYou: 'Vielen Dank für dein Feedback!',
   },
   fr: {
     title: 'Votre Pack Musical',
@@ -172,6 +183,11 @@ const translations = {
     practiceNoticeTitle: 'Bloqué sur cet arrangement ?',
     practiceNoticeDesc: 'Apprenez mesure par mesure avec des mains visuelles, des méthodes à l\'oreille et notre matériel studio.',
     practiceNoticeLink: 'Studio & Outils de pratique',
+    ratingTitle: 'Comment trouvez-vous l\'arrangement ?',
+    ratingSubtitle: 'Évaluation rapide en 1 clic – cela nous aide à améliorer la qualité de nos partitions.',
+    ratingUp: 'J\'adore',
+    ratingDown: 'À améliorer',
+    ratingThankYou: 'Merci pour votre retour !',
   },
   es: {
     title: 'Tu Paquete de Música',
@@ -224,6 +240,11 @@ const translations = {
     practiceNoticeTitle: '¿Atascado en este arreglo?',
     practiceNoticeDesc: 'Aprende compás por compás con manos visuales, práctica de oído y nuestro setup de estudio.',
     practiceNoticeLink: 'Studio y Herramientas',
+    ratingTitle: '¿Qué te pareció el arreglo?',
+    ratingSubtitle: 'Valoración rápida en 1 clic – nos ayuda a saber si las partituras cumplieron tus expectativas.',
+    ratingUp: 'Me encanta',
+    ratingDown: 'Necesita mejorar',
+    ratingThankYou: '¡Muchas gracias por tu valoración!',
   },
   it: {
     title: 'Il tuo Pacchetto Musicale',
@@ -276,6 +297,11 @@ const translations = {
     practiceNoticeTitle: 'Bloccato su questo arrangiamento?',
     practiceNoticeDesc: 'Impara battuta per battuta con mani visive, metodi a orecchio e la nostra attrezzatura studio.',
     practiceNoticeLink: 'Studio e Strumenti',
+    ratingTitle: 'Come valuti l\'arrangiamento?',
+    ratingSubtitle: 'Valutazione rapida in 1 clic – ci aiuta a capire se gli spartiti e i file soddisfano le tue aspettative.',
+    ratingUp: 'Mi piace molto',
+    ratingDown: 'Da migliorare',
+    ratingThankYou: 'Grazie mille per il tuo feedback!',
   }
 };
 
@@ -285,6 +311,14 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [error, setError] = useState<string | null>(null);
   const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
   const [showTiktokModal, setShowTiktokModal] = useState(false);
+  const [userRating, setUserRating] = useState<'up' | 'down' | null>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(`meloscribe_rating_${hash}`);
+      if (stored === 'up' || stored === 'down') return stored;
+    }
+    return null;
+  });
+  const [submittingRating, setSubmittingRating] = useState(false);
 
   const cleanLang = (language || '').toLowerCase().split('-')[0].split('_')[0];
   const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(cleanLang) ? cleanLang : 'en';
@@ -329,6 +363,14 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
         if (res.ok) {
           const data = await res.json();
           setOrderInfo(data);
+          if (data.rating === 'up' || data.rating === 'down') {
+            setUserRating(data.rating);
+            try {
+              localStorage.setItem(`meloscribe_rating_${hash}`, data.rating);
+            } catch {
+              // ignore
+            }
+          }
         } else {
           const errData = await res.json().catch(() => ({}));
           setError(errData.error || t.orderNotFound);
@@ -343,6 +385,29 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
 
     fetchOrderDetails();
   }, [hash, API_BASE, t.orderNotFound]);
+
+  const handleRating = async (rating: 'up' | 'down') => {
+    if (submittingRating || userRating === rating) return;
+    setUserRating(rating);
+    try {
+      localStorage.setItem(`meloscribe_rating_${hash}`, rating);
+    } catch {
+      // ignore
+    }
+    showToast(t.ratingThankYou);
+    setSubmittingRating(true);
+    try {
+      await fetch(`${API_BASE}/api/order/rating`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hash, rating })
+      });
+    } catch (err) {
+      console.warn('Failed to submit rating:', err);
+    } finally {
+      setSubmittingRating(false);
+    }
+  };
 
   const handleDownload = async (type: 'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow') => {
     if (!orderInfo || downloadingType) return;
@@ -774,6 +839,50 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Quick Customer Rating */}
+        <div className="glass-card p-5 sm:p-6 rounded-2xl border border-gray-200/80 bg-white/70 backdrop-blur-md dark:border-dark-500/50 dark:bg-dark-800/80 mb-6 text-center relative overflow-hidden">
+          <h4 className="font-display font-bold text-sm sm:text-base text-gray-900 dark:text-white mb-1">
+            {t.ratingTitle}
+          </h4>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 max-w-sm mx-auto">
+            {t.ratingSubtitle}
+          </p>
+
+          {userRating ? (
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan text-xs sm:text-sm font-semibold animate-in fade-in duration-300">
+              {userRating === 'up' ? (
+                <ThumbsUp className="w-4 h-4 fill-neon-cyan text-neon-cyan" />
+              ) : (
+                <ThumbsDown className="w-4 h-4 fill-neon-cyan text-neon-cyan" />
+              )}
+              <span>{t.ratingThankYou}</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={() => handleRating('up')}
+                disabled={submittingRating}
+                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/80 hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-500 dark:hover:text-emerald-400 text-gray-700 dark:text-gray-200 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                aria-label={t.ratingUp}
+              >
+                <ThumbsUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+                <span>{t.ratingUp}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRating('down')}
+                disabled={submittingRating}
+                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/80 hover:border-rose-500/60 hover:bg-rose-500/10 hover:text-rose-500 dark:hover:text-rose-400 text-gray-700 dark:text-gray-200 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                aria-label={t.ratingDown}
+              >
+                <ThumbsDown className="w-4 h-4 text-rose-500 dark:text-rose-400" />
+                <span>{t.ratingDown}</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Footer Support Info */}

@@ -1749,7 +1749,12 @@ function App() {
       ) : currentPath === '/refunds' ? (
         <Refunds onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/suggestions' ? (
-        <Suggestions onBack={() => navigate('/')} language={language} showToast={showToast} />
+        <Suggestions 
+          onBack={() => navigate('/')} 
+          language={language} 
+          showToast={showToast} 
+          onSelectSong={(song) => handleDownloadClick(song)} 
+        />
       ) : currentPath === '/success' ? (
         <Success onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath.startsWith('/order/') ? (
