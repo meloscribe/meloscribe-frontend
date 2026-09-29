@@ -168,6 +168,15 @@ npm run dev
   - Sofortige Conversion bei Katalog-Treffer: Zeigt eine positive Benachrichtigung (*"Great news! '{title}' is already available on Meloscribe."*), öffnet das Noten-Modal direkt und blendet ein interaktives Aktions-Banner ein, anstatt eine Sackgassen-Fehlermeldung zu werfen.
   - Vollständige 5-Sprachen-Lokalisierung (`en`, `de`, `fr`, `es`, `it`).
   - `.no-scrollbar` CSS-Utility in `index.css` ergänzt für sauberes, nahtloses horizontales Swipen auf iOS und Android ohne sichtbare Scrollbalken.
+- [x] 1-Click Order Download Rating System (👍 / 👎):
+  - Schnelle, reibungslose Bewertung auf der Download-/Bestellseite (`OrderDetails.tsx`) direkt unter dem Download-Button platziert.
+  - Vollständige Lokalisierung in allen 5 Sprachen (DE, EN, FR, ES, IT), `localStorage`-Persistierung und visuelle Bestätigung ("Thank you for your feedback!").
+  - Backend-Anbindung via `POST /api/order/rating` auf Oracle VM (`152.70.23.171`) mit Validierung von `rating` (`up` / `down`) und SQLite-Spalten `rating` & `rated_at` in `purchases`.
+  - Admin-Analytics in `WebsiteTab.jsx`: Satisfaction-Score KPI-Card, Daumen-Statistik (👍 / 👎) und Feedback-Verteilung pro Song.
+- [x] Landing Page Hero CTA Optimization (Suggest a Song Shortcut):
+  - Den überflüssigen "Follow Us"-Button im Hero-Bereich durch einen direkten "Suggest a Song"-Shortcut (`/suggestions`) ersetzt.
+  - Konsistentes Neon-Design mit Sparkles-Icon (`Sparkles` in `text-neon-cyan`), nahtloses Client-Routing via SPA-Navigator.
+  - Vollständige 5-Sprachen-Lokalisierung (`en`: 'Suggest a Song', `de`: 'Song vorschlagen', `fr`: 'Suggérer un morceau', `es`: 'Sugerir una canción', `it`: 'Suggerisci un brano').
 
 ## Active Blockers / Next Steps
 
