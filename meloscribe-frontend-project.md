@@ -169,7 +169,7 @@ npm run dev
   - Vollständige 5-Sprachen-Lokalisierung (`en`, `de`, `fr`, `es`, `it`).
   - `.no-scrollbar` CSS-Utility in `index.css` ergänzt für sauberes, nahtloses horizontales Swipen auf iOS und Android ohne sichtbare Scrollbalken.
 - [x] 1-Click Order Download Rating System (👍 / 👎):
-  - Ultra-minimalistischer Pill direkt im Song-Header neben dem Titel platziert (`OrderDetails.tsx`) – rein die beiden Daumen-Icons (👍 / 👎) ohne Text-Overhead oder Leseaufwand.
+  - Elegante, zentrierte Floating-Glass-Capsule am Ende der Download-Karte (`OrderDetails.tsx`) – rein die beiden Daumen-Icons (👍 / 👎) im Cyan/Magenta-Farbschema ohne Leseaufwand, wodurch der Songtitel unberührt und edel bleibt.
   - Vollständige Lokalisierung in allen 5 Sprachen (DE, EN, FR, ES, IT), `localStorage`-Persistierung und subtiler 2-Sekunden-Toast zur Bestätigung.
   - Backend-Anbindung via `POST /api/order/rating` auf Oracle VM (`152.70.23.171`) mit Validierung von `rating` (`up` / `down`) und SQLite-Spalten `rating` & `rated_at` in `purchases`.
   - Admin-Analytics in `WebsiteTab.jsx`: Satisfaction-Score KPI-Card, Daumen-Statistik (👍 / 👎) und Feedback-Verteilung pro Song.
