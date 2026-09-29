@@ -557,44 +557,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 />
                 <Music className="w-5 h-5 text-neon-cyan absolute" />
               </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg">
-                    {orderInfo?.song_name}
-                  </h3>
-                  {/* Ultra-minimalist Thumbs Up / Down Pill */}
-                  <div className="inline-flex items-center bg-gray-100/90 dark:bg-dark-900/90 border border-gray-200 dark:border-dark-700/80 rounded-full p-0.5 shadow-xs backdrop-blur-md">
-                    <button
-                      type="button"
-                      onClick={() => handleRating('up')}
-                      disabled={submittingRating}
-                      className={`p-1.5 rounded-full transition-all cursor-pointer ${
-                        userRating === 'up'
-                          ? 'text-neon-cyan bg-neon-cyan/20 scale-105'
-                          : 'text-gray-400 hover:text-neon-cyan hover:bg-neon-cyan/10'
-                      }`}
-                      title={t.ratingUp}
-                      aria-label="Thumbs up"
-                    >
-                      <ThumbsUp className={`w-3.5 h-3.5 ${userRating === 'up' ? 'fill-neon-cyan' : ''}`} />
-                    </button>
-                    <div className="w-[1px] h-3 bg-gray-200 dark:bg-dark-700 mx-0.5" />
-                    <button
-                      type="button"
-                      onClick={() => handleRating('down')}
-                      disabled={submittingRating}
-                      className={`p-1.5 rounded-full transition-all cursor-pointer ${
-                        userRating === 'down'
-                          ? 'text-neon-pink bg-neon-pink/20 scale-105'
-                          : 'text-gray-400 hover:text-neon-pink hover:bg-neon-pink/10'
-                      }`}
-                      title={t.ratingDown}
-                      aria-label="Thumbs down"
-                    >
-                      <ThumbsDown className={`w-3.5 h-3.5 ${userRating === 'down' ? 'fill-neon-pink' : ''}`} />
-                    </button>
-                  </div>
-                </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg">
+                  {orderInfo?.song_name}
+                </h3>
                 <div className="flex flex-col gap-1 mt-1">
                   <span className="flex items-center gap-1 text-xs text-gray-550 dark:text-gray-400">
                     <Mail className="w-3.5 h-3.5 text-neon-pink" />
@@ -870,6 +836,41 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
                 )}
                 <span>{t.midiBtnText}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Elegant Floating Rating Pill */}
+          <div className="pt-6 mt-6 border-t border-gray-200/50 dark:border-dark-600/50 flex flex-col items-center justify-center gap-2">
+            <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/80 dark:bg-dark-900/90 border border-gray-200/80 dark:border-dark-600/80 shadow-lg backdrop-blur-xl transition-all duration-300">
+              <button
+                type="button"
+                onClick={() => handleRating('up')}
+                disabled={submittingRating}
+                className={`p-2 rounded-full transition-all duration-200 cursor-pointer ${
+                  userRating === 'up'
+                    ? 'text-neon-cyan bg-neon-cyan/20 shadow-neon-cyan-subtle scale-110'
+                    : 'text-gray-400 hover:text-neon-cyan hover:bg-neon-cyan/10 hover:scale-110'
+                }`}
+                title={t.ratingUp}
+                aria-label="Thumbs up"
+              >
+                <ThumbsUp className={`w-5 h-5 ${userRating === 'up' ? 'fill-neon-cyan' : ''}`} />
+              </button>
+              <div className="w-[1px] h-6 bg-gray-200 dark:bg-dark-700" />
+              <button
+                type="button"
+                onClick={() => handleRating('down')}
+                disabled={submittingRating}
+                className={`p-2 rounded-full transition-all duration-200 cursor-pointer ${
+                  userRating === 'down'
+                    ? 'text-neon-pink bg-neon-pink/20 shadow-neon-pink-subtle scale-110'
+                    : 'text-gray-400 hover:text-neon-pink hover:bg-neon-pink/10 hover:scale-110'
+                }`}
+                title={t.ratingDown}
+                aria-label="Thumbs down"
+              >
+                <ThumbsDown className={`w-5 h-5 ${userRating === 'down' ? 'fill-neon-pink' : ''}`} />
               </button>
             </div>
           </div>
