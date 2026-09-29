@@ -64,6 +64,7 @@ const translations = {
     subtitleHighlight: 'Ready to play.',
     badgeText: 'New sheets added weekly',
     browseSheets: 'Browse Sheets',
+    suggestSongShortcut: 'Suggest a Song',
     followUs: 'Follow Us',
     scrollToExplore: 'Scroll',
     popularArrangements: 'Trending Arrangements',
@@ -126,6 +127,7 @@ const translations = {
     subtitleHighlight: 'Bereit zum Spielen.',
     badgeText: 'Jede Woche neue Noten',
     browseSheets: 'Noten durchsuchen',
+    suggestSongShortcut: 'Song vorschlagen',
     followUs: 'Folgen',
     scrollToExplore: 'Scrollen',
     popularArrangements: 'Trending Arrangements',
@@ -188,6 +190,7 @@ const translations = {
     subtitleHighlight: 'Prenez vos partitions et commencez à jouer.',
     badgeText: 'Nouvelles partitions chaque semaine',
     browseSheets: 'Parcourir les partitions',
+    suggestSongShortcut: 'Suggérer un morceau',
     followUs: 'Suivez-nous',
     scrollToExplore: 'Défiler',
     popularArrangements: 'Arrangements tendance',
@@ -250,6 +253,7 @@ const translations = {
     subtitleHighlight: 'Consigue tus partituras y empieza a jugar.',
     badgeText: 'Nuevas partituras añadidas semanalmente',
     browseSheets: 'Explorar partituras',
+    suggestSongShortcut: 'Sugerir una canción',
     followUs: 'Síguenos',
     scrollToExplore: 'Desplazarse',
     popularArrangements: 'Arreglos en tendencia',
@@ -312,6 +316,7 @@ const translations = {
     subtitleHighlight: 'Prendi i tuoi spartiti e inizia a suonare.',
     badgeText: 'Nuovi spartiti aggiunti ogni settimana',
     browseSheets: 'Sfoglia gli spartiti',
+    suggestSongShortcut: 'Suggerisci un brano',
     followUs: 'Seguici',
     scrollToExplore: 'Scorri',
     popularArrangements: 'Arrangiamenti di tendenza',
@@ -1258,19 +1263,15 @@ function App() {
                   <span className="flex items-center gap-2"><Play className="w-5 h-5" />{t.browseSheets}</span>
                 </a>
                 <a 
-                  href="#socials" 
+                  href="/suggestions" 
                   onClick={(e) => {
-                    if (currentPath !== '/') {
-                      e.preventDefault();
-                      navigate('/');
-                      setTimeout(() => {
-                        document.getElementById('socials')?.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
-                    }
+                    e.preventDefault();
+                    navigate('/suggestions');
                   }}
                   className="btn-neon min-w-[200px] flex items-center justify-center gap-2"
                 >
-                  <Music className="w-5 h-5" />{t.followUs}
+                  <Sparkles className="w-5 h-5 text-neon-cyan" />
+                  <span>{t.suggestSongShortcut}</span>
                 </a>
               </div>
             </div>
