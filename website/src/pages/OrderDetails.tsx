@@ -557,10 +557,44 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                 />
                 <Music className="w-5 h-5 text-neon-cyan absolute" />
               </div>
-              <div>
-                <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg">
-                  {orderInfo?.song_name}
-                </h3>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg">
+                    {orderInfo?.song_name}
+                  </h3>
+                  {/* Ultra-minimalist Thumbs Up / Down Pill */}
+                  <div className="inline-flex items-center bg-gray-100/90 dark:bg-dark-900/90 border border-gray-200 dark:border-dark-700/80 rounded-full p-0.5 shadow-xs backdrop-blur-md">
+                    <button
+                      type="button"
+                      onClick={() => handleRating('up')}
+                      disabled={submittingRating}
+                      className={`p-1.5 rounded-full transition-all cursor-pointer ${
+                        userRating === 'up'
+                          ? 'text-emerald-500 dark:text-emerald-400 bg-emerald-500/20 scale-105'
+                          : 'text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10'
+                      }`}
+                      title={t.ratingUp}
+                      aria-label="Thumbs up"
+                    >
+                      <ThumbsUp className={`w-3.5 h-3.5 ${userRating === 'up' ? 'fill-emerald-500 dark:fill-emerald-400' : ''}`} />
+                    </button>
+                    <div className="w-[1px] h-3 bg-gray-200 dark:bg-dark-700 mx-0.5" />
+                    <button
+                      type="button"
+                      onClick={() => handleRating('down')}
+                      disabled={submittingRating}
+                      className={`p-1.5 rounded-full transition-all cursor-pointer ${
+                        userRating === 'down'
+                          ? 'text-rose-500 dark:text-rose-400 bg-rose-500/20 scale-105'
+                          : 'text-gray-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/10'
+                      }`}
+                      title={t.ratingDown}
+                      aria-label="Thumbs down"
+                    >
+                      <ThumbsDown className={`w-3.5 h-3.5 ${userRating === 'down' ? 'fill-rose-500 dark:fill-rose-400' : ''}`} />
+                    </button>
+                  </div>
+                </div>
                 <div className="flex flex-col gap-1 mt-1">
                   <span className="flex items-center gap-1 text-xs text-gray-550 dark:text-gray-400">
                     <Mail className="w-3.5 h-3.5 text-neon-pink" />
@@ -841,49 +875,6 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           </div>
         </div>
 
-        {/* Quick Customer Rating */}
-        <div className="glass-card p-5 sm:p-6 rounded-2xl border border-gray-200/80 bg-white/70 backdrop-blur-md dark:border-dark-500/50 dark:bg-dark-800/80 mb-6 text-center relative overflow-hidden">
-          <h4 className="font-display font-bold text-sm sm:text-base text-gray-900 dark:text-white mb-1">
-            {t.ratingTitle}
-          </h4>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 max-w-sm mx-auto">
-            {t.ratingSubtitle}
-          </p>
-
-          {userRating ? (
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan text-xs sm:text-sm font-semibold animate-in fade-in duration-300">
-              {userRating === 'up' ? (
-                <ThumbsUp className="w-4 h-4 fill-neon-cyan text-neon-cyan" />
-              ) : (
-                <ThumbsDown className="w-4 h-4 fill-neon-cyan text-neon-cyan" />
-              )}
-              <span>{t.ratingThankYou}</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-3 sm:gap-4">
-              <button
-                type="button"
-                onClick={() => handleRating('up')}
-                disabled={submittingRating}
-                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/80 hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-500 dark:hover:text-emerald-400 text-gray-700 dark:text-gray-200 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-                aria-label={t.ratingUp}
-              >
-                <ThumbsUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
-                <span>{t.ratingUp}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRating('down')}
-                disabled={submittingRating}
-                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/80 hover:border-rose-500/60 hover:bg-rose-500/10 hover:text-rose-500 dark:hover:text-rose-400 text-gray-700 dark:text-gray-200 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-                aria-label={t.ratingDown}
-              >
-                <ThumbsDown className="w-4 h-4 text-rose-500 dark:text-rose-400" />
-                <span>{t.ratingDown}</span>
-              </button>
-            </div>
-          )}
-        </div>
 
         {/* Footer Support Info */}
         <div className="flex items-center justify-between px-6 text-[11px] text-gray-500 dark:text-gray-500">
