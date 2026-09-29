@@ -304,6 +304,11 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
     }
   };
 
+  const isLocalhost = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1'
+  );
+
   const API_BASE = import.meta.env.VITE_API_URL || 
     (typeof window !== 'undefined' && (
       window.location.hostname === 'localhost' || 
@@ -596,32 +601,34 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </button>
             </div>
 
-            {/* Compact Support & Practice Studio Note */}
-            <div className="p-3.5 sm:p-4 rounded-xl border border-neon-cyan/25 bg-white/70 dark:bg-dark-900/50 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 my-4">
-              <div className="flex items-start sm:items-center gap-3">
-                <div className="p-2 rounded-lg bg-neon-cyan/10 text-neon-cyan flex-shrink-0 mt-0.5 sm:mt-0">
-                  <Sparkles className="w-4 h-4 animate-pulse" />
+            {/* Compact Support & Practice Studio Note (localhost only while in development) */}
+            {isLocalhost && (
+              <div className="p-3.5 sm:p-4 rounded-xl border border-neon-cyan/25 bg-white/70 dark:bg-dark-900/50 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 my-4">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="p-2 rounded-lg bg-neon-cyan/10 text-neon-cyan flex-shrink-0 mt-0.5 sm:mt-0">
+                    <Sparkles className="w-4 h-4 animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-xs sm:text-sm text-gray-900 dark:text-white">
+                      {t.practiceNoticeTitle}
+                    </h4>
+                    <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 leading-relaxed">
+                      {t.practiceNoticeDesc}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-display font-bold text-xs sm:text-sm text-gray-900 dark:text-white">
-                    {t.practiceNoticeTitle}
-                  </h4>
-                  <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 leading-relaxed">
-                    {t.practiceNoticeDesc}
-                  </p>
-                </div>
+                <a
+                  href="/studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => onOutboundClick('studio_link', 'download_page')}
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap bg-white/[0.05] dark:bg-white/[0.04] border border-gray-300/60 dark:border-white/10 text-gray-900 dark:text-white hover:border-neon-cyan/60 hover:bg-neon-cyan/10 hover:shadow-neon-cyan-subtle hover:text-neon-cyan dark:hover:text-neon-cyan transition-all duration-200 cursor-pointer self-start sm:self-auto flex-shrink-0 group"
+                >
+                  <span>{t.practiceNoticeLink}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </a>
               </div>
-              <a
-                href="/studio"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => onOutboundClick('studio_link', 'download_page')}
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap bg-white/[0.05] dark:bg-white/[0.04] border border-gray-300/60 dark:border-white/10 text-gray-900 dark:text-white hover:border-neon-cyan/60 hover:bg-neon-cyan/10 hover:shadow-neon-cyan-subtle hover:text-neon-cyan dark:hover:text-neon-cyan transition-all duration-200 cursor-pointer self-start sm:self-auto flex-shrink-0 group"
-              >
-                <span>{t.practiceNoticeLink}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-              </a>
-            </div>
+            )}
 
             {/* Download Video (Original) */}
             <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border border-gray-200/80 bg-gray-50/50 dark:border-dark-600/40 dark:bg-dark-900/30 gap-4">

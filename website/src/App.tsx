@@ -552,6 +552,11 @@ const API_BASE = import.meta.env.VITE_API_URL ||
     ? `http://${window.location.hostname}:8787`
     : 'https://api.meloscribe.dev');
 
+const isLocalhost = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' || 
+  window.location.hostname === '127.0.0.1'
+);
+
 function App() {
   const { i18n } = useTranslation();
   const scrollTrackRef = useRef<HTMLDivElement>(null);
@@ -1069,7 +1074,7 @@ function App() {
   useEffect(() => {
     if (selectedSong) {
       document.title = `${selectedSong.title} — meloscribe`;
-    } else if (currentPath === '/studio') {
+    } else if (currentPath === '/studio' && isLocalhost) {
       document.title = 'Studio & Learning Stack — meloscribe';
     } else if (currentPath === '/sheets') {
       document.title = 'Sheet Music Catalog — meloscribe';
@@ -1158,17 +1163,19 @@ function App() {
                 >
                   {t.navSuggestions}
                 </a>
-                <a 
-                  href="/studio" 
-                  onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
-                  className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
-                    currentPath === '/studio'
-                      ? 'text-neon-cyan'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                >
-                  {t.navStudio || 'Studio'}
-                </a>
+                {isLocalhost && (
+                  <a 
+                    href="/studio" 
+                    onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
+                    className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
+                      currentPath === '/studio'
+                        ? 'text-neon-cyan'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {t.navStudio || 'Studio'}
+                  </a>
+                )}
               </nav>
             </div>
 
@@ -1731,7 +1738,7 @@ function App() {
             )}
           </div>
         </section>
-      ) : currentPath === '/studio' ? (
+      ) : (currentPath === '/studio' && isLocalhost) ? (
         <Studio onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/imprint' ? (
         <Impressum onBack={() => navigate('/')} language={language} />
@@ -1778,13 +1785,15 @@ function App() {
                 &copy; {new Date().getFullYear()} {t.brand}. {t.copyright}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-x-6">
-                <a 
-                  href="/studio" 
-                  onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
-                  className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
-                >
-                  {t.navStudio || 'Studio'}
-                </a>
+                {isLocalhost && (
+                  <a 
+                    href="/studio" 
+                    onClick={(e) => { e.preventDefault(); navigate('/studio'); }}
+                    className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
+                  >
+                    {t.navStudio || 'Studio'}
+                  </a>
+                )}
                 <a 
                   href="/suggestions" 
                   onClick={(e) => { e.preventDefault(); navigate('/suggestions'); }}
