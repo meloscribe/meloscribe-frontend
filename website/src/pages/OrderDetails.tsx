@@ -388,20 +388,28 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   }, [hash, API_BASE, t.orderNotFound]);
 
   const handleRating = async (rating: 'up' | 'down') => {
-    if (submittingRating || userRating === rating) return;
-    setUserRating(rating);
+    if (submittingRating) return;
+    const isRemoving = userRating === rating;
+    const newRating = isRemoving ? null : rating;
+    setUserRating(newRating);
     try {
-      localStorage.setItem(`meloscribe_rating_${hash}`, rating);
+      if (newRating) {
+        localStorage.setItem(`meloscribe_rating_${hash}`, newRating);
+      } else {
+        localStorage.removeItem(`meloscribe_rating_${hash}`);
+      }
     } catch {
       // ignore
     }
-    showToast(t.ratingThankYou);
+    if (!isRemoving) {
+      showToast(t.ratingThankYou);
+    }
     setSubmittingRating(true);
     try {
       await fetch(`${API_BASE}/api/order/rating`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hash, rating })
+        body: JSON.stringify({ hash, rating: newRating || 'none' })
       });
     } catch (err) {
       console.warn('Failed to submit rating:', err);
