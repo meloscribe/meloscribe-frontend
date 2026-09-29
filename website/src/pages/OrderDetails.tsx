@@ -570,13 +570,13 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                       disabled={submittingRating}
                       className={`p-1.5 rounded-full transition-all cursor-pointer ${
                         userRating === 'up'
-                          ? 'text-emerald-500 dark:text-emerald-400 bg-emerald-500/20 scale-105'
-                          : 'text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10'
+                          ? 'text-neon-cyan bg-neon-cyan/20 scale-105'
+                          : 'text-gray-400 hover:text-neon-cyan hover:bg-neon-cyan/10'
                       }`}
                       title={t.ratingUp}
                       aria-label="Thumbs up"
                     >
-                      <ThumbsUp className={`w-3.5 h-3.5 ${userRating === 'up' ? 'fill-emerald-500 dark:fill-emerald-400' : ''}`} />
+                      <ThumbsUp className={`w-3.5 h-3.5 ${userRating === 'up' ? 'fill-neon-cyan' : ''}`} />
                     </button>
                     <div className="w-[1px] h-3 bg-gray-200 dark:bg-dark-700 mx-0.5" />
                     <button
@@ -585,13 +585,13 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
                       disabled={submittingRating}
                       className={`p-1.5 rounded-full transition-all cursor-pointer ${
                         userRating === 'down'
-                          ? 'text-rose-500 dark:text-rose-400 bg-rose-500/20 scale-105'
-                          : 'text-gray-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/10'
+                          ? 'text-neon-pink bg-neon-pink/20 scale-105'
+                          : 'text-gray-400 hover:text-neon-pink hover:bg-neon-pink/10'
                       }`}
                       title={t.ratingDown}
                       aria-label="Thumbs down"
                     >
-                      <ThumbsDown className={`w-3.5 h-3.5 ${userRating === 'down' ? 'fill-rose-500 dark:fill-rose-400' : ''}`} />
+                      <ThumbsDown className={`w-3.5 h-3.5 ${userRating === 'down' ? 'fill-neon-pink' : ''}`} />
                     </button>
                   </div>
                 </div>

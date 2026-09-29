@@ -19,15 +19,6 @@ export interface CompletedItem {
 
 const CURATED_COMPLETED_TITLES = [
   'In This Shirt',
-  'Golden Brown',
-  'River Flows in You',
-  'Sweetest Rain',
-  'Je te laisserai des mots',
-  'Mary On A Cross',
-  'The Scientist',
-  'Succession Theme',
-  'Cornfield Chase',
-  'Mockingbird',
 ];
 
 // Normalize strings for fuzzy matching
@@ -302,11 +293,10 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
     const completedItems: CompletedItem[] = [];
     const seenTitles = new Set<string>();
 
-    // 1. Process DB suggestions
+    // 1. Process DB suggestions (only explicitly completed ones)
     data.forEach(sug => {
-      const catalogMatch = findMatchingCatalogSong(sug.title, sug.artist);
-
-      if (sug.status === 'completed' || catalogMatch) {
+      if (sug.status === 'completed') {
+        const catalogMatch = findMatchingCatalogSong(sug.title, sug.artist);
         const normKey = normalizeString(sug.title);
         if (!seenTitles.has(normKey)) {
           seenTitles.add(normKey);
@@ -604,9 +594,9 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
 
           {/* Interactive Match Notification Banner */}
           {matchedSongBanner && (
-            <div className="mb-6 p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-300">
+            <div className="mb-6 p-4 rounded-xl border border-neon-cyan/40 bg-neon-cyan/10 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-300">
               <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs flex-shrink-0">
+                <div className="w-6 h-6 rounded-full bg-neon-cyan/20 flex items-center justify-center text-neon-cyan font-bold text-xs flex-shrink-0">
                   ✓
                 </div>
                 <div>
@@ -667,7 +657,7 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
           <div className="mb-8 animate-in fade-in duration-300">
             <div className="flex items-center justify-between gap-2 mb-2.5 px-1">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <Sparkles className="w-3.5 h-3.5 text-neon-cyan" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   {t.completedStripTitle}
                 </span>
@@ -677,7 +667,7 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
                   type="button"
                   onClick={() => scrollStrip('left')}
                   disabled={!canScrollLeft}
-                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-emerald-400 text-gray-600 dark:text-gray-300 hover:text-emerald-400 transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-neon-cyan text-gray-600 dark:text-gray-300 hover:text-neon-cyan transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
                   title="Scroll left"
                   aria-label="Scroll left"
                 >
@@ -687,7 +677,7 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
                   type="button"
                   onClick={() => scrollStrip('right')}
                   disabled={!canScrollRight}
-                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-emerald-400 text-gray-600 dark:text-gray-300 hover:text-emerald-400 transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-white/80 dark:bg-dark-800/80 border border-gray-300 dark:border-dark-600 hover:border-neon-cyan text-gray-600 dark:text-gray-300 hover:text-neon-cyan transition-all cursor-pointer disabled:opacity-25 disabled:pointer-events-none shadow-sm"
                   title="Scroll right"
                   aria-label="Scroll right"
                 >
@@ -713,10 +703,10 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
                       onSelectSong(item.song);
                     }
                   }}
-                  className="inline-flex items-center gap-2 h-9 whitespace-nowrap px-4 rounded-full text-xs font-semibold bg-white/80 dark:bg-dark-800/80 hover:bg-white dark:hover:bg-dark-700 border border-emerald-500/40 hover:border-emerald-400 text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white backdrop-blur-md transition-all duration-200 cursor-pointer shadow-sm hover:shadow-neon-cyan-subtle flex-shrink-0 group"
+                  className="inline-flex items-center gap-2 h-9 whitespace-nowrap px-4 rounded-full text-xs font-semibold bg-white/80 dark:bg-dark-800/80 hover:bg-white dark:hover:bg-dark-700 border border-neon-cyan/40 hover:border-neon-cyan text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white backdrop-blur-md transition-all duration-200 cursor-pointer shadow-sm hover:shadow-neon-cyan-subtle flex-shrink-0 group"
                   title={`${item.title} - ${item.artist} (${t.viewSheetMusic})`}
                 >
-                  <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
+                  <span className="flex items-center justify-center w-4 h-4 rounded-full bg-neon-cyan/20 text-neon-cyan font-bold text-[10px]">
                     ✓
                   </span>
                   <span className="tracking-tight group-hover:text-neon-cyan transition-colors">{item.title}</span>
