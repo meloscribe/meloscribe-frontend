@@ -161,9 +161,9 @@ npm run dev
   - Vollständiger Produktions-Build (`npm run build`) und End-to-End-Browser-Verifikation im Localhost-Dev-Server erfolgreich abgeschlossen.
 
 - [x] Suggestions Page Mobile Swipe-Strip & Catalog Fuzzy Duplication Guard:
-  - Horizontaler Swipe-Strip (`overflow-x-auto no-scrollbar`) für umgesetzte Community-Wünsche direkt zwischen Vorschlags-Box und Leaderboard platziert.
-  - Flache Dark-Glass-Pills (`h-9`, `backdrop-blur-md`, emerald border, checkmark icon, song title, external arrow icon) für kürzlich arrangierte Songs (*In This Shirt*, *Golden Brown*, *River Flows in You*, etc.).
-  - Direkter Checkout-Funnel: Tap auf eine Song-Pill öffnet ohne Umwege das interaktive Noten-Modal (`PaddleModal.tsx`) mit Audio-Player und Kauf-Option.
+  - Horizontaler Swipe-Strip (`overflow-x-auto no-scrollbar`) für umgesetzte Community-Wünsche (*In This Shirt*) direkt zwischen Vorschlags-Box und Leaderboard platziert.
+  - Streng im Meloscribe Brand-Farbschema gehalten: Reines Cyan/Magenta (`neon-cyan` & `neon-pink`), kein Fremd-Grün (`emerald`).
+  - Direkter Checkout-Funnel: Tap auf die Song-Pill öffnet ohne Umwege das interaktive Noten-Modal (`PaddleModal.tsx`) mit Audio-Player und Kauf-Option.
   - Intelligenter Duplikat-Schutz mit Levenshtein- und Ähnlichkeits-Fuzzy-Matching (`findMatchingCatalogSong`) gegen existierende Katalog-Songs in `songs.json` (fängt Tippfehler wie z. B. *"Experiance"* oder *"In The Shirt"* ab).
   - Sofortige Conversion bei Katalog-Treffer: Zeigt eine positive Benachrichtigung (*"Great news! '{title}' is already available on Meloscribe."*), öffnet das Noten-Modal direkt und blendet ein interaktives Aktions-Banner ein, anstatt eine Sackgassen-Fehlermeldung zu werfen.
   - Vollständige 5-Sprachen-Lokalisierung (`en`, `de`, `fr`, `es`, `it`).
