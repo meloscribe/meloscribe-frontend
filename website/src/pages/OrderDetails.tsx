@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { onOutboundClick } from '../lib/outboundTracker';
+import { MeloThumbUp, MeloThumbDown } from '../components/MeloThumb';
 
 interface OrderDetailsProps {
   onBack: () => void;
@@ -840,38 +841,42 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             </div>
           </div>
 
-          {/* Elegant Floating Rating Pill */}
+          {/* Meloscribe Cyber-Rating Capsule */}
           <div className="pt-6 mt-6 border-t border-gray-200/50 dark:border-dark-600/50 flex flex-col items-center justify-center gap-2">
-            <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/80 dark:bg-dark-900/90 border border-gray-200/80 dark:border-dark-600/80 shadow-lg backdrop-blur-xl transition-all duration-300">
-              <button
-                type="button"
-                onClick={() => handleRating('up')}
-                disabled={submittingRating}
-                className={`p-2 rounded-full transition-all duration-200 cursor-pointer ${
-                  userRating === 'up'
-                    ? 'text-neon-cyan bg-neon-cyan/20 shadow-neon-cyan-subtle scale-110'
-                    : 'text-gray-400 hover:text-neon-cyan hover:bg-neon-cyan/10 hover:scale-110'
-                }`}
-                title={t.ratingUp}
-                aria-label="Thumbs up"
-              >
-                <ThumbsUp className={`w-5 h-5 ${userRating === 'up' ? 'fill-neon-cyan' : ''}`} />
-              </button>
-              <div className="w-[1px] h-6 bg-gray-200 dark:bg-dark-700" />
-              <button
-                type="button"
-                onClick={() => handleRating('down')}
-                disabled={submittingRating}
-                className={`p-2 rounded-full transition-all duration-200 cursor-pointer ${
-                  userRating === 'down'
-                    ? 'text-neon-pink bg-neon-pink/20 shadow-neon-pink-subtle scale-110'
-                    : 'text-gray-400 hover:text-neon-pink hover:bg-neon-pink/10 hover:scale-110'
-                }`}
-                title={t.ratingDown}
-                aria-label="Thumbs down"
-              >
-                <ThumbsDown className={`w-5 h-5 ${userRating === 'down' ? 'fill-neon-pink' : ''}`} />
-              </button>
+            <div className="p-[1px] rounded-full bg-gradient-to-r from-neon-cyan/40 via-white/10 to-neon-pink/40 shadow-xl">
+              <div className="inline-flex items-center gap-5 px-6 py-2.5 rounded-full bg-white/90 dark:bg-[#0b0f19]/95 backdrop-blur-2xl">
+                <button
+                  type="button"
+                  onClick={() => handleRating('up')}
+                  disabled={submittingRating}
+                  className={`group relative p-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    userRating === 'up'
+                      ? 'bg-neon-cyan/20 ring-1 ring-neon-cyan/60 scale-110 shadow-[0_0_16px_rgba(0,245,255,0.45)]'
+                      : 'hover:bg-neon-cyan/10 hover:scale-115 text-gray-400 hover:text-neon-cyan'
+                  }`}
+                  title={t.ratingUp}
+                  aria-label="Thumbs up"
+                >
+                  <MeloThumbUp className="w-5 h-5" active={userRating === 'up'} />
+                </button>
+                
+                <div className="w-[1.5px] h-6 bg-gradient-to-b from-neon-cyan/30 via-white/15 to-neon-pink/30 rounded-full" />
+                
+                <button
+                  type="button"
+                  onClick={() => handleRating('down')}
+                  disabled={submittingRating}
+                  className={`group relative p-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    userRating === 'down'
+                      ? 'bg-neon-pink/20 ring-1 ring-neon-pink/60 scale-110 shadow-[0_0_16px_rgba(255,0,127,0.45)]'
+                      : 'hover:bg-neon-pink/10 hover:scale-115 text-gray-400 hover:text-neon-pink'
+                  }`}
+                  title={t.ratingDown}
+                  aria-label="Thumbs down"
+                >
+                  <MeloThumbDown className="w-5 h-5" active={userRating === 'down'} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
