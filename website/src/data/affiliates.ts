@@ -132,5 +132,5 @@ export const affiliateHardwareGear: HardwareGear[] = [
 
 export const affiliateTransparencyNotice = {
   title: 'Transparency Notice',
-  text: 'Some links on this page are affiliate links. If you purchase through them, Meloscribe earns a small commission at no additional cost to you. Only gear and tools genuinely vetted for pianists are recommended.',
+  text: 'Some links on this page are affiliate links. If you purchase through them, meloscribe earns a small commission at no additional cost to you. Only gear and tools genuinely vetted for pianists are recommended.',
 };

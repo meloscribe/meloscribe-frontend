@@ -849,7 +849,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             </div>
           </div>
 
-          {/* Meloscribe Cyber-Rating Capsule */}
+          {/* meloscribe Cyber-Rating Capsule */}
           <div className="pt-6 mt-6 border-t border-gray-200/50 dark:border-dark-600/50 flex flex-col items-center justify-center gap-2">
             <div className="p-[1px] rounded-full bg-gradient-to-r from-neon-cyan/40 via-white/10 to-neon-pink/40 shadow-xl">
               <div className="inline-flex items-center gap-5 px-6 py-2.5 rounded-full bg-white/90 dark:bg-[#0b0f19]/95 backdrop-blur-2xl">

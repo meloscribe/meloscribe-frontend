@@ -32,7 +32,7 @@ export default function Studio({ onBack }: StudioProps) {
           </div>
 
           <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-5 leading-tight">
-            <span className="text-gray-900 dark:text-white">The Meloscribe</span>{' '}
+            <span className="text-gray-900 dark:text-white">The meloscribe</span>{' '}
             <span className="text-gradient neon-text-cyan">Studio &amp; Learning Stack</span>
           </h1>
 
