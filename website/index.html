@@ -56,8 +56,9 @@
     <link rel="alternate" hreflang="x-default" href="https://meloscribesheets.com" />
   </head>
   <body class="bg-black text-white antialiased">
-    <div id="root">
-      <!-- Static content fallback for social crawlers (Pinterestbot) and search engines -->
+    <div id="root"></div>
+    <noscript>
+      <!-- Static content fallback for social crawlers (Pinterestbot) and search engines with JS disabled -->
       <header style="padding: 24px; text-align: center;">
         <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 8px;">meloscribe — Premium Piano Sheets &amp; Tutorials</h1>
         <p style="font-size: 16px; color: #a1a1aa;">Handcrafted piano arrangements, digital sheet music, and practice tutorial packages for modern pianists.</p>
@@ -66,20 +67,20 @@
         <section style="margin-bottom: 32px;">
           <h2 style="font-size: 20px; margin-bottom: 12px;">Original Piano Arrangements &amp; Sheet Music</h2>
           <p style="line-height: 1.6; color: #d4d4d8;">meloscribe creates handcrafted piano arrangements, downloadable sheet music (PDF), high-quality practice MIDI files, and full 2K video tutorials. Discover our complete catalog of soundtracks, modern pop, and viral piano pieces.</p>
-          <p style="margin-top: 12px;"><a href="https://www.meloscribesheets.com/sheets" style="color: #00f5ff; text-decoration: underline;">Browse the Sheet Music Catalog</a></p>
+          <p style="margin-top: 12px;"><a href="https://meloscribesheets.com/sheets" style="color: #00f5ff; text-decoration: underline;">Browse the Sheet Music Catalog</a></p>
         </section>
         <section style="margin-bottom: 32px;">
           <h2 style="font-size: 20px; margin-bottom: 12px;">Merchant Information &amp; Customer Protection</h2>
           <p style="line-height: 1.6; color: #d4d4d8;">We guarantee safe, encrypted payment processing via Stripe and PayPal with instant digital delivery upon purchase.</p>
           <ul style="line-height: 1.8; color: #d4d4d8; list-style-type: disc; margin-left: 20px;">
-            <li><strong>Refund Policy:</strong> Transparent 14-day refund policy for all digital purchases. Review our <a href="https://www.meloscribesheets.com/refunds" style="color: #00f5ff;">Refund Policy</a>.</li>
-            <li><strong>Terms of Service:</strong> Read our <a href="https://www.meloscribesheets.com/terms" style="color: #00f5ff;">Terms of Service</a>.</li>
-            <li><strong>Privacy Policy:</strong> Learn how we protect your data in our <a href="https://www.meloscribesheets.com/privacy" style="color: #00f5ff;">Privacy Policy</a>.</li>
-            <li><strong>Imprint &amp; Contact:</strong> Tobias Baumann, Wolfgelts 10, 88353 Ki&szlig;legg, Germany &bull; Email: <a href="mailto:info@meloscribe.dev" style="color: #00f5ff;">info@meloscribe.dev</a> (<a href="https://www.meloscribesheets.com/imprint" style="color: #00f5ff;">Imprint / Legal Notice</a>).</li>
+            <li><strong>Refund Policy:</strong> Transparent 14-day refund policy for all digital purchases. Review our <a href="https://meloscribesheets.com/refunds" style="color: #00f5ff;">Refund Policy</a>.</li>
+            <li><strong>Terms of Service:</strong> Read our <a href="https://meloscribesheets.com/terms" style="color: #00f5ff;">Terms of Service</a>.</li>
+            <li><strong>Privacy Policy:</strong> Learn how we protect your data in our <a href="https://meloscribesheets.com/privacy" style="color: #00f5ff;">Privacy Policy</a>.</li>
+            <li><strong>Imprint &amp; Contact:</strong> Tobias Baumann, Wolfgelts 10, 88353 Ki&szlig;legg, Germany &bull; Email: <a href="mailto:info@meloscribe.dev" style="color: #00f5ff;">info@meloscribe.dev</a> (<a href="https://meloscribesheets.com/imprint" style="color: #00f5ff;">Imprint / Legal Notice</a>).</li>
           </ul>
         </section>
       </main>
-    </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Paddle Billing SDK -->
     <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
