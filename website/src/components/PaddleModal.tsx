@@ -631,6 +631,7 @@ export default function PaddleModal({
   const currentClientSecretRef = useRef<string | null>(null);
   const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
   const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
+  const hasWalletsRef = useRef<boolean>(false);
 
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' || 
@@ -670,6 +671,7 @@ export default function PaddleModal({
     elementsRef.current = null;
     stripeRef.current = null;
     currentClientSecretRef.current = null;
+    hasWalletsRef.current = false;
     setCheckoutStep('details');
     setIsEmbeddedLoading(false);
     setEmbeddedError(null);
@@ -1192,10 +1194,19 @@ export default function PaddleModal({
           availablePaymentMethods &&
           (availablePaymentMethods.applePay || availablePaymentMethods.googlePay || availablePaymentMethods.paypal)
         );
+        hasWalletsRef.current = hasWallets;
         setHasStripeExpress(hasWallets);
         setStripeHasPayPalExpress(hasPayPal);
         setExpressReady(true);
         setExpressAvailable(hasAnyExpress);
+
+        // If native wallets (Apple Pay / Google Pay) are available, keep accordion collapsed for 1-click focus.
+        // If NO native wallets (In-App Browser or regular browser without wallets), Card remains open.
+        if (hasWallets && paymentElementRef.current) {
+          try {
+            paymentElementRef.current.collapse();
+          } catch (_) {}
+        }
       });
 
       expressCheckout.on('confirm', async (event: any) => {
@@ -1239,11 +1250,11 @@ export default function PaddleModal({
       const paymentElement = elements.create('payment', {
         layout: {
           type: 'accordion',
-          defaultCollapsed: true,
+          defaultCollapsed: false,
           radios: 'always',
           spacedAccordionItems: true,
         },
-        paymentMethodOrder: ['paypal', 'card', 'ideal', 'eps'],
+        paymentMethodOrder: ['card', 'paypal', 'ideal', 'eps'],
         wallets: {
           link: 'never',
           applePay: 'never',
@@ -1262,15 +1273,13 @@ export default function PaddleModal({
       });
 
       paymentElement.on('ready', () => {
-        try {
-          paymentElement.collapse();
-        } catch (_) {}
         setIsEmbeddedLoading(false);
-        setTimeout(() => {
+        // Only collapse if Apple Pay or Google Pay was detected
+        if (hasWalletsRef.current) {
           try {
             paymentElement.collapse();
           } catch (_) {}
-        }, 50);
+        }
       });
 
       requestAnimationFrame(() => {
@@ -1723,40 +1732,43 @@ export default function PaddleModal({
                         <div id="stripe-payment-element" className="overflow-hidden" style={{ overflow: 'hidden' }} />
                       </div>
 
-                      {/* Error Message if submit fails */}
-                      {paymentFormError && (
-                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
-                          {paymentFormError}
-                        </div>
-                      )}
-
-                      {/* Custom Glowing Gradient Pay Button */}
-                      <button
-                        type="button"
-                        onClick={handleConfirmPayment}
-                        disabled={isSubmittingPayment}
-                        className="w-full mt-4 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                      >
-                        {isSubmittingPayment ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            <span>{t.processingPayment}</span>
-                          </>
-                        ) : (
-                          <>
-                            <ShieldCheck className="w-5 h-5" />
-                            <span>
-                              {selectedPaymentMethod === 'paypal'
-                                ? `${t.payWithPaypal} • ${currentPrice}`
-                                : t.payNow.replace('{price}', String(currentPrice))}
-                            </span>
-                          </>
+                      {/* Sticky action footer on mobile, clean relative flow on desktop */}
+                      <div className="sticky bottom-0 -mx-4 md:mx-0 px-4 md:px-0 pt-3 pb-3 md:pb-0 bg-gray-50/95 dark:bg-dark-800/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-gray-200 dark:border-dark-600/60 md:border-none z-20 mt-4 rounded-b-2xl md:rounded-none transition-all duration-200">
+                        {/* Error Message if submit fails */}
+                        {paymentFormError && (
+                          <div className="p-3 mb-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
+                            {paymentFormError}
+                          </div>
                         )}
-                      </button>
 
-                      {/* Trust Guarantee / PCI Compliance Footer */}
-                      <div className="pt-2 text-[11px] text-gray-400 text-center">
-                        <span>{t.pciCompliant}</span>
+                        {/* Custom Glowing Gradient Pay Button */}
+                        <button
+                          type="button"
+                          onClick={handleConfirmPayment}
+                          disabled={isSubmittingPayment}
+                          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                        >
+                          {isSubmittingPayment ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                              <span>{t.processingPayment}</span>
+                            </>
+                          ) : (
+                            <>
+                              <ShieldCheck className="w-5 h-5" />
+                              <span>
+                                {selectedPaymentMethod === 'paypal'
+                                  ? `${t.payWithPaypal} • ${currentPrice}`
+                                  : t.payNow.replace('{price}', String(currentPrice))}
+                              </span>
+                            </>
+                          )}
+                        </button>
+
+                        {/* Trust Guarantee / PCI Compliance Footer */}
+                        <div className="pt-2 text-[11px] text-gray-500 dark:text-gray-400 text-center">
+                          <span>{t.pciCompliant}</span>
+                        </div>
                       </div>
                     </div>
                   )}
