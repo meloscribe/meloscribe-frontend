@@ -66,9 +66,78 @@ function getSimilarityScore(a: string, b: string): number {
   return (maxLength - distance) / maxLength;
 }
 
+// Check if two artists match with typo and substring tolerance
+export function areArtistsMatching(artistA?: string, artistB?: string): boolean {
+  if (!artistA || !artistB) return true;
+  const normA = normalizeString(artistA);
+  const normB = normalizeString(artistB);
+  if (!normA || !normB) return true;
+  if (normA === normB || normA.includes(normB) || normB.includes(normA)) return true;
+
+  const maxLen = Math.max(normA.length, normB.length);
+  const dist = getLevenshteinDistance(normA, normB);
+  const sim = (maxLen - dist) / maxLen;
+  return maxLen <= 5 ? dist <= 1 : (dist <= 2 || sim >= 0.75);
+}
+
+// Check if two song titles match with token-level stemming, typo, and stopword tolerance
+export function areTitlesMatching(titleA: string, titleB: string, artistMatches = false): boolean {
+  const normA = normalizeString(titleA);
+  const normB = normalizeString(titleB);
+  if (!normA || !normB) return false;
+  if (normA === normB) return true;
+
+  const maxLen = Math.max(normA.length, normB.length);
+  const dist = getLevenshteinDistance(normA, normB);
+  const sim = (maxLen - dist) / maxLen;
+  if (maxLen <= 5 ? dist <= 1 : (dist <= 2 || sim >= 0.82)) return true;
+
+  const stopWords = new Set(['the', 'a', 'an', 'and', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'part', 'pt']);
+  const wordsA = normA.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
+  const wordsB = normB.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
+
+  // If one title has 1 word and the other has multiple, reject unless character distance was <= 2
+  if ((wordsA.length === 1 && wordsB.length > 1) || (wordsB.length === 1 && wordsA.length > 1)) {
+    return false;
+  }
+
+  if (wordsA.length >= 2 && wordsB.length >= 2 && Math.abs(wordsA.length - wordsB.length) <= (artistMatches ? 1 : 0)) {
+    const usedB = new Set<number>();
+    let matchedCount = 0;
+
+    for (const wA of wordsA) {
+      for (let i = 0; i < wordsB.length; i++) {
+        if (usedB.has(i)) continue;
+        const wB = wordsB[i];
+        const exact = wA === wB;
+        const stemMatch = (wA.startsWith(wB) || wB.startsWith(wA)) && Math.min(wA.length, wB.length) >= 4;
+        const minL = Math.min(wA.length, wB.length);
+        const wordDist = getLevenshteinDistance(wA, wB);
+        const typoMatch = (minL <= 4 && wordDist <= 1) || (minL > 4 && wordDist <= 2);
+
+        if (exact || stemMatch || typoMatch) {
+          usedB.add(i);
+          matchedCount++;
+          break;
+        }
+      }
+    }
+
+    const maxWords = Math.max(wordsA.length, wordsB.length);
+    const minWords = Math.min(wordsA.length, wordsB.length);
+    // For 2-word titles, both non-stop words must match (e.g. sweet & rain matches sweetest & rain)
+    if (minWords === 2) {
+      return matchedCount === 2;
+    }
+    // For 3+ words: if artist matches, allow 1 missing word, otherwise require minWords
+    return artistMatches ? matchedCount >= maxWords - 1 : matchedCount >= minWords;
+  }
+
+  return false;
+}
+
 // Fuzzy matching against published catalog songs
 export function findMatchingCatalogSong(inputTitle: string, inputArtist?: string): any | null {
-  const normInputTitle = normalizeString(inputTitle);
   const normInputArtist = inputArtist ? normalizeString(inputArtist) : '';
   const isFullRequest = /\b(full|ganzer|ganze)\b/i.test(inputTitle);
   const isEasyRequest = /\b(easy|einfach|leichte)\b/i.test(inputTitle);
@@ -76,27 +145,11 @@ export function findMatchingCatalogSong(inputTitle: string, inputArtist?: string
 
   for (const song of (songsData as any[])) {
     if (song.hidden || song.id === 'global_settings') continue;
-    const pubTitle = normalizeString(song.title);
-    const pubArtist = normalizeString(song.artist);
 
-    // Exact or substring match
-    const exactTitle = pubTitle === normInputTitle || pubTitle.includes(normInputTitle) || normInputTitle.includes(pubTitle);
-    const exactArtist = !normInputArtist || pubArtist === normInputArtist || pubArtist.includes(normInputArtist) || normInputArtist.includes(pubArtist);
+    const artistMatches = areArtistsMatching(normInputArtist, song.artist);
+    const titleMatches = areTitlesMatching(inputTitle, song.title, artistMatches);
 
-    // Fuzzy matching with short word safeguards
-    const maxLen = Math.max(pubTitle.length, normInputTitle.length);
-    const distTitle = getLevenshteinDistance(normInputTitle, pubTitle);
-    const simTitle = getSimilarityScore(normInputTitle, song.title);
-    const titleFuzzy = exactTitle || (maxLen <= 5 ? distTitle <= 1 : (distTitle <= 2 || simTitle >= 0.82));
-
-    let artistFuzzy = true;
-    if (normInputArtist && pubArtist) {
-      const distArtist = getLevenshteinDistance(normInputArtist, pubArtist);
-      const simArtist = getSimilarityScore(normInputArtist, song.artist);
-      artistFuzzy = exactArtist || distArtist <= 2 || simArtist >= 0.80;
-    }
-
-    if (titleFuzzy && artistFuzzy) {
+    if (titleMatches && artistMatches) {
       if (isReworkRequest) continue;
       if (isFullRequest && song.format !== 'full_arrangement') continue;
       if (isEasyRequest && !song.hasEasy) continue;
@@ -496,24 +549,10 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
     }
 
     // 1. Fuzzy Check against existing suggestions for smart upvote
-    const normInputTitle = normalizeString(title);
-    const normInputArtist = normalizeString(artist);
     let matchFound: Suggestion | null = null;
     for (const sug of openSuggestions) {
-      const normSugTitle = normalizeString(sug.title);
-      const normSugArtist = normalizeString(sug.artist);
-      const maxLenTitle = Math.max(normInputTitle.length, normSugTitle.length);
-      const distTitle = getLevenshteinDistance(normInputTitle, normSugTitle);
-      const simTitle = getSimilarityScore(normInputTitle, sug.title);
-
-      const titleMatches = (maxLenTitle <= 5 ? distTitle <= 1 : (distTitle <= 2 || simTitle >= 0.85));
-
-      let artistMatches = true;
-      if (normInputArtist && normSugArtist) {
-        const distArtist = getLevenshteinDistance(normInputArtist, normSugArtist);
-        const simArtist = getSimilarityScore(normInputArtist, sug.artist);
-        artistMatches = distArtist <= 2 || simArtist >= 0.80;
-      }
+      const artistMatches = areArtistsMatching(artist, sug.artist);
+      const titleMatches = areTitlesMatching(title, sug.title, artistMatches);
 
       if (titleMatches && artistMatches) {
         matchFound = sug;

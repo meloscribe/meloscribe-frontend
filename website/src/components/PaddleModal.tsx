@@ -50,6 +50,8 @@ const COMMON_DOMAIN_TYPOS: Record<string, string> = {
   'protonmai.com': 'protonmail.com',
 };
 
+const DEFAULT_STRIPE_PK = 'pk_live_51ToYxLQ4cuBqoYoXMPF7D2Nk9JzfGtwuWJrgKnKR6mSfslf99PS3S8h8yPPRlSCPZ6C3g87ZdoK0Mz6biHuJZaCp00NeL1qzfU';
+
 function getDomainSuggestion(email: string): string | null {
   const parts = email.trim().toLowerCase().split('@');
   if (parts.length !== 2) return null;
@@ -606,6 +608,7 @@ export default function PaddleModal({
 
   const [checkoutStep, setCheckoutStep] = useState<'details' | 'embedded'>('details');
   const [isEmbeddedLoading, setIsEmbeddedLoading] = useState(false);
+  const [isCheckoutReady, setIsCheckoutReady] = useState(false);
   const [embeddedError, setEmbeddedError] = useState<string | null>(null);
   const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
   const [paymentFormError, setPaymentFormError] = useState<string | null>(null);
@@ -674,6 +677,7 @@ export default function PaddleModal({
     hasWalletsRef.current = false;
     setCheckoutStep('details');
     setIsEmbeddedLoading(false);
+    setIsCheckoutReady(false);
     setEmbeddedError(null);
     setPaymentFormError(null);
     setIsSubmittingPayment(false);
@@ -685,7 +689,10 @@ export default function PaddleModal({
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      // Eagerly pre-warm Stripe.js in browser cache when modal opens
+      loadStripe(DEFAULT_STRIPE_PK).catch(() => {});
+    } else {
       cleanupEmbeddedCheckout();
       setFreeEmail('');
       setFreeEmailConsent(true);
@@ -1020,41 +1027,90 @@ export default function PaddleModal({
     const apiBaseUrl = getApiBaseUrl();
 
     const promise = (async () => {
-      const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          songId: sId,
-          format: 'full_arrangement',
-          difficulty: diff,
-          priceId: pId,
-          language: language,
-          embedded: true
-        })
-      });
-      if (!res.ok) {
-        throw new Error(await res.text() || 'Failed to create checkout session');
+      try {
+        const res = await fetch(`${apiBaseUrl}/api/checkout/create-session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            songId: sId,
+            format: 'full_arrangement',
+            difficulty: diff,
+            priceId: pId,
+            language: language,
+            embedded: true
+          })
+        });
+        if (!res.ok) {
+          throw new Error(await res.text() || 'Failed to create checkout session');
+        }
+        const data = await res.json();
+        sessionCacheRef.current[cacheKey] = data;
+        if (data.publishableKey) {
+          loadStripe(data.publishableKey).catch(() => {});
+        }
+        return data;
+      } catch (err) {
+        delete prefetchPromiseRef.current[cacheKey];
+        throw err;
       }
-      const data = await res.json();
-      sessionCacheRef.current[cacheKey] = data;
-      if (data.publishableKey) {
-        loadStripe(data.publishableKey).catch(() => {});
-      }
-      return data;
     })();
 
     prefetchPromiseRef.current[cacheKey] = promise;
     return promise;
   };
 
-
   const handleBuyClick = async () => {
     if (paymentsDisabled) return;
     setCheckoutStep('embedded');
     setIsEmbeddedLoading(true);
+    setIsCheckoutReady(false);
     setEmbeddedError(null);
     setPaymentFormError(null);
     setExpressAvailable(false);
+    setHasStripeExpress(false);
+    setStripeHasPayPalExpress(false);
+    setExpressReady(false);
+    setSelectedPaymentMethod(null);
+
+    let paymentReady = false;
+    let expressReadyLocal = false;
+    let isRevealed = false;
+    let readyFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+    let hardSafetyTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const revealCheckout = () => {
+      if (isRevealed) return;
+      isRevealed = true;
+      if (readyFallbackTimer) {
+        clearTimeout(readyFallbackTimer);
+        readyFallbackTimer = null;
+      }
+      if (hardSafetyTimer) {
+        clearTimeout(hardSafetyTimer);
+        hardSafetyTimer = null;
+      }
+      setIsEmbeddedLoading(false);
+      setIsCheckoutReady(true);
+    };
+
+    // Hard safety timeout: under no circumstance keep skeleton up longer than 3.5s
+    hardSafetyTimer = setTimeout(() => {
+      revealCheckout();
+    }, 3500);
+
+    const checkBothReady = (fromPayment: boolean, fromExpress: boolean) => {
+      if (fromPayment) paymentReady = true;
+      if (fromExpress) expressReadyLocal = true;
+
+      if (paymentReady && expressReadyLocal) {
+        revealCheckout();
+      } else if (paymentReady && !readyFallbackTimer) {
+        // PaymentElement iframe is ready! Give Express Checkout max 900ms to resolve wallet APIs
+        readyFallbackTimer = setTimeout(() => {
+          revealCheckout();
+        }, 900);
+      }
+    };
 
     try {
       const cacheKey = `${currentSongId}_${selectedDifficulty}_${currentPriceId || ''}_${language}`;
@@ -1072,7 +1128,7 @@ export default function PaddleModal({
       }
       currentClientSecretRef.current = data.clientSecret;
 
-      const stripe = await loadStripe(data.publishableKey);
+      const stripe = await loadStripe(data.publishableKey || DEFAULT_STRIPE_PK);
       if (!stripe) {
         throw new Error('Could not initialize Stripe SDK');
       }
@@ -1201,12 +1257,14 @@ export default function PaddleModal({
         setExpressAvailable(hasAnyExpress);
 
         // If native wallets (Apple Pay / Google Pay) are available, keep accordion collapsed for 1-click focus.
-        // If NO native wallets (In-App Browser or regular browser without wallets), Card remains open.
+        // If NO native wallets, Card remains open.
         if (hasWallets && paymentElementRef.current) {
           try {
             paymentElementRef.current.collapse();
           } catch (_) {}
         }
+
+        checkBothReady(false, true);
       });
 
       expressCheckout.on('confirm', async (event: any) => {
@@ -1273,13 +1331,12 @@ export default function PaddleModal({
       });
 
       paymentElement.on('ready', () => {
-        setIsEmbeddedLoading(false);
-        // Only collapse if Apple Pay or Google Pay was detected
         if (hasWalletsRef.current) {
           try {
             paymentElement.collapse();
           } catch (_) {}
         }
+        checkBothReady(true, false);
       });
 
       requestAnimationFrame(() => {
@@ -1294,8 +1351,11 @@ export default function PaddleModal({
       });
     } catch (e: any) {
       console.error("[Embedded Checkout Error]:", e);
+      if (hardSafetyTimer) clearTimeout(hardSafetyTimer);
+      if (readyFallbackTimer) clearTimeout(readyFallbackTimer);
       setEmbeddedError(e.message || t.failedToLoadCheckout);
       setIsEmbeddedLoading(false);
+      setIsCheckoutReady(false);
     }
   };
 
@@ -1657,14 +1717,7 @@ export default function PaddleModal({
                 </div>
 
                 {/* Stripe Mount Container */}
-                <div className="relative w-full mt-3 rounded-2xl bg-gray-50 dark:bg-dark-800 border border-gray-200 dark:border-dark-600/60 p-4 md:p-5 shadow-2xl transition-all duration-300">
-                  {isEmbeddedLoading && (
-                    <div className="flex flex-col items-center justify-center gap-3 py-14 bg-gray-50/95 dark:bg-dark-800/95 backdrop-blur-sm z-20">
-                      <Loader2 className="w-8 h-8 text-neon-cyan animate-spin" />
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{t.loadingCheckout}</p>
-                    </div>
-                  )}
-
+                <div className="relative w-full mt-3 rounded-2xl bg-gray-50 dark:bg-dark-800 border border-gray-200 dark:border-dark-600/60 p-4 md:p-5 shadow-2xl transition-all duration-300 min-h-[420px]">
                   {embeddedError ? (
                     <div className="p-6 text-center space-y-3">
                       <p className="text-sm text-red-400 font-medium">{embeddedError}</p>
@@ -1686,91 +1739,153 @@ export default function PaddleModal({
                       </div>
                     </div>
                   ) : (
-                    <div className={`${isEmbeddedLoading ? 'hidden' : 'block'} space-y-3`}>
-                      {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
-                      <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'h-0 overflow-hidden invisible pointer-events-none'}`}>
-                        <div
-                          id="stripe-express-checkout"
-                          className="w-full overflow-hidden"
-                          style={{ overflow: 'hidden' }}
-                        />
-
-                        {/* Divider between Express and regular tabs */}
-                        {expressAvailable && (
-                          <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
-                            <span className="px-3">{t.orCardKlarna}</span>
-                            <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                    <>
+                      {/* Layer A: Shimmering Skeleton Placeholder (Visible until both Stripe elements are ready) */}
+                      <div
+                        className={`absolute inset-0 z-20 p-4 md:p-5 flex flex-col justify-between bg-gray-50 dark:bg-dark-800 rounded-2xl transition-opacity duration-300 ${
+                          isCheckoutReady ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                        }`}
+                      >
+                        <div className="space-y-4 animate-pulse">
+                          {/* Express Checkout Skeleton Pills */}
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2.5">
+                              <div className="h-11 rounded-xl bg-gray-200 dark:bg-white/[0.07] border border-gray-300/40 dark:border-white/5 flex items-center justify-center">
+                                <div className="w-16 h-3 bg-gray-300 dark:bg-white/10 rounded-full" />
+                              </div>
+                              <div className="h-11 rounded-xl bg-gray-200 dark:bg-white/[0.07] border border-gray-300/40 dark:border-white/5 flex items-center justify-center">
+                                <div className="w-16 h-3 bg-gray-300 dark:bg-white/10 rounded-full" />
+                              </div>
+                            </div>
+                            <div className="flex items-center my-3 text-[11px] font-medium text-gray-400">
+                              <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                              <span className="px-3 text-gray-400/60 uppercase text-[10px] tracking-wider">{t.orCardKlarna}</span>
+                              <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                            </div>
                           </div>
-                        )}
-                      </div>
 
-                      {/* Contact Information (Email) */}
-                      <div>
-                        <label className="flex items-center justify-between text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                          <span>{t.contactInformation}</span>
-                          {(selectedPaymentMethod === 'paypal' || selectedPaymentMethod === 'paypal_express') && (
-                            <span className="text-[11px] font-normal text-neon-cyan/90 normal-case tracking-normal">
-                              {t.optionalForPaypal}
-                            </span>
-                          )}
-                        </label>
-                        <input
-                          type="email"
-                          value={customerEmail}
-                          onChange={(e) => setCustomerEmail(e.target.value)}
-                          placeholder={selectedPaymentMethod === 'paypal' ? (t.emailPlaceholderPaypal || t.emailPlaceholder) : t.emailPlaceholder}
-                          className="w-full bg-[#161616] border border-[#262626] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan outline-none transition-all shadow-inner"
-                        />
-                      </div>
-
-                      {/* Regular Payment Element (Card, Link, Klarna, iDEAL, EPS) */}
-                      <div>
-                        <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">
-                          {t.paymentMethod}
-                        </span>
-                        <div id="stripe-payment-element" className="overflow-hidden" style={{ overflow: 'hidden' }} />
-                      </div>
-
-                      {/* Sticky action footer on mobile, clean relative flow on desktop */}
-                      <div className="sticky bottom-0 -mx-4 md:mx-0 px-4 md:px-0 pt-3 pb-3 md:pb-0 bg-gray-50/95 dark:bg-dark-800/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-gray-200 dark:border-dark-600/60 md:border-none z-20 mt-4 rounded-b-2xl md:rounded-none transition-all duration-200">
-                        {/* Error Message if submit fails */}
-                        {paymentFormError && (
-                          <div className="p-3 mb-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
-                            {paymentFormError}
+                          {/* Contact Information (Email) Skeleton */}
+                          <div>
+                            <div className="w-24 h-3 bg-gray-300 dark:bg-white/10 rounded mb-2" />
+                            <div className="w-full h-10 rounded-xl bg-gray-200 dark:bg-[#161616] border border-gray-300/40 dark:border-[#262626]" />
                           </div>
-                        )}
 
-                        {/* Custom Glowing Gradient Pay Button */}
-                        <button
-                          type="button"
-                          onClick={handleConfirmPayment}
-                          disabled={isSubmittingPayment}
-                          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
-                        >
-                          {isSubmittingPayment ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                              <span>{t.processingPayment}</span>
-                            </>
-                          ) : (
-                            <>
-                              <ShieldCheck className="w-5 h-5" />
-                              <span>
-                                {selectedPaymentMethod === 'paypal'
-                                  ? `${t.payWithPaypal} • ${currentPrice}`
-                                  : t.payNow.replace('{price}', String(currentPrice))}
-                              </span>
-                            </>
-                          )}
-                        </button>
+                          {/* Payment Method Accordion Skeleton */}
+                          <div>
+                            <div className="w-28 h-3 bg-gray-300 dark:bg-white/10 rounded mb-2" />
+                            <div className="w-full h-12 rounded-xl bg-gray-200 dark:bg-[#161616] border border-gray-300/40 dark:border-[#262626] flex items-center justify-between px-4">
+                              <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full bg-gray-300 dark:bg-white/20" />
+                                <div className="w-24 h-3 bg-gray-300 dark:bg-white/10 rounded" />
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-6 h-4 bg-gray-300 dark:bg-white/10 rounded" />
+                                <div className="w-6 h-4 bg-gray-300 dark:bg-white/10 rounded" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
 
-                        {/* Trust Guarantee / PCI Compliance Footer */}
-                        <div className="pt-2 text-[11px] text-gray-500 dark:text-gray-400 text-center">
-                          <span>{t.pciCompliant}</span>
+                        {/* Pay Button Skeleton */}
+                        <div className="pt-4 animate-pulse">
+                          <div className="w-full h-12 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/25 flex items-center justify-center">
+                            <div className="w-32 h-3.5 bg-white/20 rounded-full" />
+                          </div>
+                          <div className="w-40 h-2.5 bg-gray-300 dark:bg-white/10 rounded-full mx-auto mt-2" />
                         </div>
                       </div>
-                    </div>
+
+                      {/* Layer B: Real Form (Stays in DOM so Stripe elements can render with true container dimensions) */}
+                      <div
+                        className={`space-y-3 transition-opacity duration-300 ${
+                          isCheckoutReady ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                        }`}
+                      >
+                        {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
+                        <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'hidden'}`}>
+                          <div
+                            id="stripe-express-checkout"
+                            className="w-full overflow-hidden min-h-[46px]"
+                            style={{ overflow: 'hidden' }}
+                          />
+
+                          {/* Divider between Express and regular tabs */}
+                          {expressAvailable && (
+                            <div className="flex items-center my-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                              <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                              <span className="px-3">{t.orCardKlarna}</span>
+                              <div className="flex-1 border-b border-gray-200 dark:border-white/10" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Contact Information (Email) */}
+                        <div>
+                          <label className="flex items-center justify-between text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                            <span>{t.contactInformation}</span>
+                            {(selectedPaymentMethod === 'paypal' || selectedPaymentMethod === 'paypal_express') && (
+                              <span className="text-[11px] font-normal text-neon-cyan/90 normal-case tracking-normal">
+                                {t.optionalForPaypal}
+                              </span>
+                            )}
+                          </label>
+                          <input
+                            type="email"
+                            value={customerEmail}
+                            onChange={(e) => setCustomerEmail(e.target.value)}
+                            placeholder={selectedPaymentMethod === 'paypal' ? (t.emailPlaceholderPaypal || t.emailPlaceholder) : t.emailPlaceholder}
+                            className="w-full bg-[#161616] border border-[#262626] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan outline-none transition-all shadow-inner"
+                          />
+                        </div>
+
+                        {/* Regular Payment Element (Card, Link, Klarna, iDEAL, EPS) */}
+                        <div>
+                          <span className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {t.paymentMethod}
+                          </span>
+                          <div id="stripe-payment-element" className="overflow-hidden min-h-[140px]" style={{ overflow: 'hidden' }} />
+                        </div>
+
+                        {/* Sticky action footer on mobile, clean relative flow on desktop */}
+                        <div className="sticky bottom-0 -mx-4 md:mx-0 px-4 md:px-0 pt-3 pb-3 md:pb-0 bg-gray-50/95 dark:bg-dark-800/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-gray-200 dark:border-dark-600/60 md:border-none z-20 mt-4 rounded-b-2xl md:rounded-none transition-all duration-200">
+                          {/* Error Message if submit fails */}
+                          {paymentFormError && (
+                            <div className="p-3 mb-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
+                              {paymentFormError}
+                            </div>
+                          )}
+
+                          {/* Custom Glowing Gradient Pay Button */}
+                          <button
+                            type="button"
+                            onClick={handleConfirmPayment}
+                            disabled={isSubmittingPayment}
+                            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
+                          >
+                            {isSubmittingPayment ? (
+                              <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <span>{t.processingPayment}</span>
+                              </>
+                            ) : (
+                              <>
+                                <ShieldCheck className="w-5 h-5" />
+                                <span>
+                                  {selectedPaymentMethod === 'paypal'
+                                    ? `${t.payWithPaypal} • ${currentPrice}`
+                                    : t.payNow.replace('{price}', String(currentPrice))}
+                                </span>
+                              </>
+                            )}
+                          </button>
+
+                          {/* Trust Guarantee / PCI Compliance Footer */}
+                          <div className="pt-2 text-[11px] text-gray-500 dark:text-gray-400 text-center">
+                            <span>{t.pciCompliant}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -2029,6 +2144,8 @@ export default function PaddleModal({
 
                     <button
                       onClick={handleBuyClick}
+                      onMouseEnter={() => prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId)}
+                      onTouchStart={() => prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId)}
                       disabled={isRedirecting || isEmbeddedLoading}
                       className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
                     >
