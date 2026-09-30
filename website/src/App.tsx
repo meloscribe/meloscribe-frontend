@@ -13,7 +13,6 @@ import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 import OrderDetails from './pages/OrderDetails';
 import Studio from './pages/Studio';
-import DomainMoved from './pages/DomainMoved';
 
 // Format auto-detection helper removed: all items are Full Arrangements
 
@@ -1118,11 +1117,6 @@ function App() {
     setSelectedSong(song);
     setIsKofiModalOpen(true);
   };
-
-  // Render migration page if visited via legacy domain (meloscribe.dev)
-  if (typeof window !== 'undefined' && window.location.hostname.includes('meloscribe.dev')) {
-    return <DomainMoved language={language} />;
-  }
 
   return (
 
