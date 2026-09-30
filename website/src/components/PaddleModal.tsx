@@ -2028,20 +2028,20 @@ export default function PaddleModal({
                         </div>
                       )}
 
-                      {/* Submit Button with Ultra High Contrast */}
+                      {/* Submit Button with Ultra High Contrast & Neon Glow */}
                       <button
                         type="submit"
-                        disabled={freeEmailLoading || !freeEmail.trim()}
-                        className="w-full py-3.5 px-6 rounded-xl font-extrabold tracking-wide bg-[#00f5d4] hover:bg-[#00e0c2] text-black flex items-center justify-center gap-2.5 transition-all shadow-[0_0_20px_rgba(0,245,212,0.35)] hover:shadow-[0_0_28px_rgba(0,245,212,0.55)] active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-2"
+                        disabled={freeEmailLoading}
+                        className="w-full py-4 px-6 rounded-xl font-extrabold tracking-wide uppercase bg-gradient-to-r from-neon-cyan via-[#00f5d4] to-emerald-400 text-black flex items-center justify-center gap-2.5 transition-all duration-300 shadow-[0_0_25px_rgba(0,245,255,0.45)] hover:shadow-[0_0_35px_rgba(0,245,212,0.75)] hover:brightness-105 active:scale-[0.98] cursor-pointer disabled:opacity-75 disabled:cursor-wait text-sm sm:text-base mt-2"
                       >
                         {freeEmailLoading ? (
                           <>
-                            <Loader2 className="w-4 h-4 animate-spin text-black" />
+                            <Loader2 className="w-5 h-5 animate-spin text-black" />
                             <span className="text-black font-extrabold">{t.freeDownloadSending}</span>
                           </>
                         ) : (
                           <>
-                            <Mail className="w-4 h-4 text-black stroke-[2.5]" />
+                            <Mail className="w-5 h-5 text-black stroke-[2.5]" />
                             <span className="text-black font-extrabold">{t.freeDownloadSubmit}</span>
                           </>
                         )}

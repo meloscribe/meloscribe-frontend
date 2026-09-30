@@ -1380,33 +1380,26 @@ function App() {
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
                           tabIndex={isPaymentsDisabled ? -1 : 0}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1.5 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
-                              ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
-                              : isArrangeMe
-                              ? 'bg-neon-cyan/15 dark:bg-neon-cyan/10 border border-neon-cyan/50 text-cyan-600 dark:text-neon-cyan hover:bg-neon-cyan/25 hover:border-neon-cyan shadow-neon-cyan-subtle cursor-pointer active:scale-[0.98]'
+                              ? 'bg-gray-100/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isPaymentsDisabled ? (
-                            <>
-                              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                              <span className="truncate">{t.currentlyDisabled}</span>
-                            </>
+                            <span className="truncate">{t.currentlyDisabled}</span>
                           ) : isArrangeMe ? (
                             <>
-                              <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
+                              <span className="font-semibold">{song.price}</span>
                               <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
-                          ) : (
+                          ) : isSongFree(song.price) ? (
                             <>
-                              {isSongFree(song.price) ? (
-                                <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-cyan flex-shrink-0" />
-                              ) : (
-                                <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-pink flex-shrink-0" />
-                              )}
-                              <span>{isSongFree(song.price) ? 'FREE' : song.price}</span>
+                              <span className="font-semibold">FREE</span>
+                              <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
+                          ) : (
+                            <span className="font-semibold">{song.price}</span>
                           )}
                         </button>
                       </div>
@@ -1670,33 +1663,26 @@ function App() {
                           onClick={() => !isPaymentsDisabled && handleDownloadClick(song)}
                           disabled={isPaymentsDisabled}
                           tabIndex={isPaymentsDisabled ? -1 : 0}
-                          className={`kofi-download-btn w-full flex items-center justify-center gap-1 sm:gap-2 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
+                          className={`kofi-download-btn w-full flex items-center justify-center gap-1.5 py-2 px-2 sm:py-2.5 sm:px-3 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
                             isPaymentsDisabled
-                              ? 'bg-gray-105/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
-                              : isArrangeMe
-                              ? 'bg-neon-cyan/15 dark:bg-neon-cyan/10 border border-neon-cyan/50 text-cyan-600 dark:text-neon-cyan hover:bg-neon-cyan/25 hover:border-neon-cyan shadow-neon-cyan-subtle cursor-pointer active:scale-[0.98]'
+                              ? 'bg-gray-100/30 dark:bg-dark-800/30 border-gray-200 dark:border-dark-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50 pointer-events-none'
                               : `bg-gray-100/60 dark:bg-dark-600/50 border ${isSongFree(song.price) ? 'border-transparent' : 'border-gray-300 dark:border-dark-500'} text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-dark-500/30 cursor-pointer active:scale-[0.98]`
                           }`}
                         >
                           {isPaymentsDisabled ? (
-                            <>
-                              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                              <span className="truncate">{t.currentlyDisabled}</span>
-                            </>
+                            <span className="truncate">{t.currentlyDisabled}</span>
                           ) : isArrangeMe ? (
                             <>
-                              <span className="truncate text-[11px] sm:text-xs">{t.getOnArrangeMe}</span>
+                              <span className="font-semibold">{song.price}</span>
                               <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
-                          ) : (
+                          ) : isSongFree(song.price) ? (
                             <>
-                              {isSongFree(song.price) ? (
-                                <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-cyan flex-shrink-0" />
-                              ) : (
-                                <ShoppingBag className="w-3.5 h-3.5 sm:w-4 h-4 text-neon-pink flex-shrink-0" />
-                              )}
-                              <span>{isSongFree(song.price) ? 'FREE' : song.price}</span>
+                              <span className="font-semibold">FREE</span>
+                              <Download className="w-3.5 h-3.5 sm:w-4 h-4 text-cyan-600 dark:text-neon-cyan flex-shrink-0" />
                             </>
+                          ) : (
+                            <span className="font-semibold">{song.price}</span>
                           )}
                         </button>
                       </div>
