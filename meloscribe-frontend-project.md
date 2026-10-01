@@ -4,7 +4,7 @@ Living documentation for the meloscribe website (`C:\Dev\meloscribe-frontend`). 
 
 **GitHub repo:** https://github.com/meloscribe/meloscribe-frontend (public)
 **Hosted on:** Vercel (auto-deploy on push to `main`)
-**Live URL:** https://www.meloscribesheets.com (Redirect von meloscribe.dev)
+**Live URL:** https://meloscribesheets.com (Redirect von www und meloscribe.dev)
 
 ---
 
@@ -184,13 +184,14 @@ npm run dev
   - Desktop Drag-to-Scroll mit Mauszeiger (`cursor-grab` / `active:cursor-grabbing`) und Drag-Schutz (verhindert ungewollten Klick beim Ziehen).
 
 - [x] Vercel Routing & Security Header Cleanup (Pinterest / SEO Compliance):
-  - In `website/vercel.json` (Vercel Root Directory build context) und im Repo-Root `headers` Block für HTTP-Sicherheits-Header (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`) implementiert.
-  - Expliziten `redirects`-Block mit `statusCode: 301` für Host `meloscribesheets.com` auf `https://www.meloscribesheets.com/:path*` hinterlegt, um Vercels standardmäßigen 308-Redirect durch abwärtskompatibles 301 Moved Permanently zu ersetzen.
-  - Sämtliche Canonical-, OpenGraph-, Twitter-, Hreflang- und Noscript-URLs in `website/index.html` sowie `sitemap.xml` und `robots.txt` konsistent auf `https://www.meloscribesheets.com/` harmonisiert.
+  - In `website/vercel.json` (Vercel Root Directory build context) und im Repo-Root `headers`-Block für HTTP-Sicherheits-Header (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`) implementiert.
+  - Expliziten `redirects`-Block mit `statusCode: 301` für Host `www.meloscribesheets.com` auf `https://meloscribesheets.com/:path*` hinterlegt.
+  - Sämtliche Canonical-, OpenGraph-, Twitter-, Hreflang- und Noscript-URLs in `website/index.html` sowie `sitemap.xml` und `robots.txt` konsistent auf Apex-Domain `https://meloscribesheets.com/` harmonisiert.
+  - Im Vercel Dashboard Weiterleitung von `www.meloscribesheets.com` &rarr; `https://meloscribesheets.com` auf `301 - Moved Permanently` verifiziert.
 
 ## Active Blockers / Next Steps
 
 - Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout mit dynamischer Währungsumrechnung. Vercel-Deployment ist live.
-- Im Vercel Dashboard sicherstellen, dass unter **Settings > Domains** `www.meloscribesheets.com` als Production Domain definiert ist und `meloscribesheets.com` mit Status Code 301 auf `www.meloscribesheets.com` weiterleitet.
 - Pinterest Domain-Unblock Appeal nach Verifikation via curl einreichen.
+
 

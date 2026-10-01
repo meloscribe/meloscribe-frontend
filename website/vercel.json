@@ -5,10 +5,10 @@
       "has": [
         {
           "type": "host",
-          "value": "meloscribesheets.com"
+          "value": "www.meloscribesheets.com"
         }
       ],
-      "destination": "https://www.meloscribesheets.com/:path*",
+      "destination": "https://meloscribesheets.com/:path*",
       "statusCode": 301
     }
   ],
