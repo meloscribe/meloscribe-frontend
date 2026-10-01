@@ -9,4 +9,4 @@ Disallow: /order/
 Disallow: /success/
 Disallow: /api/
 
-Sitemap: https://meloscribesheets.com/sitemap.xml
+Sitemap: https://www.meloscribesheets.com/sitemap.xml

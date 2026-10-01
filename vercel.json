@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "meloscribesheets.com"
+        }
+      ],
+      "destination": "https://www.meloscribesheets.com/:path*",
+      "statusCode": 301
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/website/index.html" }
   ],

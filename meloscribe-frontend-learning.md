@@ -165,3 +165,19 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 - **Solution:** Reframe recommendations as helpful practice progression rather than an upsell:
   - Keep the post-purchase page lightweight and uncluttered with a single, sleek glass note: *"Stuck on this arrangement? Learn it measure by measure..."* linking to the full `/studio` stack.
   - Maintain complete localization across all languages (`en`, `de`, `fr`, `es`, `it`) to preserve a native, high-trust user experience.
+
+---
+
+### Vercel Root Directory Config Isolation & vercel.json Precedence
+- **Bug / Phenomenon:** HTTP security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Permissions-Policy`, etc.) configured in the repository root `vercel.json` were never sent by Vercel edge nodes, returning only the default headers on production.
+- **Root Cause:** In monorepos or nested directories where Vercel Project Settings configure the **Root Directory** as `website`, Vercel reads exclusively `website/vercel.json` and ignores the top-level repository `vercel.json`.
+- **Solution:** Always duplicate or maintain runtime configs (`headers`, `rewrites`, `redirects`) in both the nested root directory (`website/vercel.json`) and the repository root (`vercel.json`).
+
+---
+
+### Social Crawler & Pinterest Compatibility (308 vs 301 Redirects)
+- **Problem:** Many legacy search spiders, validation services, and social crawlers (such as Pinterestbot) fail to process modern HTTP `308 Permanent Redirect` responses correctly, treating them as broken links or failing domain verification appeals.
+- **Solution:**
+  1. In `vercel.json`, use explicit `"statusCode": 301` inside the `redirects` array rather than `"permanent": true` (which defaults to 308).
+  2. For domain-level redirection (apex to `www` or vice versa), configure the redirect directly in the Vercel Dashboard under **Project Settings > Domains** and set the status code dropdown explicitly to **301 Moved Permanently**.
+
