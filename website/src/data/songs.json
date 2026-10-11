@@ -1,5 +1,26 @@
 [
   {
+    "id": "59",
+    "title": "Experience",
+    "artist": "Ludovico Einaudi",
+    "difficulty": "Original",
+    "price": "6 €",
+    "kofiId": "",
+    "stripePriceId": "",
+    "coverImage": "/covers/Experience_clean.jpg",
+    "audioPreviewUrl": "/audio-previews/Experience.mp3",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "theme": "warm",
+    "isArrangeMe": true,
+    "paymentsDisabled": true,
+    "arrangemeUrl": "",
+    "arrangemeEasyUrl": "",
+    "hasOriginal": true,
+    "hasEasy": false,
+    "trending": false,
+    "isTrending": false
+  },
+  {
     "id": "9",
     "title": "In This Shirt",
     "artist": "The Irrepressibles",
@@ -13,7 +34,8 @@
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
     "kofiId": "price_1UISU8Q4cuBqoYoXtmC1mCZZ",
     "hasOriginal": true,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "58",
@@ -33,7 +55,8 @@
     "easyStripePriceId": "price_1UCmWzQ4cuBqoYoXCuDpwsgr",
     "easyKofiId": "price_1UCmWzQ4cuBqoYoXCuDpwsgr",
     "easyId": "59",
-    "trending": true
+    "trending": true,
+    "isTrending": true
   },
   {
     "id": "56",
@@ -57,7 +80,8 @@
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2094707/Product.aspx",
     "arrangemeEasyUrl": "https://www.sheetmusicdirect.com/se/ID_No/2126060/Product.aspx",
     "isArrangeMe": true,
-    "paymentsDisabled": false
+    "paymentsDisabled": false,
+    "isTrending": true
   },
   {
     "id": "5",
@@ -71,7 +95,8 @@
     "audioPreviewUrl": "/audio-previews/Sweetest Rain.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": true
+    "trending": true,
+    "isTrending": true
   },
   {
     "id": "54",
@@ -94,7 +119,8 @@
     "easyId": "55",
     "arrangemeUrl": "",
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "global_settings",
@@ -121,7 +147,8 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Mary On A Cross.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "2",
@@ -141,7 +168,8 @@
     "easyPrice": "6",
     "easyStripePriceId": "",
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2172480/Product.aspx",
-    "arrangemeEasyUrl": ""
+    "arrangemeEasyUrl": "",
+    "isTrending": false
   },
   {
     "id": "3",
@@ -160,7 +188,8 @@
     "easyStripePriceId": "",
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2120828/Product.aspx",
     "isArrangeMe": true,
-    "paymentsDisabled": false
+    "paymentsDisabled": false,
+    "isTrending": false
   },
   {
     "id": "4",
@@ -174,7 +203,8 @@
     "audioPreviewUrl": "/audio-previews/Closed Doors.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "6",
@@ -188,7 +218,8 @@
     "theme": "cold",
     "format": "full_arrangement",
     "audioPreviewUrl": "/audio-previews/We Wish You a Merry Xmas.mp3",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "10",
@@ -202,7 +233,8 @@
     "audioPreviewUrl": "/audio-previews/Wet Hands.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "11",
@@ -218,7 +250,8 @@
     "theme": "warm",
     "paymentsDisabled": true,
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "13",
@@ -234,7 +267,8 @@
     "theme": "warm",
     "paymentsDisabled": true,
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "14",
@@ -248,7 +282,8 @@
     "audioPreviewUrl": "/audio-previews/Succession Theme.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "15",
@@ -262,7 +297,8 @@
     "audioPreviewUrl": "/audio-previews/Past Lives.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "16",
@@ -278,7 +314,8 @@
     "theme": "warm",
     "trending": false,
     "paymentsDisabled": false,
-    "isArrangeMe": false
+    "isArrangeMe": false,
+    "isTrending": false
   },
   {
     "id": "17",
@@ -292,7 +329,8 @@
     "audioPreviewUrl": "/audio-previews/Greensleeves.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "theme": "cold",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "18",
@@ -306,7 +344,8 @@
     "audioPreviewUrl": "/audio-previews/God Rest Ye Merry.mp3",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "theme": "cold",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "19",
@@ -320,7 +359,8 @@
     "theme": "cold",
     "audioPreviewUrl": "/audio-previews/Carol of the Bells.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "21",
@@ -335,7 +375,8 @@
     "audioPreviewUrl": "/audio-previews/Silent Night.mp3",
     "kofiId": "prod_dummy123",
     "format": "full_arrangement",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "22",
@@ -351,7 +392,8 @@
     "kofiId": "prod_dummy123",
     "paymentsDisabled": true,
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "23",
@@ -365,7 +407,8 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Cornfield Chase.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "30",
@@ -379,7 +422,8 @@
     "theme": "warm",
     "audioPreviewUrl": "/audio-previews/Your love is my drug.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "37",
@@ -393,7 +437,8 @@
     "audioPreviewUrl": "/audio-previews/Icarus.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "41",
@@ -407,7 +452,8 @@
     "audioPreviewUrl": "/audio-previews/My Singing Monsters.mp3",
     "gradient": "from-emerald-500/20 via-dark-700 to-teal-500/5",
     "theme": "green",
-    "trending": false
+    "trending": false,
+    "isTrending": false
   },
   {
     "id": "53",
@@ -423,6 +469,7 @@
     "theme": "warm",
     "paymentsDisabled": true,
     "isArrangeMe": false,
-    "trending": false
+    "trending": false,
+    "isTrending": false
   }
 ]
