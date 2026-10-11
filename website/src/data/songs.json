@@ -3,7 +3,7 @@
     "id": "59",
     "title": "Experience",
     "artist": "Ludovico Einaudi",
-    "difficulty": "Original",
+    "difficulty": "Original / Easy",
     "price": "6 €",
     "kofiId": "",
     "stripePriceId": "",
@@ -16,9 +16,13 @@
     "arrangemeUrl": "",
     "arrangemeEasyUrl": "",
     "hasOriginal": true,
-    "hasEasy": false,
+    "hasEasy": true,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "easyPrice": "6 €",
+    "easyStripePriceId": "",
+    "easyKofiId": "",
+    "easyId": "60"
   },
   {
     "id": "9",
