@@ -189,9 +189,17 @@ npm run dev
   - Sämtliche Canonical-, OpenGraph-, Twitter-, Hreflang- und Noscript-URLs in `website/index.html` sowie `sitemap.xml` und `robots.txt` konsistent auf Apex-Domain `https://meloscribesheets.com/` harmonisiert.
   - Im Vercel Dashboard Weiterleitung von `www.meloscribesheets.com` &rarr; `https://meloscribesheets.com` auf `301 - Moved Permanently` verifiziert.
 
+- [x] Suggestions Page Catalog Auto-Exclusion & Smart Parenthesis/Artist Matching:
+  - Automatischer Katalog-Ausschluss: Offene Vorschläge werden beim Laden (`loadData`) direkt gegen `songs.json` abgeglichen. Bereits veröffentlichte Songs (*Experience*, *River Flows in You*) werden automatisch aus der offenen Wunschliste gefiltert und stattdessen mit Noten-Modal-Verlinkung im "Recently Arranged"-Strip angezeigt, selbst wenn ihr DB-Status noch auf `open` stand.
+  - Klammern-Bereinigung & Subtitle-Toleranz: Funktion `stripParentheses` und `extractParenthesesContent` extrahieren Kern-Titel (z.B. *"Every Snowflake is Different (just like you)"* &harr; *"Every Snowflake is Different"*, *"Aria Math (Minecraft)"* &harr; *"Aria Math"*), wodurch Dubletten zuverlässig abgefangen und auf denselben Eintrag hochgevotet werden.
+  - Platzhalter- & Brand-Autoren-Erkennung: `isPlaceholderOrUnknownArtist` erkennt, wenn Nutzer keinen echten Autor kennen (z.B. "Meloscribe", identisch zum Songtitel wie *"Aria math von Aria math"*, "unknown", "All", "Piano"). Dadurch blockieren fehlerhafte oder unbekannte Interpreten-Eingaben nicht mehr den Match gegen den echten Notenkatalog oder bestehende Wünsche.
+  - Bereinigung der Live-Datenbank: Bestehende Datensätze auf Oracle VM und lokal bereinigt (*Experience* & *River Flows in You* auf `completed`; *Aria Math* auf Interpret `C418`; *Welcome to the Black Parade* Rechtschreibkorrektur).
+  - Backend Auto-Sync in `routes_public.py`: Beim Abruf und Erstellen von Vorschlägen gleicht auch das Backend automatisch gegen `songs.json` ab und fängt Dubletten mit Klammern- und Interpreten-Toleranz ab.
+
 ## Active Blockers / Next Steps
 
 - Keine aktiven Blockaden. Das Payment-Gateway läuft über Stripe Checkout mit dynamischer Währungsumrechnung. Vercel-Deployment ist live.
 - Pinterest Domain-Unblock Appeal nach Verifikation via curl einreichen.
+
 
 
