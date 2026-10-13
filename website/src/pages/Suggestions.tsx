@@ -66,13 +66,100 @@ function getSimilarityScore(a: string, b: string): number {
   return (maxLength - distance) / maxLength;
 }
 
-// Check if two artists match with typo and substring tolerance
-export function areArtistsMatching(artistA?: string, artistB?: string): boolean {
+// Strip parentheses / brackets / braces to get core song title
+export function stripParentheses(str: string): string {
+  return str
+    .replace(/[\(\[\{][^\)\]\}]*[\)\]\}]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Extract content inside parentheses / brackets
+export function extractParenthesesContent(str: string): string[] {
+  const matches = str.matchAll(/[\(\[\{]([^\)\]\}]*)[\)\]\}]/g);
+  const results: string[] = [];
+  for (const m of matches) {
+    if (m[1] && m[1].trim()) {
+      results.push(m[1].trim());
+    }
+  }
+  return results;
+}
+
+// Check if an artist string is a placeholder, unknown, brand name, or duplicate of title
+export function isPlaceholderOrUnknownArtist(artist?: string, title?: string): boolean {
+  if (!artist || !artist.trim()) return true;
+  const normArtist = normalizeString(artist);
+  if (!normArtist || normArtist.length <= 2) return true;
+
+  // Brand names (e.g. users attributing piano channel to meloscribe)
+  if (normArtist.includes('meloscribe') || normArtist.includes('melo scribe')) return true;
+
+  // Common unknown / placeholder phrases
+  const unknownTokens = [
+    'unknown', 'unbekannt', 'idk', 'dont know', 'dont care', 'no idea',
+    'keine ahnung', 'weiss nicht', 'weiß nicht', 'none', 'all', 'alle',
+    'someone', 'anyone', 'nobody', 'various', 'various artists', 'various artist',
+    'piano', 'pianist', 'klavier', 'tiktok', 'youtube', 'ost', 'soundtrack',
+    'composer', 'author', 'interpret', 'kuenstler', 'künstler', 'na', 'n a'
+  ];
+  if (unknownTokens.some(tok => normArtist === tok || normArtist.startsWith(tok + ' ') || normArtist.endsWith(' ' + tok))) {
+    return true;
+  }
+
+  // If title is provided, check if artist is effectively the title duplicated
+  // e.g. Title: "Aria math", Artist: "Aria math"
+  if (title) {
+    const normTitle = normalizeString(title);
+    const normBaseTitle = normalizeString(stripParentheses(title));
+    if (normArtist === normTitle || (normBaseTitle && normArtist === normBaseTitle)) {
+      return true;
+    }
+    if (normTitle && (normTitle.startsWith(normArtist) || normArtist.startsWith(normTitle))) {
+      return true;
+    }
+    if (normBaseTitle && (normBaseTitle.startsWith(normArtist) || normArtist.startsWith(normBaseTitle))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Check if two artists match with typo, substring, parenthetical, and placeholder tolerance
+export function areArtistsMatching(
+  artistA?: string,
+  artistB?: string,
+  titleA?: string,
+  titleB?: string
+): boolean {
   if (!artistA || !artistB) return true;
+
+  // If either artist is unknown / placeholder / meloscribe / duplicate of title, don't penalize
+  if (isPlaceholderOrUnknownArtist(artistA, titleA) || isPlaceholderOrUnknownArtist(artistB, titleB)) {
+    return true;
+  }
+
   const normA = normalizeString(artistA);
   const normB = normalizeString(artistB);
   if (!normA || !normB) return true;
   if (normA === normB || normA.includes(normB) || normB.includes(normA)) return true;
+
+  // Also check if title contained artist in parentheses e.g. "Song (Artist)"
+  if (titleA) {
+    const extrasA = extractParenthesesContent(titleA);
+    for (const extra of extrasA) {
+      const normExtra = normalizeString(extra);
+      if (normExtra === normB || normExtra.includes(normB) || normExtra.includes(normExtra)) return true;
+    }
+  }
+  if (titleB) {
+    const extrasB = extractParenthesesContent(titleB);
+    for (const extra of extrasB) {
+      const normExtra = normalizeString(extra);
+      if (normExtra === normA || normExtra.includes(normA) || normExtra.includes(normExtra)) return true;
+    }
+  }
 
   const maxLen = Math.max(normA.length, normB.length);
   const dist = getLevenshteinDistance(normA, normB);
@@ -80,21 +167,39 @@ export function areArtistsMatching(artistA?: string, artistB?: string): boolean 
   return maxLen <= 5 ? dist <= 1 : (dist <= 2 || sim >= 0.75);
 }
 
-// Check if two song titles match with token-level stemming, typo, and stopword tolerance
+// Check if two song titles match with token-level stemming, typo, stopword, and parenthesis tolerance
 export function areTitlesMatching(titleA: string, titleB: string, artistMatches = false): boolean {
   const normA = normalizeString(titleA);
   const normB = normalizeString(titleB);
   if (!normA || !normB) return false;
   if (normA === normB) return true;
 
+  // Check stripped parentheses / base titles (e.g. "Every Snowflake is Different (just like you)" vs "Every Snowflake is Different")
+  const baseA = normalizeString(stripParentheses(titleA));
+  const baseB = normalizeString(stripParentheses(titleB));
+  if (baseA && baseB) {
+    if (baseA === baseB) return true;
+    if (baseA === normB || normA === baseB) return true;
+
+    // Fuzzy check on base titles
+    const baseMaxLen = Math.max(baseA.length, baseB.length);
+    const baseDist = getLevenshteinDistance(baseA, baseB);
+    const baseSim = (baseMaxLen - baseDist) / baseMaxLen;
+    if (baseMaxLen <= 5 ? baseDist <= 1 : (baseDist <= 2 || baseSim >= 0.82)) return true;
+  }
+
   const maxLen = Math.max(normA.length, normB.length);
   const dist = getLevenshteinDistance(normA, normB);
   const sim = (maxLen - dist) / maxLen;
   if (maxLen <= 5 ? dist <= 1 : (dist <= 2 || sim >= 0.82)) return true;
 
+  // Word token matching on base title if parentheses existed, else full title
+  const targetA = (baseA && baseA.length >= 3) ? baseA : normA;
+  const targetB = (baseB && baseB.length >= 3) ? baseB : normB;
+
   const stopWords = new Set(['the', 'a', 'an', 'and', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'part', 'pt']);
-  const wordsA = normA.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
-  const wordsB = normB.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
+  const wordsA = targetA.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
+  const wordsB = targetB.split(' ').filter(w => w.length > 0 && !stopWords.has(w));
 
   // If one title has 1 word and the other has multiple, reject unless character distance was <= 2
   if ((wordsA.length === 1 && wordsB.length > 1) || (wordsB.length === 1 && wordsA.length > 1)) {
@@ -138,7 +243,6 @@ export function areTitlesMatching(titleA: string, titleB: string, artistMatches 
 
 // Fuzzy matching against published catalog songs
 export function findMatchingCatalogSong(inputTitle: string, inputArtist?: string): any | null {
-  const normInputArtist = inputArtist ? normalizeString(inputArtist) : '';
   const isFullRequest = /\b(full|ganzer|ganze)\b/i.test(inputTitle);
   const isEasyRequest = /\b(easy|einfach|leichte)\b/i.test(inputTitle);
   const isReworkRequest = /\b(rework|re-work|v2)\b/i.test(inputTitle);
@@ -146,7 +250,7 @@ export function findMatchingCatalogSong(inputTitle: string, inputArtist?: string
   for (const song of (songsData as any[])) {
     if (song.hidden || song.id === 'global_settings') continue;
 
-    const artistMatches = areArtistsMatching(normInputArtist, song.artist);
+    const artistMatches = areArtistsMatching(inputArtist, song.artist, inputTitle, song.title);
     const titleMatches = areTitlesMatching(inputTitle, song.title, artistMatches);
 
     if (titleMatches && artistMatches) {
@@ -346,16 +450,19 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
     const completedItems: CompletedItem[] = [];
     const seenTitles = new Set<string>();
 
-    // 1. Process DB suggestions (only explicitly completed ones)
+    // 1. Process DB suggestions (auto-completing any that match published catalog songs)
     data.forEach(sug => {
-      if (sug.status === 'completed') {
-        const catalogMatch = findMatchingCatalogSong(sug.title, sug.artist);
-        const normKey = normalizeString(sug.title);
+      const catalogMatch = findMatchingCatalogSong(sug.title, sug.artist);
+      const isCompleted = sug.status === 'completed' || !!catalogMatch;
+
+      if (isCompleted) {
+        const titleToUse = catalogMatch ? catalogMatch.title : sug.title;
+        const normKey = normalizeString(titleToUse);
         if (!seenTitles.has(normKey)) {
           seenTitles.add(normKey);
           completedItems.push({
             id: sug.id,
-            title: catalogMatch ? catalogMatch.title : sug.title,
+            title: titleToUse,
             artist: catalogMatch ? catalogMatch.artist : sug.artist,
             song: catalogMatch,
           });
@@ -551,7 +658,7 @@ export default function Suggestions({ onBack, language, showToast, onSelectSong 
     // 1. Fuzzy Check against existing suggestions for smart upvote
     let matchFound: Suggestion | null = null;
     for (const sug of openSuggestions) {
-      const artistMatches = areArtistsMatching(artist, sug.artist);
+      const artistMatches = areArtistsMatching(artist, sug.artist, title, sug.title);
       const titleMatches = areTitlesMatching(title, sug.title, artistMatches);
 
       if (titleMatches && artistMatches) {
