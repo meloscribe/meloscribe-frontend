@@ -195,6 +195,7 @@ npm run dev
   - Platzhalter- & Brand-Autoren-Erkennung: `isPlaceholderOrUnknownArtist` erkennt, wenn Nutzer keinen echten Autor kennen (z.B. "Meloscribe", identisch zum Songtitel wie *"Aria math von Aria math"*, "unknown", "All", "Piano"). Dadurch blockieren fehlerhafte oder unbekannte Interpreten-Eingaben nicht mehr den Match gegen den echten Notenkatalog oder bestehende Wünsche.
   - Bereinigung der Live-Datenbank: Bestehende Datensätze auf Oracle VM und lokal bereinigt (*Experience* & *River Flows in You* auf `completed`; *Aria Math* auf Interpret `C418`; *Welcome to the Black Parade* Rechtschreibkorrektur).
   - Backend Auto-Sync in `routes_public.py`: Beim Abruf und Erstellen von Vorschlägen gleicht auch das Backend automatisch gegen `songs.json` ab und fängt Dubletten mit Klammern- und Interpreten-Toleranz ab.
+  - Social Proof Phrasing (Solo Creator): Leisten-Titel von formalem "Recently Arranged (Community Requests)" auf direkte Solo-Creator-Perspektive umgestellt: `"You Voted, I Arranged"` (DE: `"Von euch gewünscht – von mir arrangiert"`, FR: `"Vous avez voté, j'ai arrangé"`, ES: `"Ustedes votaron, yo lo arreglé"`, IT: `"Avete votato, l'ho arrangiato"`).
 
 ## Active Blockers / Next Steps
 
