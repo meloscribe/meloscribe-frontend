@@ -13,7 +13,6 @@ import Suggestions from './pages/Suggestions';
 import Success from './pages/Success';
 import OrderDetails from './pages/OrderDetails';
 import Studio from './pages/Studio';
-import TestPage from './pages/TestPage';
 
 // Format auto-detection helper removed: all items are Full Arrangements
 
@@ -1736,13 +1735,6 @@ function App() {
         <Terms onBack={() => navigate('/')} language={language} />
       ) : currentPath === '/refunds' ? (
         <Refunds onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/test' ? (
-        <TestPage 
-          onBack={() => navigate('/')} 
-          language={language} 
-          allSongs={allSongs} 
-          onSelectSong={(song) => handleDownloadClick(song)} 
-        />
       ) : currentPath === '/suggestions' ? (
         <Suggestions 
           onBack={() => navigate('/')} 
