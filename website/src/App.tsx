@@ -1169,6 +1169,17 @@ function App() {
                 >
                   {t.navSuggestions}
                 </a>
+                <a 
+                  href="/test" 
+                  onClick={(e) => { e.preventDefault(); navigate('/test'); }}
+                  className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
+                    currentPath === '/test'
+                      ? 'text-neon-pink'
+                      : 'text-neon-pink/80 hover:text-neon-pink'
+                  }`}
+                >
+                  Test IAB
+                </a>
                 {isLocalhost && (
                   <a 
                     href="/studio" 
@@ -1828,6 +1839,13 @@ function App() {
                   className="link-underline text-gray-500 dark:text-gray-400 hover:text-neon-cyan transition-colors text-sm"
                 >
                   {t.refunds}
+                </a>
+                <a 
+                  href="/test" 
+                  onClick={(e) => { e.preventDefault(); navigate('/test'); }}
+                  className="link-underline text-neon-pink/80 hover:text-neon-pink transition-colors text-sm"
+                >
+                  Test IAB (/test)
                 </a>
               </div>
             </div>
