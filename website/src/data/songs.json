@@ -20,7 +20,9 @@
     "easyPrice": "6 €",
     "easyStripePriceId": "price_1UPhVRQ4cuBqoYoX1xSuqYqW",
     "easyKofiId": "price_1UPhVRQ4cuBqoYoX1xSuqYqW",
-    "easyId": "60"
+    "easyId": "60",
+    "pdfPages": 5,
+    "easyPdfPages": 4
   },
   {
     "id": "9",
@@ -37,7 +39,8 @@
     "kofiId": "price_1UISU8Q4cuBqoYoXtmC1mCZZ",
     "hasOriginal": true,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 4
   },
   {
     "id": "58",
@@ -58,7 +61,9 @@
     "easyKofiId": "price_1UCmWzQ4cuBqoYoXCuDpwsgr",
     "easyId": "59",
     "trending": true,
-    "isTrending": true
+    "isTrending": true,
+    "pdfPages": 4,
+    "easyPdfPages": 4
   },
   {
     "id": "56",
@@ -83,7 +88,9 @@
     "arrangemeEasyUrl": "https://www.sheetmusicdirect.com/se/ID_No/2126060/Product.aspx",
     "isArrangeMe": true,
     "paymentsDisabled": false,
-    "isTrending": true
+    "isTrending": true,
+    "pdfPages": 5,
+    "easyPdfPages": 5
   },
   {
     "id": "5",
@@ -98,7 +105,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": true,
-    "isTrending": true
+    "isTrending": true,
+    "pdfPages": 3
   },
   {
     "id": "54",
@@ -122,7 +130,9 @@
     "arrangemeUrl": "",
     "isArrangeMe": false,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2,
+    "easyPdfPages": 2
   },
   {
     "id": "global_settings",
@@ -150,7 +160,8 @@
     "audioPreviewUrl": "/audio-previews/Mary On A Cross.mp3",
     "kofiId": "prod_dummy123",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "2",
@@ -171,7 +182,8 @@
     "easyStripePriceId": "",
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2172480/Product.aspx",
     "arrangemeEasyUrl": "",
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "3",
@@ -191,7 +203,8 @@
     "arrangemeUrl": "https://www.sheetmusicdirect.com/se/ID_No/2120828/Product.aspx",
     "isArrangeMe": true,
     "paymentsDisabled": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 3
   },
   {
     "id": "4",
@@ -206,7 +219,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "6",
@@ -221,7 +235,8 @@
     "format": "full_arrangement",
     "audioPreviewUrl": "/audio-previews/We Wish You a Merry Xmas.mp3",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "10",
@@ -236,7 +251,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "11",
@@ -253,7 +269,8 @@
     "paymentsDisabled": true,
     "isArrangeMe": false,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "13",
@@ -270,7 +287,8 @@
     "paymentsDisabled": true,
     "isArrangeMe": false,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "14",
@@ -285,7 +303,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "15",
@@ -300,7 +319,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "16",
@@ -317,7 +337,8 @@
     "trending": false,
     "paymentsDisabled": false,
     "isArrangeMe": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "17",
@@ -332,7 +353,8 @@
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "theme": "cold",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "18",
@@ -347,7 +369,8 @@
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
     "theme": "cold",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "19",
@@ -362,7 +385,8 @@
     "audioPreviewUrl": "/audio-previews/Carol of the Bells.mp3",
     "kofiId": "prod_dummy123",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "21",
@@ -378,7 +402,8 @@
     "kofiId": "prod_dummy123",
     "format": "full_arrangement",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "22",
@@ -395,7 +420,8 @@
     "paymentsDisabled": true,
     "isArrangeMe": false,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "23",
@@ -410,7 +436,8 @@
     "audioPreviewUrl": "/audio-previews/Cornfield Chase.mp3",
     "kofiId": "prod_dummy123",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "30",
@@ -425,7 +452,8 @@
     "audioPreviewUrl": "/audio-previews/Your love is my drug.mp3",
     "kofiId": "prod_dummy123",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 1
   },
   {
     "id": "37",
@@ -440,7 +468,8 @@
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 4
   },
   {
     "id": "41",
@@ -455,7 +484,8 @@
     "gradient": "from-emerald-500/20 via-dark-700 to-teal-500/5",
     "theme": "green",
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 2
   },
   {
     "id": "53",
@@ -472,6 +502,7 @@
     "paymentsDisabled": true,
     "isArrangeMe": false,
     "trending": false,
-    "isTrending": false
+    "isTrending": false,
+    "pdfPages": 3
   }
 ]

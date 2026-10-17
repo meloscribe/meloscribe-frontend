@@ -1856,6 +1856,8 @@ function App() {
           paymentsDisabled={(globalPaymentsDisabled || Boolean(selectedSong.paymentsDisabled)) && !(Boolean(selectedSong.arrangemeUrl || selectedSong.arrangemeEasyUrl) && (selectedSong.isArrangeMe ?? true))}
           arrangemeUrl={selectedSong.arrangemeUrl}
           arrangemeEasyUrl={selectedSong.arrangemeEasyUrl}
+          pdfPages={selectedSong.pdfPages}
+          easyPdfPages={selectedSong.easyPdfPages}
         />
       )}
 

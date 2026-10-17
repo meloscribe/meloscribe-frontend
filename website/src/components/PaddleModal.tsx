@@ -24,6 +24,8 @@ interface PaddleModalProps {
   arrangemeUrl?: string;
   arrangemeEasyUrl?: string;
   paymentsDisabled?: boolean;
+  pdfPages?: number;
+  easyPdfPages?: number;
 }
 
 const COMMON_DOMAIN_TYPOS: Record<string, string> = {
@@ -597,7 +599,9 @@ export default function PaddleModal({
   isArrangeMe = false,
   arrangemeUrl,
   arrangemeEasyUrl,
-  paymentsDisabled = false
+  paymentsDisabled = false,
+  pdfPages,
+  easyPdfPages
 }: PaddleModalProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -976,6 +980,43 @@ export default function PaddleModal({
 
   const activeLang = normalizeLang(language);
   const t = translations[activeLang];
+
+  const currentPdfPages = isSelectedEasy ? (easyPdfPages || pdfPages) : pdfPages;
+
+  const getPdfTitle = () => {
+    if (!currentPdfPages) return t.pdfTitle;
+    switch (activeLang) {
+      case 'de':
+        return `Vollständige Noten (${currentPdfPages} ${currentPdfPages === 1 ? 'Seite' : 'Seiten'} PDF)`;
+      case 'fr':
+        return `Partitions complètes (PDF ${currentPdfPages} ${currentPdfPages === 1 ? 'page' : 'pages'})`;
+      case 'es':
+        return `Partituras completas (PDF de ${currentPdfPages} ${currentPdfPages === 1 ? 'página' : 'páginas'})`;
+      case 'it':
+        return `Spartiti completi (PDF di ${currentPdfPages} ${currentPdfPages === 1 ? 'pagina' : 'pagine'})`;
+      case 'en':
+      default:
+        return `Complete sheet music (${currentPdfPages} ${currentPdfPages === 1 ? 'Page' : 'Pages'} PDF)`;
+    }
+  };
+
+  const getPackageIncludesDesc = () => {
+    if (!currentPdfPages) return t.packageIncludesDesc;
+    const pageStr = `${currentPdfPages} ${currentPdfPages === 1 ? 'Page' : 'Pages'}`;
+    switch (activeLang) {
+      case 'de':
+        return `Klaviernoten (${currentPdfPages} ${currentPdfPages === 1 ? 'Seite' : 'Seiten'} PDF) + MIDI-Dateien (Normal/Langsam) + HD-Video-Tutorials`;
+      case 'fr':
+        return `Partitions de piano (PDF ${currentPdfPages} ${currentPdfPages === 1 ? 'page' : 'pages'}) + Fichiers MIDI (Normal/Lent) + Tutoriels vidéo HD`;
+      case 'es':
+        return `Partituras de piano (PDF de ${currentPdfPages} ${currentPdfPages === 1 ? 'página' : 'páginas'}) + Archivos MIDI (Normal/Lento) + Tutoriales en video HD`;
+      case 'it':
+        return `Spartiti per pianoforte (PDF di ${currentPdfPages} ${currentPdfPages === 1 ? 'pagina' : 'pagine'}) + File MIDI (Normale/Lento) + Video tutorial HD`;
+      case 'en':
+      default:
+        return `Piano Sheets (${pageStr} PDF) + MIDI Files (Normal/Slow) + HD Video Tutorials`;
+    }
+  };
 
   const handleStripeCheckoutRedirect = async () => {
     if (paymentsDisabled) return;
@@ -1650,7 +1691,7 @@ export default function PaddleModal({
                   </div>
                   <div>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {t.pdfTitle}
+                      {getPdfTitle()}
                     </span>
                     <p className="text-gray-500 dark:text-gray-500 text-xs mt-0.5">
                       {t.pdfDesc}
@@ -2131,7 +2172,7 @@ export default function PaddleModal({
                         {t.packageIncludes}
                       </p>
                       <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">
-                        {t.packageIncludesDesc}
+                        {getPackageIncludesDesc()}
                       </p>
                     </div>
 

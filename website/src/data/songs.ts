@@ -32,6 +32,8 @@ export interface Song {
   isArrangeMe?: boolean;
   trending?: boolean;
   isTrending?: boolean;
+  pdfPages?: number;
+  easyPdfPages?: number;
 }
 
 export const songs = (songsData as Song[]).filter(s => s.id !== 'global_settings');
