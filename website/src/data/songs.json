@@ -1,5 +1,25 @@
 [
   {
+    "id": "61",
+    "title": "Goodbye To A Lover Again",
+    "artist": "Isak Danielson",
+    "difficulty": "Original",
+    "price": "6 €",
+    "kofiId": "price_1UYrwiQ4cuBqoYoXsIiMcCiB",
+    "stripePriceId": "price_1UYrwiQ4cuBqoYoXsIiMcCiB",
+    "coverImage": "/covers/Goodbye To A Lover Again_clean.jpg",
+    "audioPreviewUrl": "/audio-previews/Goodbye To A Lover Again.mp3",
+    "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
+    "theme": "warm",
+    "isArrangeMe": false,
+    "paymentsDisabled": false,
+    "pdfPages": 5,
+    "hasOriginal": true,
+    "hasEasy": false,
+    "trending": false,
+    "isTrending": false
+  },
+  {
     "id": "60",
     "title": "Floating in Reverie",
     "artist": "Moayad Aljabal",
@@ -16,8 +36,8 @@
     "pdfPages": 3,
     "hasOriginal": true,
     "hasEasy": false,
-    "trending": false,
-    "isTrending": false
+    "trending": true,
+    "isTrending": true
   },
   {
     "id": "59",
@@ -58,8 +78,8 @@
     "audioPreviewUrl": "/audio-previews/In This Shirt.mp3",
     "kofiId": "price_1UISU8Q4cuBqoYoXtmC1mCZZ",
     "hasOriginal": true,
-    "trending": true,
-    "isTrending": true,
+    "trending": false,
+    "isTrending": false,
     "pdfPages": 4
   },
   {
@@ -124,8 +144,8 @@
     "audioPreviewUrl": "/audio-previews/Sweetest Rain.mp3",
     "gradient": "from-orange-500/20 via-dark-700 to-orange-500/5",
     "theme": "warm",
-    "trending": true,
-    "isTrending": true,
+    "trending": false,
+    "isTrending": false,
     "pdfPages": 3
   },
   {
@@ -404,8 +424,8 @@
     "theme": "cold",
     "audioPreviewUrl": "/audio-previews/Carol of the Bells.mp3",
     "kofiId": "prod_dummy123",
-    "trending": false,
-    "isTrending": false,
+    "trending": true,
+    "isTrending": true,
     "pdfPages": 1
   },
   {
