@@ -557,7 +557,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-gray-150 dark:bg-dark-900 flex-shrink-0 flex items-center justify-center border border-gray-200 dark:border-dark-600/50 overflow-hidden">
                 <img 
-                  src={`/covers/${orderInfo?.song_name.replace(" (All Parts)", "").replace(" (Part 1)", "").replace(" (Part 2)", "")}.jpg`}
+                  src={`/covers/${(orderInfo?.song_name || '')
+                    .replace(/\s*\((All Parts|Part \d+|Easy|Easy Version|Original|Original \/ Easy)\)/gi, '')
+                    .replace(/\s+(Easy|Easy Version|Original)$/i, '')
+                    .trim()}.jpg`}
                   alt={orderInfo?.song_name}
                   className="w-full h-full object-cover"
                   onError={(e) => {

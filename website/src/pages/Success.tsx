@@ -118,7 +118,8 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
       }
     };
 
-    if (checkoutId === 'demo_checkout_123' || checkoutId.startsWith('demo_')) {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocalhost && (checkoutId === 'demo_checkout_123' || checkoutId.startsWith('demo_'))) {
       setTimeout(() => {
         window.history.pushState(null, '', `/order/demo_hash_${checkoutId}`);
         window.dispatchEvent(new PopStateEvent('popstate'));
