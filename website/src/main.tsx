@@ -4,6 +4,9 @@ import { Analytics } from '@vercel/analytics/react';
 import App from './App.tsx';
 import './index.css';
 import './i18n.ts';
+import { captureAttribution } from './utils/attribution.ts';
+
+captureAttribution();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

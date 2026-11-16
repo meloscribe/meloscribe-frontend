@@ -4,6 +4,12 @@ Technical insights and resolved bugs specific to the meloscribe website (`C:\Dev
 
 ---
 
+### 2026-11-16: Fail-Safe Multi-Touch Checkout Attribution (`utm_source`, `referrer`, In-App WebViews)
+- **Context**: In-app browsers (TikTok, Facebook, Instagram) and returning Safari/Chrome buyers previously lost external origin context when reaching Stripe Checkout on Vercel, because SPA navigation sets `Referer` on API requests to `meloscribesheets.com`.
+- **Implementation (`website/src/utils/attribution.ts`, `main.tsx`, `PaddleModal.tsx`)**: Captures UTM params, platform click IDs (`fbclid`, `ttclid`, `gclid`, `epik`, `igsh`/`igshid`), WebView User-Agents, and non-internal `document.referrer` at app bootstrap (stored in `sessionStorage` + 14-day `localStorage` fallback), passing clipped values optionally into `/api/checkout/create-session`. Wrapped in defensive `try/catch` blocks so storage restrictions can never block checkout.
+
+---
+
 ### Ko-fi Widget limitations — use iframe modal instead
 - The official `overlay-widget.js` only supports tip/floating chat. It cannot target specific shop products. Use a clean React iframe modal for product-specific checkouts.
 

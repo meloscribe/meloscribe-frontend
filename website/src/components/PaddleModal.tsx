@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Loader2, ShieldCheck, Download, Music, Tv, FileText, Play, Sparkles, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, ArrowUpRight, Info, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import type { Stripe, StripeElements, StripePaymentElement, StripeExpressCheckoutElement } from '@stripe/stripe-js';
+import { getCheckoutAttribution } from '../utils/attribution';
 
 interface PaddleModalProps {
   isOpen: boolean;
@@ -1034,7 +1035,8 @@ export default function PaddleModal({
           format: 'full_arrangement',
           difficulty: selectedDifficulty,
           priceId: currentPriceId,
-          language: language
+          language: language,
+          ...getCheckoutAttribution()
         })
       });
       
@@ -1078,7 +1080,8 @@ export default function PaddleModal({
             difficulty: diff,
             priceId: pId,
             language: language,
-            embedded: true
+            embedded: true,
+            ...getCheckoutAttribution()
           })
         });
         if (!res.ok) {
