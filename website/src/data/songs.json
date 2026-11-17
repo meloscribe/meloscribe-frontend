@@ -3,7 +3,7 @@
     "id": "19",
     "title": "Carol of the Bells",
     "artist": "Traditional",
-    "difficulty": "Original",
+    "difficulty": "Original / Easy",
     "price": "6 €",
     "coverImage": "/covers/Carol of the Bells_clean.jpg",
     "gradient": "from-neon-cyan/20 via-dark-700 to-neon-cyan/5",
@@ -17,7 +17,12 @@
     "easyPdfPages": 5,
     "isArrangeMe": false,
     "paymentsDisabled": false,
-    "hasOriginal": true
+    "hasOriginal": true,
+    "hasEasy": true,
+    "easyPrice": "6 €",
+    "easyStripePriceId": "price_1Ucuo6Q4cuBqoYoXWt8Z0zrG",
+    "easyKofiId": "price_1Ucuo6Q4cuBqoYoXWt8Z0zrG",
+    "easyId": "62"
   },
   {
     "id": "61",
