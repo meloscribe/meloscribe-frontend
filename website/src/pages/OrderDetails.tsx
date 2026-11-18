@@ -310,7 +310,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [loading, setLoading] = useState(true);
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [downloadingType, setDownloadingType] = useState<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow' | null>(null);
+  const [downloadingTypes, setDownloadingTypes] = useState<Set<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow'>>(new Set());
   const [showTiktokModal, setShowTiktokModal] = useState(false);
   const [userRating, setUserRating] = useState<'up' | 'down' | null>(() => {
     if (typeof window !== 'undefined') {
@@ -419,9 +419,13 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   };
 
   const handleDownload = async (type: 'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow') => {
-    if (!orderInfo || downloadingType) return;
+    if (!orderInfo || downloadingTypes.has(type)) return;
     
-    setDownloadingType(type);
+    setDownloadingTypes(prev => {
+      const next = new Set(prev);
+      next.add(type);
+      return next;
+    });
     showToast(t.downloading);
 
     try {
@@ -436,6 +440,44 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           if (isTikTok) {
             setShowTiktokModal(true);
             return;
+          }
+
+          if (type === 'pdf' || type === 'midi' || type === 'midi_slow') {
+            const cleanSongName = (orderInfo.song_name || 'Meloscribe')
+              .replace(/[/\\?%*:|"<>]/g, '')
+              .trim();
+            let filename = `${cleanSongName}.pdf`;
+            if (type === 'midi') {
+              filename = `${cleanSongName}.mid`;
+            } else if (type === 'midi_slow') {
+              filename = `${cleanSongName} slow.mid`;
+            }
+
+            try {
+              const fileRes = await fetch(data.download_url);
+              if (!fileRes.ok) throw new Error(`HTTP ${fileRes.status}`);
+              const blob = await fileRes.blob();
+              const blobUrl = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = blobUrl;
+              link.download = filename;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+            } catch (blobErr) {
+              console.warn('Direct blob fetch failed, falling back to link download:', blobErr);
+              const link = document.createElement('a');
+              link.href = data.download_url;
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              link.setAttribute('download', filename);
+              document.body.appendChild(link);
+              link.click();
+              setTimeout(() => {
+                if (document.body.contains(link)) document.body.removeChild(link);
+              }, 2000);
+            }
           } else if (isAndroid || isIOS) {
             // Facebook (FBAN/FBAV), Instagram and standard mobile browsers support direct downloads natively.
             // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
@@ -443,16 +485,20 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           } else {
             const link = document.createElement('a');
             link.href = data.download_url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
             link.setAttribute('download', '');
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+            setTimeout(() => {
+              if (document.body.contains(link)) document.body.removeChild(link);
+            }, 2000);
           }
           
           showToast(t.downloadSuccess);
           
           if (data.download_count !== undefined) {
-            setOrderInfo(prev => prev ? { ...prev, download_count: data.download_count } : null);
+            setOrderInfo(prev => prev ? { ...prev, download_count: Math.max(prev.download_count, data.download_count) } : null);
           } else {
             setOrderInfo(prev => prev ? { ...prev, download_count: prev.download_count + 1 } : null);
           }
@@ -472,7 +518,11 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       console.error('Download request failed:', err);
       showToast(t.errNetwork);
     } finally {
-      setDownloadingType(null);
+      setDownloadingTypes(prev => {
+        const next = new Set(prev);
+        next.delete(type);
+        return next;
+      });
     }
   };
 
@@ -666,10 +716,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <button
                 onClick={() => handleDownload('pdf')}
-                disabled={isLimitReached || downloadingType !== null}
+                disabled={isLimitReached || downloadingTypes.has('pdf')}
                 className="w-full sm:w-52 whitespace-nowrap relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'pdf' ? (
+                {downloadingTypes.has('pdf') ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
@@ -731,10 +781,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <button
                 onClick={() => handleDownload('video')}
-                disabled={isLimitReached || downloadingType !== null}
+                disabled={isLimitReached || downloadingTypes.has('video')}
                 className="w-full sm:w-52 whitespace-nowrap relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 hover:from-neon-cyan/30 hover:to-neon-pink/30 hover:border-neon-cyan hover:shadow-neon-cyan-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'video' ? (
+                {downloadingTypes.has('video') ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
@@ -767,10 +817,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <button
                 onClick={() => handleDownload('video_slow')}
-                disabled={isLimitReached || downloadingType !== null}
+                disabled={isLimitReached || downloadingTypes.has('video_slow')}
                 className="w-full sm:w-52 whitespace-nowrap relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-cyan/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'video_slow' ? (
+                {downloadingTypes.has('video_slow') ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-cyan group-hover:translate-y-0.5 transition-transform" />
@@ -803,10 +853,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <button
                 onClick={() => handleDownload('midi')}
-                disabled={isLimitReached || downloadingType !== null}
+                disabled={isLimitReached || downloadingTypes.has('midi')}
                 className="w-full sm:w-52 whitespace-nowrap relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink bg-gradient-to-r from-neon-cyan/15 to-neon-pink/15 hover:from-neon-cyan/25 hover:to-neon-pink/25 hover:border-neon-pink hover:shadow-neon-pink-subtle disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'midi' ? (
+                {downloadingTypes.has('midi') ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
@@ -839,10 +889,10 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
               </div>
               <button
                 onClick={() => handleDownload('midi_slow')}
-                disabled={isLimitReached || downloadingType !== null}
+                disabled={isLimitReached || downloadingTypes.has('midi_slow')}
                 className="w-full sm:w-52 whitespace-nowrap relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-300 border border-neon-pink/60 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 hover:from-neon-cyan/20 hover:to-neon-pink/20 hover:border-neon-pink disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
-                {downloadingType === 'midi_slow' ? (
+                {downloadingTypes.has('midi_slow') ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
                   <Download className="w-4 h-4 text-neon-pink group-hover:translate-y-0.5 transition-transform" />
