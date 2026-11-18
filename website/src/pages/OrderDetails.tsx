@@ -483,16 +483,21 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
             // DO NOT use intent:// for Facebook, as Facebook will warn "Die Website versucht gerade eine externe App zu öffnen".
             window.location.href = data.download_url;
           } else {
-            const link = document.createElement('a');
-            link.href = data.download_url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.setAttribute('download', '');
-            document.body.appendChild(link);
-            link.click();
+            // Desktop: Use a hidden iframe to trigger direct R2 attachment downloads.
+            // This runs each video download in an isolated background frame without flashing an "untitled" tab.
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0px';
+            iframe.style.height = '0px';
+            iframe.style.border = 'none';
+            iframe.src = data.download_url;
+            document.body.appendChild(iframe);
             setTimeout(() => {
-              if (document.body.contains(link)) document.body.removeChild(link);
-            }, 2000);
+              if (document.body.contains(iframe)) {
+                document.body.removeChild(iframe);
+              }
+            }, 60000);
           }
           
           showToast(t.downloadSuccess);
