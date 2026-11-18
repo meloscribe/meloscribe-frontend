@@ -463,8 +463,8 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
         const errData = await res.json().catch(() => ({}));
         const errMsg = errData.error || t.errFailed;
         showToast(errMsg);
-        if (res.status === 403) {
-          // Sync UI count to 50 if limit hit
+        if (res.status === 403 && (errData.code === 'DOWNLOAD_LIMIT_REACHED' || (errMsg && errMsg.toLowerCase().includes('limit reached')))) {
+          // Sync UI count to 50 only if download count limit was actually reached
           setOrderInfo(prev => prev ? { ...prev, download_count: 50 } : null);
         }
       }
