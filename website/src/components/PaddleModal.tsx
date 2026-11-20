@@ -2188,8 +2188,6 @@ export default function PaddleModal({
 
                     <button
                       onClick={handleBuyClick}
-                      onMouseEnter={() => prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId)}
-                      onTouchStart={() => prefetchCheckoutSession(selectedDifficulty, currentSongId, currentPriceId)}
                       disabled={isRedirecting || isEmbeddedLoading}
                       className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-semibold bg-gradient-to-r from-neon-cyan to-neon-pink text-white shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(255,45,146,0.5)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 cursor-pointer text-sm"
                     >
