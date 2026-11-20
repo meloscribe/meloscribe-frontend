@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { ArrowLeft, Download, Loader2, Music, ShieldCheck, FileText, Mail, AlertCircle, Info, Tv, Sparkles, ArrowUpRight, ThumbsUp, ThumbsDown, Copy, Check, X } from 'lucide-react';
 import { onOutboundClick } from '../lib/outboundTracker';
 import { MeloThumbUp, MeloThumbDown } from '../components/MeloThumb';
 
@@ -62,11 +63,17 @@ const translations = {
     errFailed: 'Download failed',
     errNetwork: 'Network error during download',
     accessDenied: 'Access Denied',
-    tiktokNoticeTitle: '💡 TikTok Browser Notice',
-    tiktokNoticeDesc: 'Downloads do not work directly in the TikTok browser: Tap "..." in the top right and select "Open in Browser" (Safari / Chrome).',
-    inAppNoticeTitle: '💡 In-App Browser Notice',
+    tiktokNoticeTitle: 'TikTok Browser Notice',
+    tiktokNoticeDesc: 'Downloads are blocked inside the TikTok browser: Tap "..." at the very top right and select "Open in Browser" (Safari / Chrome).',
+    inAppNoticeTitle: 'In-App Browser Notice',
     inAppNoticeDesc: 'If downloads do not start: Tap "..." in top right and select "Open in Browser" (Safari / Chrome).',
-    tapHere: 'Tap here (...) and open browser',
+    tapHere: 'Tap "..." top right',
+    tiktokModalTitle: 'Open in Browser to Download',
+    tiktokStep1: 'Tap the "..." menu at the very top right of TikTok.',
+    tiktokStep2: 'Choose "Open in Browser" (Safari or Chrome).',
+    copyLinkBtn: 'Copy Order Link',
+    copiedLinkBtn: 'Link Copied',
+    closeBtn: 'Close',
     practiceNoticeTitle: 'Stuck on this arrangement?',
     practiceNoticeDesc: 'Learn it measure by measure with visual hands, ear-training methods, and our recommended studio setup.',
     practiceNoticeLink: 'Studio & Learning Stack',
@@ -119,11 +126,17 @@ const translations = {
     errFailed: 'Download fehlgeschlagen',
     errNetwork: 'Netzwerkfehler beim Download',
     accessDenied: 'Fehler',
-    tiktokNoticeTitle: '💡 Hinweis für TikTok-Browser',
-    tiktokNoticeDesc: 'Downloads funktionieren im TikTok-Browser nicht direkt: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
-    inAppNoticeTitle: '💡 Hinweis für In-App-Browser',
+    tiktokNoticeTitle: 'Hinweis für TikTok-Browser',
+    tiktokNoticeDesc: 'Downloads sind im TikTok-Browser blockiert: Tippe ganz oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
+    inAppNoticeTitle: 'Hinweis für In-App-Browser',
     inAppNoticeDesc: 'Falls Downloads nicht starten oder geblockt werden: Tippe oben rechts auf „...“ und wähle „In Browser öffnen“ (Safari / Chrome).',
-    tapHere: 'Hier tippen (...) und im Browser öffnen',
+    tapHere: 'Oben rechts auf „...“ tippen',
+    tiktokModalTitle: 'Zum Laden im Browser öffnen',
+    tiktokStep1: 'Tippe ganz oben rechts bei TikTok auf das „...“-Menü.',
+    tiktokStep2: 'Wähle „In Browser öffnen“ (Safari oder Chrome).',
+    copyLinkBtn: 'Bestell-Link kopieren',
+    copiedLinkBtn: 'Link kopiert',
+    closeBtn: 'Schließen',
     practiceNoticeTitle: 'Kommst du beim Üben nicht weiter?',
     practiceNoticeDesc: 'Lerne Takt für Takt mit visuellen Händen, Gehör-Übungsmethoden und unserem Studio-Setup.',
     practiceNoticeLink: 'Studio & Lern-Stack',
@@ -176,11 +189,17 @@ const translations = {
     errFailed: 'Téléchargement échoué',
     errNetwork: 'Erreur réseau lors du téléchargement',
     accessDenied: 'Accès refusé',
-    tiktokNoticeTitle: '💡 Navigateur TikTok',
-    tiktokNoticeDesc: 'Les téléchargements ne fonctionnent pas dans le navigateur TikTok : appuyez sur « ... » en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
-    inAppNoticeTitle: '💡 Remarque pour le navigateur intégré',
+    tiktokNoticeTitle: 'Navigateur TikTok',
+    tiktokNoticeDesc: 'Les téléchargements sont bloqués dans le navigateur TikTok : appuyez sur « ... » tout en haut à droite et choisissez « Ouvrir dans le navigateur » (Safari / Chrome).',
+    inAppNoticeTitle: 'Remarque pour le navigateur intégré',
     inAppNoticeDesc: 'Si les téléchargements ne démarrent pas : appuyez sur « ... » en haut à droite et sélectionnez « Ouvrir dans le navigateur » (Safari / Chrome).',
-    tapHere: 'Appuyez ici (...) et ouvrez dans le navigateur',
+    tapHere: 'Appuyez sur « ... » en haut',
+    tiktokModalTitle: 'Ouvrir dans le navigateur',
+    tiktokStep1: 'Appuyez sur le menu « ... » tout en haut à droite de TikTok.',
+    tiktokStep2: 'Choisissez « Ouvrir dans le navigateur » (Safari ou Chrome).',
+    copyLinkBtn: 'Copier le lien',
+    copiedLinkBtn: 'Lien copié',
+    closeBtn: 'Fermer',
     practiceNoticeTitle: 'Bloqué sur cet arrangement ?',
     practiceNoticeDesc: 'Apprenez mesure par mesure avec des mains visuelles, des méthodes à l\'oreille et notre matériel studio.',
     practiceNoticeLink: 'Studio & Outils de pratique',
@@ -233,11 +252,17 @@ const translations = {
     errFailed: 'Descarga fallida',
     errNetwork: 'Error de red durante la descarga',
     accessDenied: 'Acceso denegado',
-    tiktokNoticeTitle: '💡 Navegador de TikTok',
-    tiktokNoticeDesc: 'Las descargas no funcionan en el navegador de TikTok: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
-    inAppNoticeTitle: '💡 Aviso para el navegador integrado',
+    tiktokNoticeTitle: 'Navegador de TikTok',
+    tiktokNoticeDesc: 'Las descargas están bloqueadas en el navegador de TikTok: toca "..." arriba a la derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
+    inAppNoticeTitle: 'Aviso para el navegador integrado',
     inAppNoticeDesc: 'Si las descargas no se inician: toca "..." en la esquina superior derecha y selecciona "Abrir en el navegador" (Safari / Chrome).',
-    tapHere: 'Toca aquí (...) y abre en el navegador',
+    tapHere: 'Toca "..." arriba a la derecha',
+    tiktokModalTitle: 'Abrir en el navegador',
+    tiktokStep1: 'Toca el menú "..." en la esquina superior derecha de TikTok.',
+    tiktokStep2: 'Selecciona "Abrir en el navegador" (Safari o Chrome).',
+    copyLinkBtn: 'Copiar enlace',
+    copiedLinkBtn: 'Enlace copiado',
+    closeBtn: 'Cerrar',
     practiceNoticeTitle: '¿Atascado en este arreglo?',
     practiceNoticeDesc: 'Aprende compás por compás con manos visuales, práctica de oído y nuestro setup de estudio.',
     practiceNoticeLink: 'Studio y Herramientas',
@@ -290,11 +315,17 @@ const translations = {
     errFailed: 'Download fallito',
     errNetwork: 'Errore di rete durante il download',
     accessDenied: 'Accesso negato',
-    tiktokNoticeTitle: '💡 Browser TikTok',
-    tiktokNoticeDesc: 'I download non funzionano nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
-    inAppNoticeTitle: '💡 Avviso per il browser in-app',
+    tiktokNoticeTitle: 'Browser TikTok',
+    tiktokNoticeDesc: 'I download sono bloccati nel browser TikTok: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
+    inAppNoticeTitle: 'Avviso per il browser in-app',
     inAppNoticeDesc: 'Se i download non si avviano: tocca "..." in alto a destra e seleziona "Apri nel browser" (Safari / Chrome).',
-    tapHere: 'Tocca qui (...) e apri nel browser',
+    tapHere: 'Tocca "..." in alto a destra',
+    tiktokModalTitle: 'Apri nel browser per scaricare',
+    tiktokStep1: 'Tocca il menu "..." in alto a destra su TikTok.',
+    tiktokStep2: 'Seleziona "Apri nel browser" (Safari o Chrome).',
+    copyLinkBtn: 'Copia link ordine',
+    copiedLinkBtn: 'Link copiato',
+    closeBtn: 'Chiudi',
     practiceNoticeTitle: 'Bloccato su questo arrangiamento?',
     practiceNoticeDesc: 'Impara battuta per battuta con mani visive, metodi a orecchio e la nostra attrezzatura studio.',
     practiceNoticeLink: 'Studio e Strumenti',
@@ -312,6 +343,7 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
   const [error, setError] = useState<string | null>(null);
   const [downloadingTypes, setDownloadingTypes] = useState<Set<'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow'>>(new Set());
   const [showTiktokModal, setShowTiktokModal] = useState(false);
+  const [copiedOrderLink, setCopiedOrderLink] = useState(false);
   const [userRating, setUserRating] = useState<'up' | 'down' | null>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(`meloscribe_rating_${hash}`);
@@ -972,20 +1004,78 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
           <span>{t.backHome}</span>
         </button>
 
-        {/* TikTok Helper Overlay - only arrow top-right, no popup box */}
-        {showTiktokModal && (
-          <div 
+        {/* TikTok Helper Overlay - rendered via Portal above fixed navbar & centered in current viewport */}
+        {showTiktokModal && typeof document !== 'undefined' && createPortal(
+          <div
             onClick={() => setShowTiktokModal(false)}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col items-end p-4 cursor-pointer"
+            className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex flex-col justify-between p-4 sm:p-6"
           >
-            {/* Pointer Arrow pointing to top right */}
-            <div className="mr-3 sm:mr-6 mt-2 flex flex-col items-end text-amber-400 animate-bounce pointer-events-none">
-              <span className="text-5xl font-bold leading-none">↗</span>
-              <span className="text-xs font-bold uppercase tracking-wider bg-amber-500/25 px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 shadow-xl mt-1">
-                {t.tapHere}
-              </span>
+            {/* Calm top-right pointer above website navbar pointing toward TikTok native "..." menu */}
+            <div className="flex justify-end pt-1 pr-1 pointer-events-none">
+              <div className="inline-flex items-center gap-2 rounded-full bg-dark-900/95 border border-neon-cyan/50 px-3.5 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.65)] text-xs font-semibold text-neon-cyan">
+                <span>{t.tapHere}</span>
+                <ArrowUpRight className="w-4 h-4 flex-shrink-0" />
+              </div>
             </div>
-          </div>
+
+            {/* Center instruction card visible at any scroll position */}
+            <div className="flex-1 flex items-center justify-center">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-sm rounded-2xl bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-500/80 p-5 shadow-2xl text-left"
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <h3 className="font-display font-bold text-base text-gray-900 dark:text-white">
+                    {t.tiktokModalTitle}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowTiktokModal(false)}
+                    className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                    aria-label={t.closeBtn}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <ol className="space-y-2.5 text-sm text-gray-600 dark:text-gray-300 mb-5">
+                  <li className="flex items-start gap-2.5">
+                    <span className="w-5 h-5 rounded-full bg-neon-cyan/15 text-neon-cyan font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                    <span>{t.tiktokStep1}</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="w-5 h-5 rounded-full bg-neon-pink/15 text-neon-pink font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                    <span>{t.tiktokStep2}</span>
+                  </li>
+                </ol>
+
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(window.location.href).catch(() => {});
+                      setCopiedOrderLink(true);
+                      setTimeout(() => setCopiedOrderLink(false), 2500);
+                    }}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan text-xs font-semibold hover:bg-neon-cyan/20 transition-colors"
+                  >
+                    {copiedOrderLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedOrderLink ? t.copiedLinkBtn : t.copyLinkBtn}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowTiktokModal(false)}
+                    className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors"
+                  >
+                    {t.closeBtn}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div />
+          </div>,
+          document.body
         )}
       </div>
     </section>
