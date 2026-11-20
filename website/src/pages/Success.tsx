@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, CheckCircle2, Download, Loader2, Mail, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CheckCircle2, Download, Loader2, Mail, Sparkles } from 'lucide-react';
 
 interface SuccessProps {
   onBack: () => void;
@@ -13,6 +13,9 @@ const translations = {
     subtitle: 'Thank you for your support! Your learning package containing sheet music (PDF), MIDIs, and practice videos is now ready.',
     verifying: 'Verifying transaction & constructing secure link...',
     timeout: 'Verification timed out. Please check your email for the link.',
+    failedTitle: 'Payment Not Completed',
+    failedSubtitle: 'Your payment could not be verified or was canceled. No worries — you were not charged if the payment failed.',
+    failedError: 'Payment failed or was canceled. Please return to the catalog and try again.',
     packageReady: 'Your package is ready',
     downloadZip: 'Download Sheet Package (.zip)',
     emailSent: 'We also sent a backup copy of the link to your inbox.',
@@ -24,6 +27,9 @@ const translations = {
     subtitle: 'Vielen Dank für deine Unterstützung! Dein Lernpaket mit Noten (PDF), MIDIs und Videos ist jetzt bereit.',
     verifying: 'Verifiziere Kauf & generiere sicheren Link...',
     timeout: 'Verifizierung dauerte zu lange. Bitte prüfe deine E-Mails.',
+    failedTitle: 'Zahlung nicht abgeschlossen',
+    failedSubtitle: 'Deine Zahlung wurde abgebrochen oder konnte nicht bestätigt werden. Bei fehlgeschlagener Zahlung erfolgt keine Abbuchung.',
+    failedError: 'Zahlung fehlgeschlagen oder abgebrochen. Bitte kehre zum Katalog zurück und versuche es erneut.',
     packageReady: 'Dein Paket steht bereit',
     downloadZip: 'Notenpaket herunterladen (.zip)',
     emailSent: 'Der Link wurde dir zur Sicherheit auch per E-Mail zugeschickt.',
@@ -35,6 +41,9 @@ const translations = {
     subtitle: 'Merci pour votre soutien ! Votre pack d\'apprentissage avec partitions (PDF), MIDIs et vidéos est prêt.',
     verifying: 'Vérification de la transaction et construction du lien sécurisé...',
     timeout: 'Délai d\'attente de vérification dépassé. Veuillez vérifier vos e-mails pour le lien.',
+    failedTitle: 'Paiement non finalisé',
+    failedSubtitle: 'Votre paiement a été annulé ou n\'a pas pu être confirmé. Aucun montant n\'est débité en cas d\'échec.',
+    failedError: 'Le paiement a échoué ou a été annulé. Veuillez réessayer depuis le catalogue.',
     packageReady: 'Votre pack est prêt',
     downloadZip: 'Télécharger le pack de partitions (.zip)',
     emailSent: 'Nous avons également envoyé une copie de sauvegarde du lien dans votre boîte de réception.',
@@ -46,6 +55,9 @@ const translations = {
     subtitle: '¡Gracias por tu apoyo! Tu paquete de aprendizaje que contiene partituras (PDF), MIDIs y videos de práctica ya está listo.',
     verifying: 'Verificando transacción y construyendo enlace seguro...',
     timeout: 'Tiempo de espera de verificación agotado. Por favor, revise su correo electrónico para ver el enlace.',
+    failedTitle: 'Pago no completado',
+    failedSubtitle: 'Tu pago fue cancelado o no pudo completarse. No se realizó ningún cargo si el pago falló.',
+    failedError: 'El pago falló o fue cancelado. Por favor, vuelve al catálogo e inténtalo de nuevo.',
     packageReady: 'Tu paquete está listo',
     downloadZip: 'Descargar paquete de partituras (.zip)',
     emailSent: 'También enviamos una copia de seguridad del enlace a tu bandeja de entrada.',
@@ -57,6 +69,9 @@ const translations = {
     subtitle: 'Grazie per il tuo supporto! Il tuo pacchetto di abbandono contenente spartiti (PDF), file MIDI e video di pratica è ora pronto.',
     verifying: 'Verifica della transazione e creazione del link sicuro...',
     timeout: 'Tempo di verifica scaduto. Controlla la tua email per il link.',
+    failedTitle: 'Pagamento non completato',
+    failedSubtitle: 'Il pagamento è stato annullato o non è andato a buon fine. Nessun addebito viene effettuato se il pagamento fallisce.',
+    failedError: 'Pagamento non riuscito o annullato. Torna al catalogo e riprova.',
     packageReady: 'Il tuo pacchetto è pronto',
     downloadZip: 'Scarica pacchetto spartiti (.zip)',
     emailSent: 'Abbiamo anche inviato una copia di backup del link alla tua casella di posta.',
@@ -74,9 +89,12 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
   const activeLang = ['de', 'en', 'fr', 'es', 'it'].includes(cleanLang) ? cleanLang : 'en';
   const t = translations[activeLang as keyof typeof translations];
 
-  // Get checkout_id from URL params
+  // Get checkout_id and redirect_status from URL params
   const queryParams = new URLSearchParams(window.location.search);
-  const checkoutId = queryParams.get('payment_intent') || queryParams.get('checkout_id') || queryParams.get('checkout') || 'demo_checkout_123';
+  const rawCheckoutId = queryParams.get('payment_intent') || queryParams.get('checkout_id') || queryParams.get('checkout') || '';
+  const redirectStatus = (queryParams.get('redirect_status') || '').toLowerCase();
+  const isRedirectFailure = redirectStatus === 'failed' || redirectStatus === 'canceled';
+  const checkoutId = rawCheckoutId || 'demo_checkout_123';
 
   const API_BASE = import.meta.env.VITE_API_URL || 
     (typeof window !== 'undefined' && (
@@ -90,13 +108,31 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
       : 'https://api.meloscribe.dev');
 
   useEffect(() => {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isRedirectFailure || (!rawCheckoutId && !isLocalhost)) {
+      setError(t.failedError);
+      setLoading(false);
+      return;
+    }
+
+    if (isLocalhost && (checkoutId === 'demo_checkout_123' || checkoutId.startsWith('demo_'))) {
+      const demoTimer = window.setTimeout(() => {
+        window.history.pushState(null, '', `/order/demo_hash_${checkoutId}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, 1500);
+      return () => window.clearTimeout(demoTimer);
+    }
+
     let intervalId: number;
     let attempts = 0;
+    let inFlight = false;
     const maxAttempts = 30; // 30 attempts * 1.5s = 45s max polling
 
     const checkHash = async () => {
+      if (inFlight) return;
+      inFlight = true;
       try {
-        const res = await fetch(`${API_BASE}/api/order/hash-by-checkout?checkout_id=${checkoutId}`);
+        const res = await fetch(`${API_BASE}/api/order/hash-by-checkout?checkout_id=${encodeURIComponent(checkoutId)}`);
         if (res.ok) {
           const data = await res.json();
           if (data && data.download_hash) {
@@ -108,6 +144,8 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
         }
       } catch (err) {
         console.warn('Polling hash failed:', err);
+      } finally {
+        inFlight = false;
       }
 
       attempts += 1;
@@ -118,39 +156,36 @@ export default function Success({ onBack, language, showToast }: SuccessProps) {
       }
     };
 
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    if (isLocalhost && (checkoutId === 'demo_checkout_123' || checkoutId.startsWith('demo_'))) {
-      setTimeout(() => {
-        window.history.pushState(null, '', `/order/demo_hash_${checkoutId}`);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-      }, 1500);
-      return;
-    }
-
     intervalId = window.setInterval(checkHash, 1500);
     checkHash();
 
     return () => clearInterval(intervalId);
-  }, [checkoutId, t.timeout]);
+  }, [checkoutId, rawCheckoutId, isRedirectFailure, API_BASE, t.timeout, t.failedError]);
 
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] flex items-center justify-center">
       <div className="max-w-xl w-full mx-auto text-center">
-        {/* Success Icon */}
-        <div className="inline-flex p-3 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 mb-6 relative">
-          <div className="absolute inset-0 bg-neon-cyan/10 rounded-full blur-xl animate-pulse" />
-          <CheckCircle2 className="w-12 h-12 text-neon-cyan relative z-10" />
-        </div>
+        {/* Status Icon */}
+        {error ? (
+          <div className="inline-flex p-3 rounded-full bg-neon-pink/10 border border-neon-pink/20 mb-6 relative">
+            <AlertCircle className="w-12 h-12 text-neon-pink relative z-10" />
+          </div>
+        ) : (
+          <div className="inline-flex p-3 rounded-full bg-neon-cyan/10 border border-neon-cyan/20 mb-6 relative">
+            <div className="absolute inset-0 bg-neon-cyan/10 rounded-full blur-xl animate-pulse" />
+            <CheckCircle2 className="w-12 h-12 text-neon-cyan relative z-10" />
+          </div>
+        )}
 
         {/* Heading */}
         <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-          <span className="text-gradient neon-text-cyan">
-            {t.title}
+          <span className={error ? 'text-neon-pink' : 'text-gradient neon-text-cyan'}>
+            {error ? t.failedTitle : t.title}
           </span>
         </h1>
 
         <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto mb-10">
-          {t.subtitle}
+          {error ? t.failedSubtitle : t.subtitle}
         </p>
 
         {/* Download Action Card */}

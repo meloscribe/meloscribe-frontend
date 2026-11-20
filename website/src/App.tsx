@@ -17,9 +17,11 @@ import Studio from './pages/Studio';
 // Format auto-detection helper removed: all items are Full Arrangements
 
 const isSongFree = (priceStr: string | number | undefined): boolean => {
-  if (!priceStr) return true;
+  if (priceStr === undefined || priceStr === null || priceStr === '') return true;
   const p = priceStr.toString().trim().toLowerCase();
-  return p === '0' || p === '0 €' || p === '0$' || p === '0.00' || p === 'free' || p.startsWith('free') || p.startsWith('0');
+  if (p === 'free' || p.startsWith('free')) return true;
+  const num = parseFloat(p.replace(',', '.').replace(/[^0-9.]/g, ''));
+  return !isNaN(num) && num <= 0;
 };
 
 const getThemeIconColorClass = (theme: string | undefined): string => {
@@ -610,6 +612,10 @@ function App() {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
             setAllSongs(data);
+            setSelectedSong(prev => {
+              if (!prev) return prev;
+              return data.find((s: Song) => s.id === prev.id) || prev;
+            });
           }
         }
       } catch (err) {
@@ -1033,7 +1039,8 @@ function App() {
   // Sync state with back/forward history buttons
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
+      const raw = window.location.pathname;
+      setCurrentPath(raw.length > 1 ? raw.replace(/\/+$/, '') : raw);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -1041,7 +1048,8 @@ function App() {
 
   // Auto-open product modal based on query parameter
   useEffect(() => {
-    if ((currentPath === '/sheets' || currentPath === '/') && allSongs.length > 0) {
+    const normPath = currentPath.length > 1 ? currentPath.replace(/\/+$/, '') : currentPath;
+    if ((normPath === '/sheets' || normPath === '/') && allSongs.length > 0) {
       const params = new URLSearchParams(window.location.search);
       const rawSongSlug = params.get('song');
       if (rawSongSlug) {
@@ -1725,27 +1733,27 @@ function App() {
             )}
           </div>
         </section>
-      ) : (currentPath === '/studio' && isLocalhost) ? (
+      ) : (currentPath.replace(/\/+$/, '') === '/studio' && isLocalhost) ? (
         <Studio onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/imprint' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/imprint' ? (
         <Impressum onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/privacy' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/privacy' ? (
         <Datenschutz onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/terms' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/terms' ? (
         <Terms onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/refunds' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/refunds' ? (
         <Refunds onBack={() => navigate('/')} language={language} />
-      ) : currentPath === '/suggestions' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/suggestions' ? (
         <Suggestions 
           onBack={() => navigate('/')} 
           language={language} 
           showToast={showToast} 
           onSelectSong={(song) => handleDownloadClick(song)} 
         />
-      ) : currentPath === '/success' ? (
+      ) : currentPath.replace(/\/+$/, '') === '/success' ? (
         <Success onBack={() => navigate('/')} language={language} showToast={showToast} />
       ) : currentPath.startsWith('/order/') ? (
-        <OrderDetails onBack={() => navigate('/')} language={language} showToast={showToast} hash={currentPath.substring('/order/'.length)} />
+        <OrderDetails onBack={() => navigate('/')} language={language} showToast={showToast} hash={currentPath.substring('/order/'.length).replace(/\/+$/, '')} />
       ) : null}
       </main>
 

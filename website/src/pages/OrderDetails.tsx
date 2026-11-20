@@ -420,7 +420,14 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
 
   const handleDownload = async (type: 'pdf' | 'zip' | 'midi' | 'midi_slow' | 'video' | 'video_slow') => {
     if (!orderInfo || downloadingTypes.has(type)) return;
-    
+
+    const ua = navigator.userAgent || '';
+    const isTikTok = /TikTok|ByteLocale|ByteFullApp/i.test(ua);
+    if (isTikTok) {
+      setShowTiktokModal(true);
+      return;
+    }
+
     setDownloadingTypes(prev => {
       const next = new Set(prev);
       next.add(type);
@@ -433,50 +440,50 @@ export default function OrderDetails({ onBack, language, showToast, hash }: Orde
       if (res.ok) {
         const data = await res.json();
         if (data && data.download_url) {
-          const isTikTok = /TikTok|ByteLocale|ByteFullApp/i.test(navigator.userAgent);
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-          
-          if (isTikTok) {
-            setShowTiktokModal(true);
-            return;
-          }
+          const isAndroid = /Android/i.test(ua);
+          const isIOS = /iPhone|iPad|iPod/i.test(ua);
+          const isInAppWebview = /Instagram|FBAN|FBAV/i.test(ua);
 
           if (type === 'pdf' || type === 'midi' || type === 'midi_slow') {
-            const cleanSongName = (orderInfo.song_name || 'Meloscribe')
-              .replace(/[/\\?%*:|"<>]/g, '')
-              .trim();
-            let filename = `${cleanSongName}.pdf`;
-            if (type === 'midi') {
-              filename = `${cleanSongName}.mid`;
-            } else if (type === 'midi_slow') {
-              filename = `${cleanSongName} slow.mid`;
-            }
+            if (isIOS || isInAppWebview) {
+              // iOS Safari & Meta WKWebView reject async blob a[download] after fetch; direct attachment navigation works natively
+              window.location.href = data.download_url;
+            } else {
+              const cleanSongName = (orderInfo.song_name || 'Meloscribe')
+                .replace(/[/\\?%*:|"<>]/g, '')
+                .trim();
+              let filename = `${cleanSongName}.pdf`;
+              if (type === 'midi') {
+                filename = `${cleanSongName}.mid`;
+              } else if (type === 'midi_slow') {
+                filename = `${cleanSongName} slow.mid`;
+              }
 
-            try {
-              const fileRes = await fetch(data.download_url);
-              if (!fileRes.ok) throw new Error(`HTTP ${fileRes.status}`);
-              const blob = await fileRes.blob();
-              const blobUrl = URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = blobUrl;
-              link.download = filename;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-            } catch (blobErr) {
-              console.warn('Direct blob fetch failed, falling back to link download:', blobErr);
-              const link = document.createElement('a');
-              link.href = data.download_url;
-              link.target = '_blank';
-              link.rel = 'noopener noreferrer';
-              link.setAttribute('download', filename);
-              document.body.appendChild(link);
-              link.click();
-              setTimeout(() => {
-                if (document.body.contains(link)) document.body.removeChild(link);
-              }, 2000);
+              try {
+                const fileRes = await fetch(data.download_url);
+                if (!fileRes.ok) throw new Error(`HTTP ${fileRes.status}`);
+                const blob = await fileRes.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+              } catch (blobErr) {
+                console.warn('Direct blob fetch failed, falling back to link download:', blobErr);
+                const link = document.createElement('a');
+                link.href = data.download_url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(() => {
+                  if (document.body.contains(link)) document.body.removeChild(link);
+                }, 2000);
+              }
             }
           } else if (isAndroid || isIOS) {
             // Facebook (FBAN/FBAV), Instagram and standard mobile browsers support direct downloads natively.

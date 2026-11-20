@@ -640,6 +640,9 @@ export default function PaddleModal({
   const sessionCacheRef = useRef<Record<string, { clientSecret: string; publishableKey: string }>>({});
   const prefetchPromiseRef = useRef<Record<string, Promise<{ clientSecret: string; publishableKey: string }>>>({});
   const hasWalletsRef = useRef<boolean>(false);
+  const mountSessionIdRef = useRef<number>(0);
+  const readyFallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hardSafetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isLocalhost = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' || 
@@ -651,6 +654,7 @@ export default function PaddleModal({
   );
 
   const getApiBaseUrl = () => {
+    if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
     if (typeof window === 'undefined') return 'http://localhost:8787';
     const h = window.location.hostname;
     if (h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h.startsWith('10.') || h.startsWith('172.')) {
@@ -660,6 +664,15 @@ export default function PaddleModal({
   };
 
   const cleanupEmbeddedCheckout = () => {
+    mountSessionIdRef.current += 1;
+    if (readyFallbackTimerRef.current) {
+      clearTimeout(readyFallbackTimerRef.current);
+      readyFallbackTimerRef.current = null;
+    }
+    if (hardSafetyTimerRef.current) {
+      clearTimeout(hardSafetyTimerRef.current);
+      hardSafetyTimerRef.current = null;
+    }
     if (expressCheckoutRef.current) {
       try {
         expressCheckoutRef.current.destroy();
@@ -699,6 +712,8 @@ export default function PaddleModal({
       loadStripe(DEFAULT_STRIPE_PK).catch(() => {});
     } else {
       cleanupEmbeddedCheckout();
+      sessionCacheRef.current = {};
+      prefetchPromiseRef.current = {};
       setFreeEmail('');
       setFreeEmailConsent(true);
       setFreeEmailLoading(false);
@@ -762,7 +777,8 @@ export default function PaddleModal({
   const coverSrc = wideCoverSrc;
 
   const priceStr = String(currentPrice || '').trim().toLowerCase();
-  const isFree = !priceStr || priceStr === '0' || priceStr.startsWith('0') || priceStr.includes('free') || priceStr.includes('0 €') || priceStr.includes('0$');
+  const parsedPriceNum = parseFloat(priceStr.replace(',', '.').replace(/[^0-9.]/g, ''));
+  const isFree = !priceStr || priceStr === 'free' || priceStr.startsWith('free') || (!isNaN(parsedPriceNum) && parsedPriceNum <= 0);
 
   const handleFreeEmailSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -1105,6 +1121,16 @@ export default function PaddleModal({
 
   const handleBuyClick = async () => {
     if (paymentsDisabled) return;
+    const activeMountId = ++mountSessionIdRef.current;
+    if (readyFallbackTimerRef.current) {
+      clearTimeout(readyFallbackTimerRef.current);
+      readyFallbackTimerRef.current = null;
+    }
+    if (hardSafetyTimerRef.current) {
+      clearTimeout(hardSafetyTimerRef.current);
+      hardSafetyTimerRef.current = null;
+    }
+
     setCheckoutStep('embedded');
     setIsEmbeddedLoading(true);
     setIsCheckoutReady(false);
@@ -1119,45 +1145,39 @@ export default function PaddleModal({
     let paymentReady = false;
     let expressReadyLocal = false;
     let isRevealed = false;
-    let readyFallbackTimer: ReturnType<typeof setTimeout> | null = null;
-    let hardSafetyTimer: ReturnType<typeof setTimeout> | null = null;
 
     const revealCheckout = () => {
-      if (isRevealed) return;
+      if (isRevealed || mountSessionIdRef.current !== activeMountId) return;
       isRevealed = true;
-      if (readyFallbackTimer) {
-        clearTimeout(readyFallbackTimer);
-        readyFallbackTimer = null;
+      if (readyFallbackTimerRef.current) {
+        clearTimeout(readyFallbackTimerRef.current);
+        readyFallbackTimerRef.current = null;
       }
-      if (hardSafetyTimer) {
-        clearTimeout(hardSafetyTimer);
-        hardSafetyTimer = null;
+      if (hardSafetyTimerRef.current) {
+        clearTimeout(hardSafetyTimerRef.current);
+        hardSafetyTimerRef.current = null;
       }
       setIsEmbeddedLoading(false);
       setIsCheckoutReady(true);
     };
 
-    // Hard safety timeout: under no circumstance keep skeleton up longer than 3.5s
-    hardSafetyTimer = setTimeout(() => {
-      revealCheckout();
-    }, 3500);
-
     const checkBothReady = (fromPayment: boolean, fromExpress: boolean) => {
+      if (mountSessionIdRef.current !== activeMountId) return;
       if (fromPayment) paymentReady = true;
       if (fromExpress) expressReadyLocal = true;
 
       if (paymentReady && expressReadyLocal) {
         revealCheckout();
-      } else if (paymentReady && !readyFallbackTimer) {
+      } else if (paymentReady && !readyFallbackTimerRef.current) {
         // PaymentElement iframe is ready! Give Express Checkout max 900ms to resolve wallet APIs
-        readyFallbackTimer = setTimeout(() => {
+        readyFallbackTimerRef.current = setTimeout(() => {
           revealCheckout();
         }, 900);
       }
     };
 
+    const cacheKey = `${currentSongId}_${selectedDifficulty}_${currentPriceId || ''}_${language}`;
     try {
-      const cacheKey = `${currentSongId}_${selectedDifficulty}_${currentPriceId || ''}_${language}`;
       let data = sessionCacheRef.current[cacheKey];
       if (!data) {
         if (prefetchPromiseRef.current[cacheKey]) {
@@ -1167,16 +1187,27 @@ export default function PaddleModal({
         }
       }
 
-      if (!data || !data.clientSecret || !data.publishableKey) {
+      if (mountSessionIdRef.current !== activeMountId) return;
+
+      const resolvedPk = data?.publishableKey || DEFAULT_STRIPE_PK;
+      if (!data || !data.clientSecret || !resolvedPk) {
+        delete sessionCacheRef.current[cacheKey];
+        delete prefetchPromiseRef.current[cacheKey];
         throw new Error('Invalid response from payment server');
       }
       currentClientSecretRef.current = data.clientSecret;
 
-      const stripe = await loadStripe(data.publishableKey || DEFAULT_STRIPE_PK);
+      const stripe = await loadStripe(resolvedPk);
+      if (mountSessionIdRef.current !== activeMountId) return;
       if (!stripe) {
         throw new Error('Could not initialize Stripe SDK');
       }
       stripeRef.current = stripe;
+
+      // Start hard safety timer only after stripe + elements are initialized
+      hardSafetyTimerRef.current = setTimeout(() => {
+        revealCheckout();
+      }, 3500);
 
       if (expressCheckoutRef.current) {
         try { expressCheckoutRef.current.destroy(); } catch (_) {}
@@ -1317,6 +1348,7 @@ export default function PaddleModal({
         try {
           const { error: submitError } = await elements.submit();
           if (submitError) {
+            event?.paymentFailed?.({ reason: 'fail', message: submitError.message });
             setPaymentFormError(submitError.message || t.paymentFailed);
             setIsSubmittingPayment(false);
             return;
@@ -1339,11 +1371,13 @@ export default function PaddleModal({
             confirmParams,
           });
           if (error) {
+            event?.paymentFailed?.({ reason: 'fail', message: error.message });
             setPaymentFormError(error.message || t.paymentFailed);
             setIsSubmittingPayment(false);
           }
         } catch (err: any) {
           console.error("[Express Confirm Error]:", err);
+          event?.paymentFailed?.({ reason: 'fail', message: err?.message });
           setPaymentFormError(err.message || t.paymentProcessingError);
           setIsSubmittingPayment(false);
         }
@@ -1384,6 +1418,7 @@ export default function PaddleModal({
       });
 
       requestAnimationFrame(() => {
+        if (mountSessionIdRef.current !== activeMountId) return;
         const expressMount = document.getElementById('stripe-express-checkout');
         if (expressMount) {
           expressCheckout.mount('#stripe-express-checkout');
@@ -1394,9 +1429,18 @@ export default function PaddleModal({
         }
       });
     } catch (e: any) {
+      if (mountSessionIdRef.current !== activeMountId) return;
       console.error("[Embedded Checkout Error]:", e);
-      if (hardSafetyTimer) clearTimeout(hardSafetyTimer);
-      if (readyFallbackTimer) clearTimeout(readyFallbackTimer);
+      delete sessionCacheRef.current[cacheKey];
+      delete prefetchPromiseRef.current[cacheKey];
+      if (hardSafetyTimerRef.current) {
+        clearTimeout(hardSafetyTimerRef.current);
+        hardSafetyTimerRef.current = null;
+      }
+      if (readyFallbackTimerRef.current) {
+        clearTimeout(readyFallbackTimerRef.current);
+        readyFallbackTimerRef.current = null;
+      }
       setEmbeddedError(e.message || t.failedToLoadCheckout);
       setIsEmbeddedLoading(false);
       setIsCheckoutReady(false);
@@ -1407,7 +1451,7 @@ export default function PaddleModal({
     if (!stripeRef.current || !elementsRef.current) return;
 
     const email = customerEmail.trim();
-    const isEmailValid = Boolean(email && email.includes('@') && email.includes('.'));
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
     const isPaypal = selectedPaymentMethod === 'paypal' || selectedPaymentMethod === 'paypal_express';
 
     // A valid email address is strictly required upfront for Card payments if not provided.
@@ -1845,8 +1889,8 @@ export default function PaddleModal({
                           isCheckoutReady ? 'opacity-100' : 'opacity-0 pointer-events-none'
                         }`}
                       >
-                        {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) */}
-                        <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'hidden'}`}>
+                        {/* Express Checkout Area (Apple Pay, Google Pay, PayPal) — never display:none on mount so Stripe measures real width */}
+                        <div className={`w-full transition-all duration-300 ${expressAvailable ? 'block mb-3' : 'h-0 overflow-hidden opacity-0 pointer-events-none'}`}>
                           <div
                             id="stripe-express-checkout"
                             className="w-full overflow-hidden min-h-[46px]"
