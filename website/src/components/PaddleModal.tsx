@@ -1352,7 +1352,7 @@ export default function PaddleModal({
       const paymentElement = elements.create('payment', {
         layout: {
           type: 'accordion',
-          defaultCollapsed: true,
+          defaultCollapsed: false,
           radios: 'always',
           spacedAccordionItems: true,
         },
